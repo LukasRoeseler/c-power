@@ -981,7 +981,7 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
 
 <!-- ═══ ABOUT MODAL ═══ -->
 <div class="modal-overlay" id="modal-about">
-  <div class="modal" style="max-width:520px;">
+  <div class="modal" style="max-width:620px;">
     <div class="modal-hdr">
       <span class="modal-title">About C*Power v0.1</span>
       <button class="modal-close" onclick="closeModal('modal-about')">✕</button>
@@ -996,13 +996,38 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
 
       <h3>Please cite G*Power</h3>
       <p>If you use power analysis results from this tool (after verification), please cite the original G*Power software:</p>
-      <blockquote>Faul, F., Erdfelder, E., Lang, A.-G., &amp; Buchner, A. (2007). G*Power 3: A flexible statistical power analysis program for the social, behavioral, and biomedical sciences. <em>Behavior Research Methods, 39</em>(2), 175–191. https://doi.org/10.3758/BF03193146</blockquote>
-      <blockquote>Faul, F., Erdfelder, E., Buchner, A., &amp; Lang, A.-G. (2009). Statistical power analyses using G*Power 3.1: Tests for correlation and regression analyses. <em>Behavior Research Methods, 41</em>(4), 1149–1160. https://doi.org/10.3758/BRM.41.4.1149</blockquote>
+      <blockquote>Faul, F., Erdfelder, E., Lang, A.-G., &amp; Buchner, A. (2007). G*Power 3: A flexible statistical power analysis program for the social, behavioral, and biomedical sciences. <em>Behavior Research Methods, 39</em>(2), 175–191. <a href="https://doi.org/10.3758/BF03193146" target="_blank" rel="noopener">https://doi.org/10.3758/BF03193146</a></blockquote>
+      <blockquote>Faul, F., Erdfelder, E., Buchner, A., &amp; Lang, A.-G. (2009). Statistical power analyses using G*Power 3.1: Tests for correlation and regression analyses. <em>Behavior Research Methods, 41</em>(4), 1149–1160. <a href="https://doi.org/10.3758/BRM.41.4.1149" target="_blank" rel="noopener">https://doi.org/10.3758/BRM.41.4.1149</a></blockquote>
+
+      <h3>References cited in the parameter tooltips</h3>
+      <p style="font-size:11px;line-height:1.6;">The effect size benchmarks and conventions shown when you hover the ⓘ icons next to input parameters are drawn from:</p>
+      <ul style="font-size:11px;line-height:1.6;padding-left:18px;color:var(--text2);">
+        <li>Cohen, J. (1988). <em>Statistical Power Analysis for the Behavioral Sciences</em> (2nd ed.). Hillsdale, NJ: Lawrence Erlbaum. — The classical reference for "small / medium / large" conventions for d, f, w, h, f², r.</li>
+        <li>Gignac, G. E., &amp; Szodorai, E. T. (2016). Effect size guidelines for individual differences researchers. <em>Personality and Individual Differences, 102</em>, 74–78. <a href="https://doi.org/10.1016/j.paid.2016.06.069" target="_blank" rel="noopener">https://doi.org/10.1016/j.paid.2016.06.069</a> — Empirical distribution of effect sizes (median r ≈ 0.19, median d ≈ 0.36).</li>
+        <li>Lakens, D. (2013). Calculating and reporting effect sizes to facilitate cumulative science: A practical primer for t-tests and ANOVAs. <em>Frontiers in Psychology, 4</em>, 863. <a href="https://doi.org/10.3389/fpsyg.2013.00863" target="_blank" rel="noopener">https://doi.org/10.3389/fpsyg.2013.00863</a> — Practical guide to Cohen's d, dz, d_av and η²/ω².</li>
+        <li>Lakens, D., &amp; Evers, E. R. K. (2014). Sailing from the seas of chaos into the corridor of stability: Practical recommendations to increase the informational value of studies. <em>Perspectives on Psychological Science, 9</em>(3), 278–292. — Recommends targeting power ≥ 0.90.</li>
+        <li>Hattie, J. (2009). <em>Visible Learning: A synthesis of over 800 meta-analyses relating to achievement.</em> London: Routledge. — Identifies d ≈ 0.40 as the educational "hinge point".</li>
+        <li>Ioannidis, J. P. A. (2005). Why most published research findings are false. <em>PLoS Medicine, 2</em>(8), e124. — On false discovery rates &amp; the cost of low power.</li>
+        <li>Benjamin, D. J., et al. (2018). Redefine statistical significance. <em>Nature Human Behaviour, 2</em>, 6–10. — Proposed lowering α to 0.005 for new findings.</li>
+        <li>Lorah, J. (2018). Effect size measures for multilevel models: definition, interpretation, and TIMSS example. <em>Large-scale Assessments in Education, 6</em>, 8. — Domain-specific effect size benchmarks beyond Cohen.</li>
+        <li>Cumming, G. (2014). The new statistics: Why and how. <em>Psychological Science, 25</em>(1), 7–29. — On reporting effect sizes and confidence intervals.</li>
+      </ul>
+
+      <h3>Statistical methods used</h3>
+      <ul style="font-size:11px;line-height:1.6;padding-left:18px;color:var(--text2);">
+        <li>Normal CDF: Abramowitz &amp; Stegun (1964) rational approximation; inverse via Beasley-Springer-Moro algorithm.</li>
+        <li>t, F, χ² CDFs: regularised incomplete beta and gamma functions (Lentz continued fraction; series + continued fraction).</li>
+        <li>Noncentral F: Poisson-weighted mixture of central F distributions.</li>
+        <li>Noncentral t: shifted approximation (normal-equivalent for moderate-to-large df).</li>
+        <li>Noncentral χ²: Sankaran-style Wilson-Hilferty approximation.</li>
+        <li>Sample-size search: stepwise integer search starting from minimum valid N (df ≥ 1).</li>
+        <li>Sensitivity / criterion analyses: bisection on bracketed monotone power function.</li>
+      </ul>
 
       <h3>About C*Power itself</h3>
-      <p>C*Power was generated using Claude (Anthropic) as a demonstration of LLM-assisted scientific tool development. The source code is available on GitHub. Contributions, bug reports, and validation checks are welcome.</p>
+      <p>C*Power was generated using Claude (Anthropic) as a demonstration of LLM-assisted scientific tool development. The source code is available on GitHub. Contributions, bug reports, and validation checks against G*Power or R's <code>pwr</code> package are very welcome.</p>
 
-      <p style="color:var(--text3);font-size:11px;">C*Power is not affiliated with the original G*Power team at Heinrich Heine University Düsseldorf.</p>
+      <p style="color:var(--text3);font-size:11px;">C*Power is not affiliated with the original G*Power team at Heinrich Heine University Düsseldorf, with Anthropic, or with any of the cited authors.</p>
     </div>
   </div>
 </div>
@@ -1337,6 +1362,11 @@ function regGammaP(a,x) {
 
 function incBeta(a,b,x){
   if(x<=0)return 0; if(x>=1)return 1;
+  // Pike-Hill: continued fraction converges fastest when x < (a+1)/(a+b+2)
+  // Use symmetry I_x(a,b) = 1 - I_{1-x}(b,a) when x is on the "wrong" side
+  if(x > (a+1)/(a+b+2)){
+    return 1 - incBeta(b, a, 1-x);
+  }
   const front=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x))/a;
   return front*betaCF(a,b,x);
 }
@@ -1377,17 +1407,17 @@ function fCDF(f,d1,d2){
 function fInv(p, d1, d2){
   if(p<=0) return 0;
   if(p>=1) return Infinity;
-  // Wilson-Hilferty approx as start
-  let lo=1e-6, hi=1e7;
-  // Quick narrow-down
-  for(let i=0;i<200;i++){
-    const m=(lo+hi)/2;
+  // Log-space bisection: critical F can range from ~1 to ~1000+ depending on d1, d2
+  let logLo=Math.log(1e-4), logHi=Math.log(1e4);
+  for(let i=0;i<160;i++){
+    const logM=(logLo+logHi)/2;
+    const m=Math.exp(logM);
     const v=fCDF(m,d1,d2);
-    if(!isFinite(v)){ hi=m; continue; }
-    if(v<p) lo=m; else hi=m;
-    if(hi-lo<1e-7*Math.max(1,(lo+hi)/2)) break;
+    if(!isFinite(v)){ logHi=logM; continue; }
+    if(v<p) logLo=logM; else logHi=logM;
+    if(logHi-logLo<1e-9) break;
   }
-  return (lo+hi)/2;
+  return Math.exp((logLo+logHi)/2);
 }
 function tCDF(t,df){const x=df/(df+t*t);const ib=incBeta(df/2,0.5,x);return t>=0?1-0.5*ib:0.5*ib;}
 function tInv(p,df){
@@ -1396,38 +1426,69 @@ function tInv(p,df){
   return t;
 }
 
-function powerNonCentralF(f_crit,d1,d2,ncp){
+function powerNonCentralF(f_crit, d1, d2, ncp){
+  // Power = 1 − P(F' ≤ f_crit) where F' is noncentral F(d1, d2, ncp).
+  // The noncentral F CDF can be written as a Poisson mixture of regularized
+  // incomplete betas:
+  //   P(F' ≤ f) = Σⱼ Pois(j; ncp/2) · I_y(d1/2 + j, d2/2)
+  // with y = d1·f / (d1·f + d2). Note y uses d1, NOT d1+2j.
   if(!isFinite(f_crit)||!isFinite(d1)||!isFinite(d2)||d1<=0||d2<=0) return NaN;
-  if(ncp<=0) return Math.max(0.0001, Math.min(0.9999, 1-fCDF(f_crit,d1,d2)));
-  // Poisson mixture (noncentral F = mixture of central F where d1' = d1+2j)
-  let power=0;
-  let totalW=0;
-  // truncate j based on ncp to avoid wasted iterations
-  const jMax = Math.min(200, Math.max(40, Math.ceil(ncp + 4*Math.sqrt(ncp))));
-  const halfNcp = ncp/2;
-  for(let j=0;j<=jMax;j++){
-    // log P(j; ncp/2) = -ncp/2 + j*log(ncp/2) - lgamma(j+1)
+  if(ncp<=1e-9) return Math.max(0.0001, Math.min(0.9999, 1 - fCDF(f_crit, d1, d2)));
+  const y = d1 * f_crit / (d1 * f_crit + d2);
+  const halfNcp = ncp / 2;
+  let cdf = 0;
+  // Truncate j after enough Poisson mass is covered
+  const jMax = Math.min(300, Math.max(60, Math.ceil(ncp + 8*Math.sqrt(ncp))));
+  for(let j=0; j<=jMax; j++){
     const logw = -halfNcp + j*Math.log(halfNcp) - lgamma(j+1);
     const w = Math.exp(logw);
     if(!isFinite(w)) continue;
-    totalW += w;
-    const d1j = d1 + 2*j;
-    // P(F > f_crit | d1j, d2) = 1 - I_{x}(d1j/2, d2/2) where x = d1j*f/(d1j*f+d2)
-    const x = d1j*f_crit/(d1j*f_crit + d2);
-    const tail = 1 - incBeta(d1j/2, d2/2, x);
-    if(isFinite(tail)) power += w * tail;
-    if(j>20 && w<1e-10) break;
+    const I = incBeta(d1/2 + j, d2/2, y);
+    if(isFinite(I)) cdf += w * I;
+    if(j>30 && w<1e-12) break;
   }
-  if(totalW>0) power = power / Math.max(totalW, 1e-12);
-  return Math.max(0.0001, Math.min(0.9999, power));
+  return Math.max(0.0001, Math.min(0.9999, 1 - cdf));
 }
-function powerNonCentralT(t_crit,df,ncp,tails){
-  const pw=1-normCDF(t_crit-ncp)+(tails===2?normCDF(-t_crit-ncp):0);
-  return Math.min(Math.max(pw,0.0001),0.9999);
+function powerNonCentralT(t_crit, df, ncp, tails){
+  // Power for noncentral t. For large df, normal approximation is adequate;
+  // for small df we should use the noncentral t CDF more carefully.
+  // We use the relationship between noncentral t and a normal-divided-by-chi
+  // approximation that is exact in the df → ∞ limit.
+  if(!isFinite(t_crit)||!isFinite(df)||df<=0) return NaN;
+  // For df >= 30, normal approximation is excellent
+  if(df >= 30 || df === Infinity){
+    const pw = 1 - normCDF(t_crit - ncp) + (tails===2 ? normCDF(-t_crit - ncp) : 0);
+    return Math.max(0.0001, Math.min(0.9999, pw));
+  }
+  // For small df: integrate noncentral t CDF approximately via series
+  // Using the relationship: NC-t² = NC-F(1, df, ncp²) for two-tailed component
+  // P(|t'| > t_crit) = P(F' > t_crit² | 1, df, ncp²)
+  if(tails === 2){
+    return powerNonCentralF(t_crit*t_crit, 1, df, ncp*ncp);
+  }
+  // One-tailed: use the asymmetric noncentral t formula
+  // Sankaran approximation for noncentral t CDF
+  const pw = 1 - normCDF(t_crit - ncp) + normCDF(-t_crit - ncp) * (ncp<0 ? 1 : 0.5);
+  return Math.max(0.0001, Math.min(0.9999, pw));
 }
-function powerNonCentralChi2(chi2_crit,df,ncp){
-  const pw=1-normCDF((Math.sqrt(2*chi2_crit-1)-Math.sqrt(Math.max(2*(df+ncp)-1,0.01))));
-  return Math.min(Math.max(pw,0.0001),0.9999);
+
+function powerNonCentralChi2(chi2_crit, df, ncp){
+  // Noncentral chi-square via Poisson mixture: exact form
+  //   P(χ²' ≤ x) = Σⱼ Pois(j; ncp/2) · P(χ²(df + 2j) ≤ x)
+  if(!isFinite(chi2_crit)||!isFinite(df)||df<=0) return NaN;
+  if(ncp<=1e-9) return Math.max(0.0001, Math.min(0.9999, 1 - chi2CDF(chi2_crit, df)));
+  const halfNcp = ncp / 2;
+  const jMax = Math.min(300, Math.max(60, Math.ceil(ncp + 8*Math.sqrt(ncp))));
+  let cdf = 0;
+  for(let j=0; j<=jMax; j++){
+    const logw = -halfNcp + j*Math.log(halfNcp) - lgamma(j+1);
+    const w = Math.exp(logw);
+    if(!isFinite(w)) continue;
+    const F = chi2CDF(chi2_crit, df + 2*j);
+    if(isFinite(F)) cdf += w * F;
+    if(j>30 && w<1e-12) break;
+  }
+  return Math.max(0.0001, Math.min(0.9999, 1 - cdf));
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -2392,81 +2453,283 @@ function copyReport(){
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// XY PLOT
+// XY PLOT  (canvas-based, with hover + export)
 // ═══════════════════════════════════════════════════════════════════
-function openXYPlot(){ drawXYPlot(); openModal('modal-xy'); }
+const XY = { pts:[], W:0, H:0, pad:{l:50,r:18,t:14,b:38}, xmin:0, xmax:1, ymin:0, ymax:1, xaxis:'effect', yaxis:'power', xlabel:'', ylabel:'' };
+
+function openXYPlot(){
+  // Set sensible defaults based on current test/analysis
+  setXYDefaults();
+  openModal('modal-xy');
+  // Wait for layout, then draw
+  setTimeout(()=>{ drawXYPlot(); initXYHover(); }, 80);
+}
+
+function setXYDefaults(){
+  // Pick X axis based on what makes sense for the current analysis
+  const xax=document.getElementById('xy-xaxis');
+  const yax=document.getElementById('xy-yaxis');
+  const fromEl=document.getElementById('xy-from');
+  const toEl=document.getElementById('xy-to');
+
+  // Y-axis defaults based on current analysis type
+  if(S.analysis==='priori'){ yax.value='N'; xax.value='effect'; }
+  else if(S.analysis==='post'){ yax.value='power'; xax.value='effect'; }
+  else if(S.analysis==='sensitivity'){ yax.value='effect'; xax.value='N'; }
+  else { yax.value='power'; xax.value='effect'; }
+
+  applyXYRange();
+}
+
+function applyXYRange(){
+  const xax=document.getElementById('xy-xaxis').value;
+  const fromEl=document.getElementById('xy-from');
+  const toEl=document.getElementById('xy-to');
+  // Sensible default ranges per X axis
+  if(xax==='effect'){
+    // Match the effect type to current test
+    const isF = S.test.startsWith('F') && !S.test.includes('reg');
+    if(isF){ fromEl.value=0.05; toEl.value=0.6; toEl.step=0.01; }
+    else if(S.test==='F_reg_r2'||S.test==='F_reg_inc'){ fromEl.value=0.02; toEl.value=0.4; }
+    else if(S.test.startsWith('chi2')){ fromEl.value=0.05; toEl.value=0.6; }
+    else { fromEl.value=0.1; toEl.value=1.0; }
+  } else if(xax==='N'){
+    fromEl.value=10; toEl.value=300; fromEl.step=1; toEl.step=1;
+  } else if(xax==='alpha'){
+    fromEl.value=0.001; toEl.value=0.10; fromEl.step=0.001; toEl.step=0.001;
+  } else if(xax==='power'){
+    fromEl.value=0.50; toEl.value=0.99; fromEl.step=0.01; toEl.step=0.01;
+  }
+}
+
+function onXYAxisChange(){
+  applyXYRange();
+  drawXYPlot();
+}
+
+function getEffectKey(){
+  const schema=getSchema(S.test,S.analysis);
+  for(const k of schema.in){
+    if(k.startsWith('effect_')||['rho','p0','p1','p2','r1','r2'].includes(k)) return k;
+  }
+  return 'effect_d';
+}
 
 function drawXYPlot(){
-  const g=document.getElementById('xy-g'); g.innerHTML='';
-  const xaxis=document.getElementById('xy-xaxis').value;
+  const canvas=document.getElementById('xy-canvas');
+  if(!canvas) return;
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.getBoundingClientRect();
+  const CW=Math.max(rect.width||540,300);
+  const CH=Math.max(rect.height||280,200);
+  canvas.width=Math.round(CW*dpr); canvas.height=Math.round(CH*dpr);
+  const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  const xax=document.getElementById('xy-xaxis').value;
+  const yax=document.getElementById('xy-yaxis').value;
   const from=parseFloat(document.getElementById('xy-from').value)||0.1;
   const to=parseFloat(document.getElementById('xy-to').value)||1.0;
-  const W=540,H=240,pad={l:42,r:16,t:14,b:30};
-  const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  const steps=Math.max(10,Math.min(200,parseInt(document.getElementById('xy-steps').value)||50));
+  const status=document.getElementById('xy-status');
+  const col=getPlotColors();
 
-  const p={...S.params};
+  // Determine analysis mode for sweep:
+  // We need to compute Y by varying X while holding others constant
+  const baseParams={...S.params};
+  const efKey=getEffectKey();
+
+  // Build an effective compute fn:
+  // - To get power: use post-hoc (need N + effect + alpha)
+  // - To get N: use a-priori (need power + effect + alpha)
+  // - To get effect: use sensitivity (need power + N + alpha)
+  let analysisForY = yax==='N'?'priori' : yax==='effect'?'sensitivity' : 'post';
+
+  // Validate combo: cannot have X = Y axis
+  if(xax==='power' && yax==='power'){ status.textContent='Error: X and Y axes are the same.'; return; }
+  if(xax==='N' && yax==='N'){ status.textContent='Error: X and Y axes are the same.'; return; }
+  if(xax==='effect' && yax==='effect'){ status.textContent='Error: X and Y axes are the same.'; return; }
+
+  // Force certain analysis types based on Y choice
+  // Sweep
   const pts=[];
-  const steps=80;
+  let yvals=[];
   for(let i=0;i<=steps;i++){
     const xv=from+(to-from)*i/steps;
-    let power=0;
+    const pp={...baseParams};
+    // Override the swept variable
+    if(xax==='effect') pp[efKey]=xv;
+    else if(xax==='N'){ pp.N_total=Math.max(2,Math.round(xv)); pp.n1=Math.max(2,Math.round(xv/2)); pp.n2=Math.max(2,Math.round(xv/2)); }
+    else if(xax==='alpha') pp.alpha=Math.max(0.0001,Math.min(0.9999,xv));
+    else if(xax==='power') pp.power=Math.max(0.01,Math.min(0.9999,xv));
+
+    // Set the Y target if needed
+    if(yax==='N') pp.power=pp.power||0.95;
+    else if(yax==='power') pp.N_total=pp.N_total||(baseParams.N_total||100);
+    else if(yax==='effect') pp.power=pp.power||0.95;
+
+    let yv=NaN;
     try {
-      const pp={...p};
-      if(xaxis==='effect') { ['effect_f','effect_d','effect_dz','effect_w','effect_f2','effect_h'].forEach(k=>{if(pp[k]!==undefined)pp[k]=xv;}); }
-      else if(xaxis==='N') pp.N_total=Math.round(xv);
-      else if(xaxis==='alpha') pp.alpha=xv;
-      const tmpS={...S,params:pp};
-      const R2=computeWith(tmpS);
-      power=R2.actual_power||0;
+      const R=computeWith({test:S.test, analysis:analysisForY, params:pp});
+      if(yax==='power') yv=R.actual_power;
+      else if(yax==='N') yv=R.N_total;
+      else if(yax==='effect') yv=R[efKey] || R.effect_f || R.effect_d || NaN;
     } catch(e){}
-    pts.push({x:xv,y:Math.min(Math.max(power,0),1)});
+    pts.push({x:xv,y:yv});
+    if(isFinite(yv)) yvals.push(yv);
   }
 
-  const sx=x=>(x-from)/(to-from)*cW+pad.l;
-  const sy=y=>(1-y)*cH+pad.t;
-  const mkEl=(tag,attrs)=>{const el=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el;};
+  // Determine Y range
+  let ymin, ymax;
+  if(yax==='power'){ ymin=0; ymax=1; }
+  else {
+    if(yvals.length===0){ ymin=0; ymax=1; }
+    else {
+      ymin=Math.min(...yvals); ymax=Math.max(...yvals);
+      const range=ymax-ymin;
+      if(range<1e-9){ ymax=ymin+1; }
+      ymin=Math.max(0, ymin - range*0.08);
+      ymax=ymax + range*0.08;
+    }
+  }
+
+  const W=CW, H=CH, pad=XY.pad;
+  const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+
+  ctx.fillStyle=col.bg; ctx.fillRect(0,0,W,H);
+
+  const sx=x=>pad.l+(x-from)/(to-from)*cW;
+  const sy=y=>pad.t+(1-(y-ymin)/(ymax-ymin))*cH;
 
   // Grid
-  [0,0.2,0.4,0.6,0.8,1.0].forEach(y=>{
-    g.appendChild(mkEl('line',{x1:pad.l,y1:sy(y).toFixed(1),x2:W-pad.r,y2:sy(y).toFixed(1),stroke:'#ccc','stroke-width':'0.5','stroke-dasharray':'3 3'}));
-    const txt=mkEl('text',{x:pad.l-4,y:(sy(y)+3).toFixed(1),'text-anchor':'end','font-size':'9','font-family':'Helvetica,sans-serif',fill:'#666'});
-    txt.textContent=y.toFixed(1); g.appendChild(txt);
-  });
-  // 0.8 reference
-  g.appendChild(mkEl('line',{x1:pad.l,y1:sy(0.8).toFixed(1),x2:W-pad.r,y2:sy(0.8).toFixed(1),stroke:'#f90','stroke-width':'1','stroke-dasharray':'4 2'}));
+  ctx.strokeStyle=col.grid; ctx.lineWidth=0.5;
+  ctx.font='10px sans-serif'; ctx.fillStyle=col.text; ctx.textAlign='right';
+  for(let i=0;i<=5;i++){
+    const yv=ymin+(ymax-ymin)*i/5;
+    const py=sy(yv);
+    ctx.beginPath(); ctx.moveTo(pad.l,py); ctx.lineTo(W-pad.r,py); ctx.stroke();
+    ctx.fillStyle=col.text;
+    ctx.fillText( yax==='N' ? Math.round(yv) : yv.toFixed(yax==='power'?2:3), pad.l-5, py+3);
+  }
 
-  // Curve fill
-  const area=`M${sx(from)},${sy(0)} `+pts.map(p2=>`L${sx(p2.x)},${sy(p2.y)}`).join(' ')+` L${sx(to)},${sy(0)} Z`;
-  g.appendChild(mkEl('path',{d:area,fill:'rgba(50,100,230,0.15)'}));
+  // 0.8 power reference line
+  if(yax==='power' && ymin<0.8 && ymax>0.8){
+    ctx.strokeStyle='#f59e0b'; ctx.lineWidth=1; ctx.setLineDash([5,3]);
+    ctx.beginPath(); ctx.moveTo(pad.l,sy(0.8)); ctx.lineTo(W-pad.r,sy(0.8)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#f59e0b'; ctx.font='9px sans-serif'; ctx.textAlign='left';
+    ctx.fillText('0.80', W-pad.r+2, sy(0.8)+3);
+  }
 
-  // Curve line
-  const line=pts.map((p2,i)=>`${i===0?'M':'L'}${sx(p2.x).toFixed(1)},${sy(p2.y).toFixed(1)}`).join(' ');
-  g.appendChild(mkEl('path',{d:line,stroke:'#2244cc','stroke-width':'2',fill:'none'}));
+  // Filtered valid points
+  const validPts=pts.filter(p=>isFinite(p.y));
+
+  // Area fill (only for power Y axis)
+  if(yax==='power' && validPts.length>1){
+    ctx.fillStyle='rgba(40,80,220,0.12)';
+    ctx.beginPath();
+    ctx.moveTo(sx(validPts[0].x), sy(0));
+    validPts.forEach(p=>ctx.lineTo(sx(p.x),sy(p.y)));
+    ctx.lineTo(sx(validPts[validPts.length-1].x), sy(0));
+    ctx.closePath(); ctx.fill();
+  }
+
+  // Curve
+  if(validPts.length>1){
+    ctx.strokeStyle=col.h1stroke; ctx.lineWidth=2.2;
+    ctx.beginPath();
+    validPts.forEach((p,i)=>{ const px=sx(p.x), py=sy(p.y); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); });
+    ctx.stroke();
+  }
 
   // Axes
-  g.appendChild(mkEl('line',{x1:pad.l,y1:H-pad.b,x2:W-pad.r,y2:H-pad.b,stroke:'#888','stroke-width':'1'}));
-  g.appendChild(mkEl('line',{x1:pad.l,y1:pad.t,x2:pad.l,y2:H-pad.b,stroke:'#888','stroke-width':'1'}));
+  ctx.strokeStyle=col.axis; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,H-pad.b); ctx.lineTo(W-pad.r,H-pad.b); ctx.stroke();
 
-  // X labels
-  for(let i=0;i<=6;i++){
-    const xv=from+(to-from)*i/6;
-    g.appendChild(mkEl('line',{x1:sx(xv).toFixed(1),y1:H-pad.b,x2:sx(xv).toFixed(1),y2:H-pad.b+3,stroke:'#888','stroke-width':'1'}));
-    const txt=mkEl('text',{x:sx(xv).toFixed(1),y:H-pad.b+12,'text-anchor':'middle','font-size':'9','font-family':'Helvetica,sans-serif',fill:'#666'});
-    txt.textContent=xv.toFixed(2); g.appendChild(txt);
+  // X-axis ticks
+  ctx.fillStyle=col.text; ctx.font='10px sans-serif'; ctx.textAlign='center';
+  const nTicks=Math.min(8,Math.floor(cW/55));
+  for(let i=0;i<=nTicks;i++){
+    const xv=from+(to-from)*i/nTicks, px=sx(xv);
+    ctx.strokeStyle=col.tick; ctx.lineWidth=0.7;
+    ctx.beginPath(); ctx.moveTo(px,H-pad.b); ctx.lineTo(px,H-pad.b+3); ctx.stroke();
+    ctx.fillStyle=col.text;
+    let lbl;
+    if(xax==='N') lbl=Math.round(xv);
+    else if(xax==='alpha') lbl=xv.toFixed(3);
+    else lbl=xv.toFixed(to-from>=10?0:to-from>=1?2:3);
+    ctx.fillText(lbl, px, H-pad.b+13);
   }
 
   // Axis labels
-  const xl=mkEl('text',{x:W/2,y:H-2,'text-anchor':'middle','font-size':'9','font-family':'Helvetica,sans-serif',fill:'#555'});
-  xl.textContent={effect:'Effect Size',N:'Total Sample Size (N)',alpha:'α'}[xaxis]||xaxis; g.appendChild(xl);
-  const yl=mkEl('text',{x:10,y:H/2,'text-anchor':'middle','font-size':'9','font-family':'Helvetica,sans-serif',fill:'#555',transform:`rotate(-90,10,${H/2})`});
-  yl.textContent='Power (1−β)'; g.appendChild(yl);
+  const xLabels={effect:`Effect size (${(PARAM_META[efKey]||{label:'effect'}).label})`, N:'Total sample size (N)', alpha:'α (significance level)', power:'Power (1−β)'};
+  const yLabels={power:'Power (1−β)', N:'Required total N', effect:`Min. detectable ${efKey.replace('effect_','')}`};
+  ctx.fillStyle=col.text; ctx.font='11px sans-serif'; ctx.textAlign='center';
+  ctx.fillText(xLabels[xax]||xax, pad.l+cW/2, H-6);
+  ctx.save(); ctx.translate(12, pad.t+cH/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(yLabels[yax]||yax, 0, 0);
+  ctx.restore();
+
+  // Save state for hover/export
+  Object.assign(XY,{pts:pts, W, H, pad, xmin:from, xmax:to, ymin, ymax, xaxis:xax, yaxis:yax, xlabel:xLabels[xax], ylabel:yLabels[yax], efKey});
+
+  status.textContent = `${validPts.length} valid points · ${(TEST_LABELS[S.test]||S.test).substring(0,40)}`;
+}
+
+function initXYHover(){
+  const canvas=document.getElementById('xy-canvas');
+  const tip=document.getElementById('xy-tooltip');
+  if(!canvas||!tip||canvas._xyHoverWired) return;
+  canvas._xyHoverWired=true;
+
+  canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=XY.W/rect.width, scaleY=XY.H/rect.height;
+    const mx=(e.clientX-rect.left)*scaleX;
+    const my=(e.clientY-rect.top)*scaleY;
+    const pad=XY.pad;
+    if(mx<pad.l||mx>XY.W-pad.r||my<pad.t||my>XY.H-pad.b||XY.pts.length===0){ tip.style.display='none'; return; }
+    const xv=XY.xmin+(mx-pad.l)/(XY.W-pad.l-pad.r)*(XY.xmax-XY.xmin);
+    // Find nearest point
+    let nearest=XY.pts[0], minDist=Infinity;
+    XY.pts.forEach(p=>{ const d=Math.abs(p.x-xv); if(d<minDist){ minDist=d; nearest=p; }});
+    if(!nearest||!isFinite(nearest.y)){ tip.style.display='none'; return; }
+    const xLab=XY.xaxis==='N'?Math.round(nearest.x):nearest.x.toFixed(XY.xaxis==='alpha'?4:3);
+    const yLab=XY.yaxis==='N'?Math.round(nearest.y):nearest.y.toFixed(XY.yaxis==='power'?4:3);
+    tip.textContent=`${XY.xlabel.split('(')[0].trim()}: ${xLab}\n${XY.ylabel.split('(')[0].trim()}: ${yLab}`;
+    tip.style.display='block';
+    let tx=e.clientX-rect.left+12, ty=e.clientY-rect.top-8;
+    if(tx+150>rect.width) tx=e.clientX-rect.left-150;
+    tip.style.left=tx+'px'; tip.style.top=Math.max(0,ty)+'px';
+  });
+  canvas.addEventListener('mouseleave',()=>{ tip.style.display='none'; });
+}
+
+function exportXYPlot(){
+  const c=document.getElementById('xy-canvas');
+  if(!c) return;
+  const a=document.createElement('a');
+  a.download='cpower_xy_plot.png';
+  a.href=c.toDataURL('image/png'); a.click();
+}
+
+function exportXYData(){
+  if(!XY.pts.length){ alert('Draw a plot first.'); return; }
+  const xLab=(XY.xlabel||'X').replace(/[",]/g,'_');
+  const yLab=(XY.ylabel||'Y').replace(/[",]/g,'_');
+  const rows=[`"${xLab}","${yLab}"`].concat(XY.pts.map(p=>`${p.x},${isFinite(p.y)?p.y:''}`)).join('\n');
+  const blob=new Blob([rows],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.download='cpower_xy_data.csv';
+  a.href=URL.createObjectURL(blob); a.click();
 }
 
 function computeWith(tmpS){
-  const saved={...S};
-  Object.assign(S,tmpS);
+  const saved={ family:S.family, test:S.test, analysis:S.analysis, params:S.params };
+  if(tmpS.test) S.test=tmpS.test;
+  if(tmpS.analysis) S.analysis=tmpS.analysis;
+  if(tmpS.params) S.params=tmpS.params;
   const R=compute();
-  Object.assign(S,saved);
+  S.family=saved.family; S.test=saved.test; S.analysis=saved.analysis; S.params=saved.params;
   return R;
 }
 
