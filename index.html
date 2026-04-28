@@ -1,0 +1,2717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#d4d0c8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="C*Power">
+<title>C*Power v0.1</title>
+<style>
+/* ═══════════════════════════════════════════════════════
+   BASE RESET
+═══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+button, select, input { font-family: inherit; font-size: 11px; }
+button { cursor: pointer; }
+select { cursor: pointer; }
+
+/* ═══════════════════════════════════════════════════════
+   THEME VARIABLES — default: G*Power Classic
+═══════════════════════════════════════════════════════ */
+body.theme-classic {
+  --bg:        #d4d0c8;
+  --surface:   #ece9d8;
+  --surface2:  #f4f2ea;
+  --border:    #aca899;
+  --border2:   #c4c0b8;
+  --text:      #000000;
+  --text2:     #333333;
+  --text3:     #555555;
+  --btn-bg:    linear-gradient(to bottom, #f0ede4, #d4d0c8);
+  --btn-hover: linear-gradient(to bottom, #f8f5ec, #dedad2);
+  --btn-active:linear-gradient(to bottom, #c8c4bc, #d4d0c8);
+  --primary:   linear-gradient(to bottom, #7090c8, #3060a8);
+  --primary-border: #2050a0;
+  --primary-text: #fff;
+  --tab-active:#ece9d8;
+  --tab-inactive:#d4d0c8;
+  --header-bg: linear-gradient(to bottom, #e8e5dc, #d8d5cc);
+  --panel:     #f0ede4;
+  --input-bg:  #ffffff;
+  --select-bg: #ffffff;
+  --plot-bg:   #ffffff;
+  --menubar:   linear-gradient(to bottom,#f0ede4,#e4e1d8);
+  --wip-bg:    #ffd700;
+  --wip-text:  #7a3700;
+  --modal-bg:  #ece9d8;
+}
+
+body.theme-2010s {
+  --bg:        #2c3e50;
+  --surface:   #34495e;
+  --surface2:  #3d566e;
+  --border:    #4a6278;
+  --border2:   #5a7290;
+  --text:      #ecf0f1;
+  --text2:     #bdc3c7;
+  --text3:     #95a5a6;
+  --btn-bg:    linear-gradient(135deg,#41b3a3,#2980b9);
+  --btn-hover: linear-gradient(135deg,#48c9b0,#3498db);
+  --btn-active:linear-gradient(135deg,#1a9080,#1a6fa0);
+  --primary:   linear-gradient(135deg,#e74c3c,#c0392b);
+  --primary-border: #a93226;
+  --primary-text: #fff;
+  --tab-active:#34495e;
+  --tab-inactive:#2c3e50;
+  --header-bg: linear-gradient(to right,#2c3e50,#3d566e);
+  --panel:     #2e4057;
+  --input-bg:  #1c2a38;
+  --select-bg: #1c2a38;
+  --plot-bg:   #1c2a38;
+  --menubar:   linear-gradient(to right,#1a2532,#2c3e50);
+  --wip-bg:    #e74c3c;
+  --wip-text:  #fff;
+  --modal-bg:  #2c3e50;
+}
+
+body.theme-polished {
+  --bg:        #f8f9fa;
+  --surface:   #ffffff;
+  --surface2:  #f1f3f5;
+  --border:    #dee2e6;
+  --border2:   #e9ecef;
+  --text:      #212529;
+  --text2:     #495057;
+  --text3:     #868e96;
+  --btn-bg:    #ffffff;
+  --btn-hover: #f8f9fa;
+  --btn-active:#e9ecef;
+  --primary:   linear-gradient(135deg,#667eea,#764ba2);
+  --primary-border: #5a67d8;
+  --primary-text: #fff;
+  --tab-active:#ffffff;
+  --tab-inactive:#f1f3f5;
+  --header-bg: #ffffff;
+  --panel:     #ffffff;
+  --input-bg:  #f8f9fa;
+  --select-bg: #f8f9fa;
+  --plot-bg:   #ffffff;
+  --menubar:   #ffffff;
+  --wip-bg:    linear-gradient(90deg,#f59e0b,#ef4444);
+  --wip-text:  #fff;
+  --modal-bg:  #ffffff;
+}
+
+body.theme-terminal {
+  --bg:        #0d0d0d;
+  --surface:   #111111;
+  --surface2:  #1a1a1a;
+  --border:    #00ff41;
+  --border2:   #004d14;
+  --text:      #00ff41;
+  --text2:     #00cc33;
+  --text3:     #008822;
+  --btn-bg:    #0d0d0d;
+  --btn-hover: #001a08;
+  --btn-active:#003310;
+  --primary:   #0d0d0d;
+  --primary-border: #00ff41;
+  --primary-text: #00ff41;
+  --tab-active:#111111;
+  --tab-inactive:#0d0d0d;
+  --header-bg: #0d0d0d;
+  --panel:     #111111;
+  --input-bg:  #0d0d0d;
+  --select-bg: #0d0d0d;
+  --plot-bg:   #0d0d0d;
+  --menubar:   #0d0d0d;
+  --wip-bg:    #00ff41;
+  --wip-text:  #000;
+  --modal-bg:  #111111;
+}
+
+body.theme-paper {
+  --bg:        #fdf6e3;
+  --surface:   #faf0d7;
+  --surface2:  #f5e6c4;
+  --border:    #d4b896;
+  --border2:   #e0c8a8;
+  --text:      #2d1b00;
+  --text2:     #5c3d11;
+  --text3:     #8b6914;
+  --btn-bg:    linear-gradient(to bottom,#faf0d7,#eeddb8);
+  --btn-hover: linear-gradient(to bottom,#fff5e0,#f5e6c8);
+  --btn-active:linear-gradient(to bottom,#e8d0a0,#f0dcb0);
+  --primary:   linear-gradient(to bottom,#c4622d,#a0421d);
+  --primary-border: #8b3510;
+  --primary-text: #fff;
+  --tab-active:#faf0d7;
+  --tab-inactive:#f0e0c0;
+  --header-bg: linear-gradient(to bottom,#f0e0c0,#e8d4a8);
+  --panel:     #faf0d7;
+  --input-bg:  #fffdf5;
+  --select-bg: #fffdf5;
+  --plot-bg:   #fffdf5;
+  --menubar:   linear-gradient(to bottom,#f5e8c8,#eeddb8);
+  --wip-bg:    #c4622d;
+  --wip-text:  #fff;
+  --modal-bg:  #faf0d7;
+}
+
+/* ═══════════════════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════════════════ */
+.app-window {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* ── WIP BANNER ── */
+.wip-banner {
+  background: var(--wip-bg);
+  color: var(--wip-text);
+  text-align: center;
+  padding: 3px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+  z-index: 10;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.theme-polished .wip-banner {
+  background: linear-gradient(90deg,#f59e0b,#ef4444);
+}
+
+/* ── MENU BAR ── */
+.menubar {
+  background: var(--menubar);
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 4px;
+}
+.menubar-left { display: flex; align-items: center; gap: 2px; }
+.menubar-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  margin-right: 10px;
+  white-space: nowrap;
+}
+.menu-btn {
+  padding: 2px 10px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--text);
+  font-size: 11px;
+  position: relative;
+}
+.menu-btn:hover { border-color: var(--border); background: var(--btn-hover); }
+
+/* Dropdown */
+.dropdown { position: relative; display: inline-block; }
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  z-index: 200;
+  padding: 3px 0;
+}
+.dropdown-menu.open { display: block; }
+.dropdown-item {
+  padding: 5px 16px;
+  font-size: 11px;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.dropdown-item:hover { background: var(--surface2); }
+.dropdown-item.active { font-weight: 600; }
+.dropdown-item .check { width: 12px; font-size: 10px; }
+.dropdown-sep { border: none; border-top: 1px solid var(--border2); margin: 3px 0; }
+
+/* ── TAB BAR ── */
+.tab-bar {
+  display: flex;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 6px 0;
+  gap: 2px;
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 4px 14px 5px;
+  font-size: 11px;
+  background: var(--tab-inactive);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  color: var(--text2);
+  position: relative;
+  top: 1px;
+  white-space: nowrap;
+  transition: background 0.1s;
+}
+.tab.active {
+  background: var(--tab-active);
+  border-color: var(--border);
+  color: var(--text);
+  font-weight: 500;
+  z-index: 1;
+}
+.tab:hover:not(.active) { background: var(--surface2); }
+
+/* ── MAIN BODY ── */
+.main-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── LEFT PANEL ── */
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+}
+
+/* ── RIGHT PANEL (Effect size drawer) ── */
+.right-panel {
+  width: 230px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transition: width 0.2s, opacity 0.2s;
+}
+.right-panel.hidden { width: 0; opacity: 0; overflow: hidden; pointer-events: none; }
+
+/* ── DISTRIBUTION PLOT ── */
+.plot-area {
+  background: var(--plot-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 6px 2px;
+  flex-shrink: 0;
+}
+#crit-label {
+  font-size: 10px;
+  color: var(--text2);
+  margin-bottom: 1px;
+  font-family: -apple-system, monospace;
+}
+#dist-canvas {
+  width: 100%;
+  display: block;
+  height: 155px;
+}
+
+/* ── FORM SECTIONS ── */
+.form-sections {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 5px 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: var(--surface);
+}
+.form-sections::-webkit-scrollbar { width: 6px; }
+.form-sections::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.section-header {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text3);
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Selector row */
+.selector-row {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.selector-row select { flex: 1; min-width: 0; }
+.selector-label {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text2);
+  white-space: nowrap;
+}
+
+/* ── FORM CONTROLS ── */
+select, input[type="number"] {
+  background: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 2px 5px;
+  height: 21px;
+  width: 100%;
+  outline: none;
+}
+select { appearance: auto; background: var(--select-bg); }
+select:focus, input:focus { border-color: #3478f6; outline: none; }
+.theme-terminal select:focus, .theme-terminal input:focus { border-color: var(--border); box-shadow: 0 0 4px var(--border); }
+
+/* ── PARAM PANELS ── */
+.params-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+.param-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 0;
+}
+.param-panel-hdr {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 3px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text2);
+}
+.param-panel-body { padding: 5px 7px; }
+.param-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 3px;
+  gap: 3px;
+  min-height: 21px;
+}
+.param-row:last-child { margin-bottom: 0; }
+
+/* ── INFO ICON & TOOLTIP ── */
+.info-icon {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:13px; height:13px; border-radius:50%;
+  border:1px solid var(--border); color:var(--text3);
+  font-size:9px; font-style:normal; font-weight:700;
+  cursor:help; flex-shrink:0; margin-left:3px;
+  line-height:1; user-select:none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.info-icon:hover { border-color: #3478f6; color:#3478f6; }
+
+.param-tooltip {
+  display:none;
+  position:absolute;
+  background:#1a1a2e;
+  color:#e8e8f0;
+  font-size:11px;
+  padding:8px 11px;
+  border-radius:5px;
+  pointer-events:none;
+  max-width:280px;
+  line-height:1.55;
+  z-index:300;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);
+  border:1px solid rgba(100,120,200,0.3);
+}
+.param-tooltip.visible { display:block; }
+.param-tooltip b { color:#8ab4ff; }
+.param-tooltip .conv-row { display:flex; gap:6px; margin-top:3px; }
+.param-tooltip .conv-badge {
+  display:inline-block; padding:1px 5px; border-radius:3px;
+  font-size:10px; font-weight:700;
+}
+.conv-small  { background:rgba(34,197,94,0.2);  color:#4ade80; }
+.conv-medium { background:rgba(251,191,36,0.2); color:#fbbf24; }
+.conv-large  { background:rgba(239,68,68,0.2);  color:#f87171; }
+.param-label {
+  flex: 1;
+  font-size: 11px;
+  color: var(--text);
+  min-width: 0;
+  line-height: 1.3;
+}
+.param-input-wrap { flex: 0 0 100px; }
+.param-input-wrap input {
+  width: 100px;
+  text-align: right;
+  font-size: 11px;
+  font-family: -apple-system, "Helvetica Neue", monospace;
+}
+.param-out {
+  flex: 0 0 100px;
+  text-align: right;
+  font-size: 11px;
+  font-family: -apple-system, "Helvetica Neue", monospace;
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-determine {
+  flex: 0 0 auto;
+  padding: 1px 6px;
+  font-size: 10px;
+  background: var(--btn-bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text2);
+  height: 18px;
+  white-space: nowrap;
+}
+.btn-determine:hover { background: var(--btn-hover); color: var(--text); }
+
+/* ── BUTTONS ── */
+.btn {
+  padding: 3px 14px;
+  height: 24px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid var(--border);
+  background: var(--btn-bg);
+  color: var(--text);
+  transition: background 0.1s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn:hover { background: var(--btn-hover); }
+.btn:active { background: var(--btn-active); }
+
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary-border);
+  color: var(--primary-text);
+  font-weight: 700;
+}
+.btn-primary:hover { filter: brightness(1.1); }
+.theme-terminal .btn-primary { border-color: var(--border); font-family: monospace; }
+
+/* ── BOTTOM BAR ── */
+.bottom-bar {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding: 5px 7px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.bottom-right { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+
+/* ── TABS CONTENT ── */
+#tab-distributions { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+#tab-distributions.tab-hidden { display: none; }
+#tab-protocol { display: none; flex: 1; overflow: auto; padding: 8px; background: var(--surface); }
+#tab-protocol.tab-visible { display: block; }
+
+/* ── PROTOCOL TABLE ── */
+.proto-wrap { overflow-x: auto; }
+.proto-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  min-width: 600px;
+}
+.proto-table th {
+  background: var(--header-bg);
+  border: 1px solid var(--border);
+  padding: 4px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text2);
+  white-space: nowrap;
+  text-align: left;
+}
+.proto-table td {
+  border: 1px solid var(--border2);
+  padding: 3px 7px;
+  color: var(--text);
+  font-size: 11px;
+}
+.proto-table tr:nth-child(even) td { background: var(--surface2); }
+.proto-table tr:hover td { background: var(--surface2); }
+
+/* ── RIGHT PANEL STYLES ── */
+.rp-hdr {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+.rp-body {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  flex: 1;
+}
+.rp-row { display: flex; align-items: center; gap: 5px; }
+.rp-row label { flex: 1; font-size: 11px; color: var(--text); }
+.rp-row input { flex: 0 0 64px; width: 64px; text-align: right; }
+.rp-sep { border: none; border-top: 1px solid var(--border2); margin: 2px 0; }
+
+.group-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.group-table th {
+  background: var(--header-bg);
+  border: 1px solid var(--border);
+  padding: 2px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text2);
+  text-align: center;
+}
+.group-table td {
+  border: 1px solid var(--border2);
+  padding: 1px 2px;
+  background: var(--input-bg);
+}
+.group-table td input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 11px;
+  background: transparent;
+  font-family: inherit;
+  text-align: right;
+  height: 17px;
+  padding: 0 2px;
+  color: var(--text);
+}
+.group-table tr.rp-selected td { background: color-mix(in srgb, var(--primary-border) 15%, var(--input-bg)); }
+.rp-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+.rp-result-row .rval { font-weight: 700; font-family: monospace; color: var(--text); font-size: 11px; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--modal-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+}
+.modal-hdr {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 6px 6px 0 0;
+  flex-shrink: 0;
+}
+.modal-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: var(--text3);
+  padding: 0 4px;
+  line-height: 1;
+}
+.modal-close:hover { color: var(--text); }
+.modal-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text2);
+}
+.modal-body a { color: #3478f6; }
+.modal-body h3 { font-size: 13px; color: var(--text); margin-bottom: 8px; }
+.modal-body p { margin-bottom: 10px; }
+.modal-body blockquote {
+  border-left: 3px solid var(--border);
+  padding: 6px 12px;
+  margin: 10px 0;
+  background: var(--surface2);
+  border-radius: 0 4px 4px 0;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--text3);
+}
+
+/* ── REPORT MODAL ── */
+.report-section { margin-bottom: 16px; }
+.report-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+}
+.report-text {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text);
+  white-space: pre-wrap;
+  font-family: inherit;
+  min-height: 80px;
+}
+.report-copy-btn {
+  margin-top: 6px;
+  padding: 4px 14px;
+  font-size: 11px;
+  background: var(--btn-bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  cursor: pointer;
+}
+.report-copy-btn:hover { background: var(--btn-hover); }
+.report-copy-btn.copied { color: green; }
+
+/* ══════════════════
+   MOBILE RESPONSIVE
+══════════════════ */
+@media (max-width: 680px) {
+  .right-panel { display: none !important; }
+  .params-row { grid-template-columns: 1fr; }
+  #dist-canvas { height: 110px; }
+  .selector-row { flex-wrap: wrap; }
+  .selector-row .selector-label { flex: 0 0 100%; margin-bottom: 1px; }
+  .bottom-bar { padding: 4px 6px; gap: 4px; }
+  .btn { padding: 3px 10px; font-size: 10px; }
+  .menubar-title { font-size: 11px; }
+  .tab { padding: 4px 10px 5px; font-size: 10px; }
+  .form-sections { padding: 4px 5px; gap: 4px; }
+}
+@media (max-width: 400px) {
+  .params-row { grid-template-columns: 1fr; }
+  .bottom-right { width: 100%; justify-content: flex-end; }
+}
+
+/* ══════════════
+   THEME: terminal special touches
+══════════════ */
+.theme-terminal {
+  font-family: "Courier New", "Lucida Console", monospace;
+}
+.theme-terminal select,
+.theme-terminal input,
+.theme-terminal .param-panel,
+.theme-terminal .plot-area {
+  border-color: var(--border);
+}
+.theme-terminal .wip-banner {
+  font-family: "Courier New", monospace;
+  letter-spacing: 0.1em;
+}
+
+/* ══════════════
+   THEME: polished special
+══════════════ */
+.theme-polished .param-panel { border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.theme-polished .tab { border-radius: 8px 8px 0 0; }
+.theme-polished .btn { border-radius: 6px; }
+.theme-polished select, .theme-polished input { border-radius: 6px; }
+.theme-polished .menubar { border-bottom: 1px solid var(--border2); }
+</style>
+</head>
+<body class="theme-classic">
+
+<div class="app-window" id="app">
+
+  <!-- WIP BANNER -->
+  <div class="wip-banner">
+    ⚠️ WORK IN PROGRESS — Calculations have not been independently validated. Do not use for published research without verification. ⚠️
+  </div>
+
+  <!-- MENU BAR -->
+  <div class="menubar">
+    <div class="menubar-left">
+      <span class="menubar-title">C*Power v0.1</span>
+
+      <!-- About button -->
+      <button class="menu-btn" onclick="openAbout()">About</button>
+
+      <!-- Design dropdown -->
+      <div class="dropdown" id="design-dropdown">
+        <button class="menu-btn" onclick="toggleDropdown('design-menu')">Design ▾</button>
+        <div class="dropdown-menu" id="design-menu">
+          <div class="dropdown-item active" id="dtheme-classic"    onclick="setTheme('classic')"  ><span class="check">✓</span>G*Power Classic</div>
+          <div class="dropdown-item"        id="dtheme-2010s"      onclick="setTheme('2010s')"    ><span class="check"> </span>Flat &amp; Teal (2010s)</div>
+          <div class="dropdown-item"        id="dtheme-polished"   onclick="setTheme('polished')" ><span class="check"> </span>Polished Minimal</div>
+          <div class="dropdown-item"        id="dtheme-terminal"   onclick="setTheme('terminal')" ><span class="check"> </span>Terminal / Hacker</div>
+          <div class="dropdown-item"        id="dtheme-paper"      onclick="setTheme('paper')"    ><span class="check"> </span>Aged Paper / Sepia</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <div class="tab active" id="tab-btn-dist"   onclick="switchTab('distributions')">Central and noncentral distributions</div>
+    <div class="tab"        id="tab-btn-proto"  onclick="switchTab('protocol')">Protocol of power analyses</div>
+  </div>
+
+  <!-- MAIN BODY -->
+  <div class="main-body">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+
+      <!-- Distributions tab content -->
+      <div id="tab-distributions">
+
+        <!-- Distribution plot -->
+        <div class="plot-area" style="position:relative;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+            <div id="crit-label" style="font-size:10px;color:var(--text2);font-family:-apple-system,monospace;">critical F = —</div>
+            <button class="btn" id="plot-export-btn" onclick="exportPlot()" style="padding:2px 8px;font-size:10px;height:18px;line-height:1;">↓ Export PNG</button>
+          </div>
+          <div style="position:relative;">
+            <canvas id="dist-canvas" style="width:100%;display:block;background:var(--plot-bg);border:1px solid var(--border);cursor:crosshair;"></canvas>
+            <div id="plot-tooltip" style="display:none;position:absolute;background:rgba(0,0,0,0.82);color:#fff;font-size:10px;padding:5px 8px;border-radius:4px;pointer-events:none;max-width:220px;line-height:1.5;z-index:50;white-space:pre-line;"></div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="form-sections">
+
+          <!-- Row 1: Test family + test -->
+          <div>
+            <div class="section-header">Test</div>
+            <div class="selector-row">
+              <span class="selector-label">Family:</span>
+              <select id="sel-family" style="flex:0 0 90px;width:90px;" onchange="onFamilyChange()">
+                <option value="F">F tests</option>
+                <option value="t">t tests</option>
+                <option value="chi2">χ² tests</option>
+                <option value="z">z tests</option>
+                <option value="exact">Exact</option>
+              </select>
+              <span class="selector-label">Statistical test:</span>
+              <select id="sel-test" onchange="onTestChange()"></select>
+            </div>
+          </div>
+
+          <!-- Row 2: Analysis type -->
+          <div>
+            <div class="section-header">Type of power analysis</div>
+            <select id="sel-analysis" style="width:100%;" onchange="onAnalysisChange()">
+              <option value="priori">A priori: Compute required sample size – given α, power, and effect size</option>
+              <option value="post">Post hoc: Compute achieved power – given α, sample size, and effect size</option>
+              <option value="criterion">Criterion: Compute required α – given power, sample size, and effect size</option>
+              <option value="sensitivity">Sensitivity: Compute required effect size – given α, power, and sample size</option>
+            </select>
+          </div>
+
+          <!-- Row 3: Input / Output params -->
+          <div class="params-row">
+            <div class="param-panel">
+              <div class="param-panel-hdr">Input parameters</div>
+              <div class="param-panel-body" id="input-params-body"></div>
+            </div>
+            <div class="param-panel">
+              <div class="param-panel-hdr">Output parameters</div>
+              <div class="param-panel-body" id="output-params-body"></div>
+            </div>
+          </div>
+
+        </div><!-- /form-sections -->
+
+        <!-- Bottom bar -->
+        <div class="bottom-bar">
+          <button class="btn" onclick="openXYPlot()">X-Y plot for a range of values</button>
+          <div class="bottom-right">
+            <button class="btn" onclick="openReport()">📄 Report</button>
+            <button class="btn btn-primary" onclick="calculate()">Calculate</button>
+          </div>
+        </div>
+
+      </div><!-- /tab-distributions -->
+
+      <!-- Protocol tab content -->
+      <div id="tab-protocol">
+        <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+          <button class="btn" onclick="clearProtocol()">Clear all</button>
+          <button class="btn" onclick="copyProtocolText()">Copy as text</button>
+          <button class="btn" onclick="exportProtocolCSV()">Export CSV</button>
+        </div>
+        <div class="proto-wrap">
+          <table class="proto-table" id="proto-tbl">
+            <thead>
+              <tr>
+                <th>#</th><th>Test</th><th>Analysis type</th>
+                <th>α</th><th>Power (1−β)</th><th>N total</th>
+                <th>Effect size</th><th>Groups/df</th><th>Noncentrality λ</th>
+              </tr>
+            </thead>
+            <tbody id="proto-body">
+              <tr><td colspan="9" style="padding:14px;text-align:center;color:var(--text3);">No analyses recorded yet. Run a calculation and it will appear here.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /left-panel -->
+
+    <!-- RIGHT PANEL: Effect size drawer -->
+    <div class="right-panel" id="right-panel">
+      <div class="rp-hdr">Select procedure</div>
+      <div class="rp-body">
+        <div>
+          <select id="rp-procedure" style="width:100%;" onchange="rpProcedureChange()">
+            <option value="means">Effect size from means</option>
+            <option value="eta2">From η²</option>
+            <option value="direct">Direct f input</option>
+          </select>
+        </div>
+
+        <div id="rp-means-section">
+          <div class="rp-row"><label>Number of groups</label>
+            <input type="number" id="rp-groups" value="5" min="2" max="50" onchange="rpGroupsChange()">
+          </div>
+          <div class="rp-row"><label>SD σ within groups</label>
+            <input type="number" id="rp-sd" value="10" min="0.001" step="0.1" onchange="rpCalculate()">
+          </div>
+          <table class="group-table" style="margin-top:4px;">
+            <thead><tr><th>Group</th><th>Mean</th><th>Size</th></tr></thead>
+            <tbody id="rp-group-body"></tbody>
+          </table>
+          <hr class="rp-sep">
+          <div class="rp-row"><label>Equal n</label>
+            <input type="number" id="rp-equal-n" value="50" min="1" onchange="rpSetEqualN()">
+          </div>
+        </div>
+
+        <div id="rp-eta2-section" style="display:none;">
+          <div class="rp-row"><label>η² value</label>
+            <input type="number" id="rp-eta2" value="0.06" min="0.001" max="0.999" step="0.01" onchange="rpCalculate()">
+          </div>
+        </div>
+
+        <div id="rp-direct-section" style="display:none;">
+          <div class="rp-row"><label>Effect size f</label>
+            <input type="number" id="rp-direct-f" value="0.25" min="0.001" step="0.01" onchange="rpCalculate()">
+          </div>
+        </div>
+
+        <hr class="rp-sep">
+        <div class="rp-result-row"><span>Total sample size</span><span class="rval" id="rp-total-n">250</span></div>
+        <div class="rp-result-row"><span>Effect size f</span><span class="rval" id="rp-effect-display">—</span></div>
+
+        <button class="btn btn-primary" style="width:100%;margin-top:6px;justify-content:center;" onclick="rpTransfer()">Calculate and transfer to main window</button>
+        <button class="btn" style="width:100%;justify-content:center;margin-top:4px;" onclick="toggleRightPanel()">Close effect size drawer</button>
+      </div>
+    </div>
+
+  </div><!-- /main-body -->
+
+</div><!-- /app-window -->
+
+<!-- ═══ ABOUT MODAL ═══ -->
+<div class="modal-overlay" id="modal-about">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-hdr">
+      <span class="modal-title">About C*Power v0.1</span>
+      <button class="modal-close" onclick="closeModal('modal-about')">✕</button>
+    </div>
+    <div class="modal-body">
+      <h3>What is C*Power?</h3>
+      <p>C*Power is a <strong>browser-based, mobile-friendly clone of G*Power</strong>, generated by a large language model (Claude by Anthropic). It requires no installation and runs entirely in your browser — including on smartphones and tablets.</p>
+
+      <div style="background:var(--wip-bg);color:var(--wip-text);padding:8px 12px;border-radius:4px;margin:10px 0;font-weight:700;font-size:12px;">
+        ⚠️ WORK IN PROGRESS: Calculations in this tool have NOT been independently validated against G*Power or other statistical software. Results may contain errors. Do not rely on this tool for published research without cross-checking against a validated tool.
+      </div>
+
+      <h3>Please cite G*Power</h3>
+      <p>If you use power analysis results from this tool (after verification), please cite the original G*Power software:</p>
+      <blockquote>Faul, F., Erdfelder, E., Lang, A.-G., &amp; Buchner, A. (2007). G*Power 3: A flexible statistical power analysis program for the social, behavioral, and biomedical sciences. <em>Behavior Research Methods, 39</em>(2), 175–191. https://doi.org/10.3758/BF03193146</blockquote>
+      <blockquote>Faul, F., Erdfelder, E., Buchner, A., &amp; Lang, A.-G. (2009). Statistical power analyses using G*Power 3.1: Tests for correlation and regression analyses. <em>Behavior Research Methods, 41</em>(4), 1149–1160. https://doi.org/10.3758/BRM.41.4.1149</blockquote>
+
+      <h3>About C*Power itself</h3>
+      <p>C*Power was generated using Claude (Anthropic) as a demonstration of LLM-assisted scientific tool development. The source code is available on GitHub. Contributions, bug reports, and validation checks are welcome.</p>
+
+      <p style="color:var(--text3);font-size:11px;">C*Power is not affiliated with the original G*Power team at Heinrich Heine University Düsseldorf.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REPORT MODAL ═══ -->
+<div class="modal-overlay" id="modal-report">
+  <div class="modal" style="max-width:580px;">
+    <div class="modal-hdr">
+      <span class="modal-title">📄 Analysis Report</span>
+      <button class="modal-close" onclick="closeModal('modal-report')">✕</button>
+    </div>
+    <div class="modal-body" id="report-body">
+      <p style="color:var(--text3);">Run a calculation first, then open the report.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ XY PLOT MODAL ═══ -->
+<div class="modal-overlay" id="modal-xy">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-hdr">
+      <span class="modal-title">X-Y Plot for a range of values</span>
+      <button class="modal-close" onclick="closeModal('modal-xy')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;line-height:1.5;">
+        Sweep one parameter while computing the resulting power, sample size, or effect size.
+        Hover the curve to read off exact values.
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:flex-end;">
+        <div style="flex:1;min-width:120px;">
+          <div class="report-label">Plot (Y axis)</div>
+          <select id="xy-yaxis" style="width:100%;" onchange="onXYAxisChange()">
+            <option value="power">Power (1−β)</option>
+            <option value="N">Required N (a priori)</option>
+            <option value="effect">Min. effect size (sensitivity)</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:120px;">
+          <div class="report-label">As a function of (X axis)</div>
+          <select id="xy-xaxis" style="width:100%;" onchange="onXYAxisChange()">
+            <option value="effect">Effect size</option>
+            <option value="N">Sample size (N)</option>
+            <option value="alpha">α (significance)</option>
+            <option value="power">Power (1−β)</option>
+          </select>
+        </div>
+        <div style="flex:0 0 80px;">
+          <div class="report-label">From</div>
+          <input type="number" id="xy-from" value="0.1" step="0.05" style="width:100%;">
+        </div>
+        <div style="flex:0 0 80px;">
+          <div class="report-label">To</div>
+          <input type="number" id="xy-to" value="1.0" step="0.05" style="width:100%;">
+        </div>
+        <div style="flex:0 0 60px;">
+          <div class="report-label">Steps</div>
+          <input type="number" id="xy-steps" value="50" min="10" max="200" step="10" style="width:100%;">
+        </div>
+        <div>
+          <button class="btn btn-primary" onclick="drawXYPlot()">Draw</button>
+        </div>
+      </div>
+      <div style="position:relative;">
+        <canvas id="xy-canvas" style="width:100%;display:block;background:var(--plot-bg);border:1px solid var(--border);border-radius:4px;height:280px;cursor:crosshair;"></canvas>
+        <div id="xy-tooltip" style="display:none;position:absolute;background:rgba(0,0,0,0.85);color:#fff;font-size:11px;padding:5px 8px;border-radius:4px;pointer-events:none;z-index:10;white-space:pre;font-family:monospace;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;align-items:center;flex-wrap:wrap;gap:6px;">
+        <div id="xy-status" style="font-size:11px;color:var(--text3);"></div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn" onclick="exportXYPlot()" style="padding:3px 12px;font-size:11px;">↓ Export PNG</button>
+          <button class="btn" onclick="exportXYData()" style="padding:3px 12px;font-size:11px;">↓ CSV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+const S = {
+  family: 'F',
+  test: 'F_anova',
+  analysis: 'priori',
+  tails: 1,
+  params: {},
+  results: {},
+  protocol: [],
+  rpGroups: 5,
+  rpGroupData: [],
+  rpSD: 10,
+  theme: 'classic',
+  _rpF: NaN,
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// TEST DEFINITIONS
+// ═══════════════════════════════════════════════════════════════════
+const TESTS = {
+  F: [
+    { id:'F_anova',      label:'ANOVA: Fixed effects, omnibus, one-way' },
+    { id:'F_ancova',     label:'ANOVA: Fixed effects, special, main effects and interactions' },
+    { id:'F_rm_within',  label:'ANOVA: Repeated measures, within factors' },
+    { id:'F_rm_between', label:'ANOVA: Repeated measures, between factors' },
+    { id:'F_manova',     label:'MANOVA: Global effects' },
+    { id:'F_reg_r2',     label:'Linear multiple regression: Fixed model, R² deviation from zero' },
+    { id:'F_reg_inc',    label:'Linear multiple regression: Fixed model, R² increase' },
+  ],
+  t: [
+    { id:'t_two_indep',  label:'Means: Difference between two independent means (two groups)' },
+    { id:'t_one_samp',   label:'Means: Difference from constant (one sample case)' },
+    { id:'t_paired',     label:'Means: Difference between two dependent means (matched pairs)' },
+    { id:'t_corr',       label:'Correlation: Point biserial model' },
+    { id:'t_generic',    label:'Generic t test' },
+  ],
+  chi2: [
+    { id:'chi2_gof',     label:'Goodness-of-fit tests: Contingency tables' },
+    { id:'chi2_var',     label:'Variance: Difference from constant (one sample case)' },
+  ],
+  z: [
+    { id:'z_prop2',      label:'Proportion: Inequality of two independent proportions' },
+    { id:'z_prop1',      label:'Proportion: Sign test' },
+    { id:'z_corr2',      label:'Correlation: Inequality of two independent Pearson r\'s' },
+    { id:'z_generic',    label:'Generic z test' },
+  ],
+  exact: [
+    { id:'ex_binom',     label:'Proportion: Inequality of two independent proportions' },
+    { id:'ex_multinom',  label:'Multinomial distribution: Goodness-of-fit test' },
+  ],
+};
+
+const TEST_LABELS = {};
+Object.values(TESTS).flat().forEach(t => { TEST_LABELS[t.id] = t.label; });
+
+const FAMILY_LABELS = { F:'F tests', t:'t tests', chi2:'χ² tests', z:'z tests', exact:'Exact' };
+
+// ═══════════════════════════════════════════════════════════════════
+// PARAMETER SCHEMAS
+// ═══════════════════════════════════════════════════════════════════
+function getSchema(test, analysis) {
+  const SCHEMAS = {
+    F_anova: {
+      priori:      { in:['effect_f','alpha','power','groups'],         out:['ncp','F_crit','num_df','den_df','N_total','actual_power'] },
+      post:        { in:['effect_f','alpha','groups','N_total'],       out:['ncp','F_crit','num_df','den_df','actual_power'] },
+      criterion:   { in:['effect_f','power','groups','N_total'],       out:['ncp','F_crit','alpha','num_df','den_df','actual_power'] },
+      sensitivity: { in:['alpha','power','groups','N_total'],          out:['ncp','F_crit','effect_f','num_df','den_df','actual_power'] },
+    },
+    F_reg_r2: {
+      priori:      { in:['effect_f2','alpha','power','num_pred'],      out:['ncp','F_crit','num_df','den_df','N_total','actual_power'] },
+      post:        { in:['effect_f2','alpha','num_pred','N_total'],    out:['ncp','F_crit','num_df','den_df','actual_power'] },
+      sensitivity: { in:['alpha','power','num_pred','N_total'],        out:['ncp','F_crit','effect_f2','num_df','den_df','actual_power'] },
+    },
+    F_reg_inc: {
+      priori:      { in:['effect_f2','alpha','power','num_pred','num_pred_full'], out:['ncp','F_crit','num_df','den_df','N_total','actual_power'] },
+      post:        { in:['effect_f2','alpha','num_pred','num_pred_full','N_total'], out:['ncp','F_crit','num_df','den_df','actual_power'] },
+    },
+    t_two_indep: {
+      priori:      { in:['effect_d','alpha','power'],                  out:['ncp','t_crit','df','N_total','actual_power'] },
+      post:        { in:['effect_d','alpha','n1','n2'],                out:['ncp','t_crit','df','actual_power'] },
+      criterion:   { in:['effect_d','power','n1','n2'],                out:['ncp','t_crit','alpha','df','actual_power'] },
+      sensitivity: { in:['alpha','power','n1','n2'],                   out:['ncp','t_crit','effect_d','df','actual_power'] },
+    },
+    t_one_samp: {
+      priori:      { in:['effect_d','alpha','power'],                  out:['ncp','t_crit','df','N_total','actual_power'] },
+      post:        { in:['effect_d','alpha','N_total'],                out:['ncp','t_crit','df','actual_power'] },
+      criterion:   { in:['effect_d','power','N_total'],                out:['ncp','t_crit','alpha','df','actual_power'] },
+      sensitivity: { in:['alpha','power','N_total'],                   out:['ncp','t_crit','effect_d','df','actual_power'] },
+    },
+    t_paired: {
+      priori:      { in:['effect_dz','alpha','power'],                 out:['ncp','t_crit','df','N_total','actual_power'] },
+      post:        { in:['effect_dz','alpha','N_total'],               out:['ncp','t_crit','df','actual_power'] },
+      criterion:   { in:['effect_dz','power','N_total'],               out:['ncp','t_crit','alpha','df','actual_power'] },
+      sensitivity: { in:['alpha','power','N_total'],                   out:['ncp','t_crit','effect_dz','df','actual_power'] },
+    },
+    t_corr: {
+      priori:      { in:['rho','alpha','power'],                       out:['ncp','t_crit','df','N_total','actual_power'] },
+      post:        { in:['rho','alpha','N_total'],                     out:['ncp','t_crit','df','actual_power'] },
+    },
+    t_generic: {
+      priori:      { in:['effect_d','alpha','power'],                  out:['ncp','t_crit','df','N_total','actual_power'] },
+      post:        { in:['effect_d','alpha','N_total'],                out:['ncp','t_crit','df','actual_power'] },
+    },
+    chi2_gof: {
+      priori:      { in:['effect_w','alpha','power','df_chi2'],        out:['ncp','chi2_crit','N_total','actual_power'] },
+      post:        { in:['effect_w','alpha','df_chi2','N_total'],      out:['ncp','chi2_crit','actual_power'] },
+      sensitivity: { in:['alpha','power','df_chi2','N_total'],         out:['ncp','chi2_crit','effect_w','actual_power'] },
+    },
+    chi2_var: {
+      priori:      { in:['effect_w','alpha','power'],                  out:['ncp','chi2_crit','N_total','actual_power'] },
+      post:        { in:['effect_w','alpha','N_total'],                out:['ncp','chi2_crit','actual_power'] },
+    },
+    z_prop2: {
+      priori:      { in:['p1','p2','alpha','power'],                   out:['effect_h','ncp','z_crit','N_total','actual_power'] },
+      post:        { in:['p1','p2','alpha','N_total'],                 out:['effect_h','ncp','z_crit','actual_power'] },
+      sensitivity: { in:['alpha','power','N_total'],                   out:['effect_h','ncp','z_crit','actual_power'] },
+    },
+    z_prop1: {
+      priori:      { in:['p0','alpha','power'],                        out:['effect_h','ncp','z_crit','N_total','actual_power'] },
+      post:        { in:['p0','alpha','N_total'],                      out:['effect_h','ncp','z_crit','actual_power'] },
+    },
+    z_corr2: {
+      priori:      { in:['r1','r2','alpha','power'],                   out:['ncp','z_crit','N_total','actual_power'] },
+      post:        { in:['r1','r2','alpha','N_total'],                 out:['ncp','z_crit','actual_power'] },
+    },
+    z_generic: {
+      priori:      { in:['effect_h','alpha','power'],                  out:['ncp','z_crit','N_total','actual_power'] },
+      post:        { in:['effect_h','alpha','N_total'],                out:['ncp','z_crit','actual_power'] },
+    },
+    ex_binom: {
+      priori:      { in:['p0','p1','alpha','power'],                   out:['ncp','N_total','actual_power'] },
+      post:        { in:['p0','p1','alpha','N_total'],                 out:['ncp','actual_power'] },
+    },
+    ex_multinom: {
+      priori:      { in:['effect_w','alpha','power','df_chi2'],        out:['ncp','N_total','actual_power'] },
+      post:        { in:['effect_w','alpha','df_chi2','N_total'],      out:['ncp','actual_power'] },
+    },
+    F_ancova: {
+      priori:      { in:['effect_f','alpha','power','groups','num_cov'], out:['ncp','F_crit','num_df','den_df','N_total','actual_power'] },
+      post:        { in:['effect_f','alpha','groups','num_cov','N_total'], out:['ncp','F_crit','num_df','den_df','actual_power'] },
+    },
+    F_rm_within: {
+      priori:      { in:['effect_f','alpha','power','num_meas','r_m'], out:['ncp','F_crit','num_df','den_df','N_total','actual_power'] },
+      post:        { in:['effect_f','alpha','num_meas','r_m','N_total'], out:['ncp','F_crit','num_df','den_df','actual_power'] },
+    },
+    F_rm_between: {
+      priori:      { in:['effect_f','alpha','power','num_meas','num_groups','r_m'], out:['ncp','F_crit','num_df','den_df','N_total','actual_power'] },
+      post:        { in:['effect_f','alpha','num_meas','num_groups','r_m','N_total'], out:['ncp','F_crit','num_df','den_df','actual_power'] },
+    },
+    F_manova: {
+      priori:      { in:['effect_f','alpha','power','num_groups','num_resp'], out:['ncp','F_crit','num_df','den_df','N_total','actual_power'] },
+      post:        { in:['effect_f','alpha','num_groups','num_resp','N_total'], out:['ncp','F_crit','num_df','den_df','actual_power'] },
+    },
+  };
+  const t = SCHEMAS[test] || SCHEMAS['F_anova'];
+  return (t[analysis] || t['priori'] || t[Object.keys(t)[0]]);
+}
+
+const PARAM_META = {
+  effect_f:    { label:'Effect size f',           default:0.25, step:0.0001, min:0.0001,
+    info:`<b>Cohen's f</b> — standardised effect size for ANOVA.\nf = σ_means / σ_within\n\n<b>Conventions (Cohen, 1988):</b>\n<span class="conv-badge conv-small">small</span> f = 0.10\n<span class="conv-badge conv-medium">medium</span> f = 0.25\n<span class="conv-badge conv-large">large</span> f = 0.40\n\n<b>Benchmarks from literature:</b>\n• Psychology lab experiments: f ≈ 0.2–0.4\n• Social/personality research: f ≈ 0.1–0.3\n• Educational interventions: f ≈ 0.2–0.5\n\nNote: f = √(η²/(1−η²))\nf² = η²/(1−η²)\n\nSee also: Cohen (1988); Lakens (2013).` },
+  effect_d:    { label:'Effect size d',           default:0.5, step:0.01, min:0.0001,
+    info:`<b>Cohen's d</b> — standardised mean difference.\nd = (μ₁ − μ₂) / σ_pooled\n\n<b>Conventions (Cohen, 1988):</b>\n<span class="conv-badge conv-small">small</span> d = 0.20\n<span class="conv-badge conv-medium">medium</span> d = 0.50\n<span class="conv-badge conv-large">large</span> d = 0.80\n\n<b>Empirical benchmarks (Gignac & Szodorai, 2016):</b>\nMedian d in psychology ≈ 0.36\n25th pct ≈ 0.15, 75th pct ≈ 0.65\n\n<b>Other benchmarks:</b>\n• Medical/clinical: Lovibond & Lovibond suggest d = 0.3 as meaningful\n• Educational: Hattie (2009) identifies d = 0.4 as "hinge point"\n\nUse Hedges' g for unequal n (g ≈ d for n>20).` },
+  effect_dz:   { label:'Effect size dz',          default:0.5, step:0.01, min:0.0001,
+    info:`<b>Cohen's dz</b> — effect size for paired designs.\ndz = μ_diff / σ_diff\n\nThis is NOT the same as Cohen's d for independent groups. dz depends on the correlation between measurements.\n\n<b>Conventions (Cohen, 1988):</b>\n<span class="conv-badge conv-small">small</span> dz = 0.20\n<span class="conv-badge conv-medium">medium</span> dz = 0.50\n<span class="conv-badge conv-large">large</span> dz = 0.80\n\ndz = d / √(2(1−r))\nwhere r is the correlation between measures.\n\nLakens (2013) recommends reporting both dz and d_av.` },
+  effect_w:    { label:'Effect size w',           default:0.3, step:0.01, min:0.0001,
+    info:`<b>Cohen's w</b> — effect size for χ² tests.\nw = √(Σ (p_i,obs − p_i,exp)² / p_i,exp)\n\n<b>Conventions (Cohen, 1988):</b>\n<span class="conv-badge conv-small">small</span> w = 0.10\n<span class="conv-badge conv-medium">medium</span> w = 0.30\n<span class="conv-badge conv-large">large</span> w = 0.50\n\nFor 2×2 contingency tables, w = φ (phi coefficient).\nFor larger tables, w = Cramér's V × √(min(r,c)−1)\n\nConvert from odds ratio:\nw ≈ OR / (OR + 1) for balanced designs.` },
+  effect_f2:   { label:'Effect size f²',          default:0.15, step:0.01, min:0.0001,
+    info:`<b>Cohen's f²</b> — effect size for multiple regression.\nf² = R² / (1 − R²)\n\n<b>Conventions (Cohen, 1988):</b>\n<span class="conv-badge conv-small">small</span> f² = 0.02  (R² ≈ 0.02)\n<span class="conv-badge conv-medium">medium</span> f² = 0.15  (R² ≈ 0.13)\n<span class="conv-badge conv-large">large</span> f² = 0.35  (R² ≈ 0.26)\n\nFor partial effects (R² change):\nf²_partial = R²_change / (1 − R²_full)\n\nNote: these are "general" conventions. Domain-specific benchmarks vary substantially (see Lorah, 2018).` },
+  effect_h:    { label:'Effect size h',           default:0.4, step:0.01, min:0.0001,
+    info:`<b>Cohen's h</b> — effect size for proportions.\nh = 2 arcsin(√p₁) − 2 arcsin(√p₂)\n\n<b>Conventions (Cohen, 1988):</b>\n<span class="conv-badge conv-small">small</span> h = 0.20\n<span class="conv-badge conv-medium">medium</span> h = 0.50\n<span class="conv-badge conv-large">large</span> h = 0.80\n\nThe arcsine transformation stabilises variance across the [0,1] range. |h| is symmetric around 0.5.` },
+  alpha:       { label:'α err prob',              default:0.05, step:0.001, min:0.00001, max:0.9999,
+    info:`<b>α (alpha) — Type I error probability</b>\nProbability of rejecting H₀ when it is actually true (false positive).\n\n<b>Common choices:</b>\n• α = 0.05 — conventional in psychology/biology\n• α = 0.01 — stricter, used in medical research\n• α = 0.001 — used in genetics (GWAS)\n• α = 5×10⁻⁸ — genome-wide significance\n\n<b>Consider adjusting for:</b>\n• Multiple comparisons (Bonferroni: α/k)\n• Sequential designs (O'Brien-Fleming)\n• Bayesian–frequentist calibration\n\nBenjamin et al. (2018) proposed lowering the default to α = 0.005.` },
+  power:       { label:'Power (1-β err prob)',    default:0.95, step:0.01, min:0.01, max:0.9999,
+    info:`<b>Statistical Power (1−β)</b>\nProbability of correctly rejecting H₀ when H₁ is true (sensitivity, true positive rate).\n\n<b>Common targets:</b>\n• 1−β = 0.80 — Cohen's (1988) classic minimum\n• 1−β = 0.90 — commonly recommended today\n• 1−β = 0.95 — required in many clinical trials\n• 1−β = 0.99 — high-stakes confirmatory research\n\n<b>Why 0.95 is default here:</b>\nModern recommendations (Lakens & Evers, 2012; Ioannidis, 2005) suggest targeting ≥ 0.90 to keep false discovery rates reasonable in the literature.\n\nLow power increases the false discovery rate even after a significant result.` },
+  groups:      { label:'Number of groups',        default:3, step:1, min:2, isInt:true,
+    info:`<b>Number of groups (k)</b>\nThe number of independent groups in the ANOVA.\n\nAffects:\n• Degrees of freedom: df₁ = k − 1, df₂ = N − k\n• Statistical power (more groups = more df₁, but also more N needed)\n\nFor k = 2, one-way ANOVA is equivalent to an independent-samples t-test. Prefer the t-test for 2-group comparisons.` },
+  num_groups:  { label:'Number of groups',        default:3, step:1, min:2, isInt:true,
+    info:`<b>Number of groups (k)</b>\nSee "Number of groups" above.` },
+  N_total:     { label:'Total sample size',       default:175, step:1, min:2, isInt:true,
+    info:`<b>Total sample size (N)</b>\nThe total number of participants/observations across all groups.\n\nFor balanced designs: N = k × n_per_group\n\nCost–power trade-off: doubling N roughly halves the minimum detectable effect size.` },
+  n1:          { label:'Sample size group 1',     default:50, step:1, min:2, isInt:true,
+    info:`<b>Sample size group 1 (n₁)</b>\nNumber of participants in the first group.\n\nFor maximum power with fixed N: n₁ = n₂ (balanced design).\nIf groups have unequal variances or costs differ, unequal allocation may be optimal.` },
+  n2:          { label:'Sample size group 2',     default:50, step:1, min:2, isInt:true,
+    info:`<b>Sample size group 2 (n₂)</b>\nNumber of participants in the second group.\n\nBalanced designs (n₁ = n₂) are most efficient. If one group is rare or costly, use unequal allocation — but power loss is often small for moderate imbalance (e.g., 1:2 ratio).` },
+  df_chi2:     { label:'Df',                      default:1, step:1, min:1, isInt:true,
+    info:`<b>Degrees of freedom (df)</b>\nFor goodness-of-fit: df = number of categories − 1\nFor contingency tables: df = (rows − 1)(columns − 1)\n\nExamples:\n• 2-category test: df = 1\n• 3-category test: df = 2\n• 2×3 table: df = 2\n• 4×4 table: df = 9` },
+  num_pred:    { label:'Number of predictors',    default:1, step:1, min:1, isInt:true,
+    info:`<b>Number of predictors (u)</b>\nThe number of predictors in the regression model (numerator df).\n\nFor R² against zero: this is the total number of predictors.\nFor R² increase: this is the number of predictors added.\n\nMore predictors = lower df₂ = less power for the same N.` },
+  num_pred_full:{ label:'Predictors (full model)',default:3, step:1, min:2, isInt:true,
+    info:`<b>Predictors in full model</b>\nTotal number of predictors in the full (unrestricted) model.\n\nUsed when testing R² increase: the number of predictors in the model that includes the focal set of predictors.` },
+  num_cov:     { label:'Number of covariates',    default:1, step:1, min:0, isInt:true,
+    info:`<b>Number of covariates</b>\nCovariates reduce error variance and thus increase power — but they also cost degrees of freedom.\n\nNet effect on power: adding effective covariates (r > 0.1 with outcome) typically increases power.` },
+  num_meas:    { label:'Number of measurements', default:3, step:1, min:2, isInt:true,
+    info:`<b>Number of repeated measurements</b>\nHow many time points / conditions each participant completes.\n\nMore measurements = more power for within-subject effects, but also more participant burden and potential carryover effects.` },
+  r_m:         { label:'Corr between measures',  default:0.5, step:0.01, min:0, max:0.9999,
+    info:`<b>Correlation between repeated measures</b>\nAverage correlation between measurements within subjects.\n\nHigher r → more power for within-subject tests (error variance is reduced).\n\nTypical values:\n• Memory paradigms: r ≈ 0.5–0.7\n• Personality measures (test-retest): r ≈ 0.6–0.8\n• Reaction time: r ≈ 0.4–0.7\n\nEstimate from pilot data, prior publications, or use r = 0.5 as a conservative default.` },
+  num_resp:    { label:'Number of response vars', default:2, step:1, min:1, isInt:true,
+    info:`<b>Number of response variables (MANOVA)</b>\nHow many dependent variables are analysed simultaneously.\n\nMore DVs = more df for error, but MANOVA can be more powerful than running separate ANOVAs when DVs are correlated.` },
+  p0:          { label:'Prop H₀',                default:0.5, step:0.01, min:0.001, max:0.999,
+    info:`<b>Proportion under H₀ (p₀)</b>\nThe null-hypothesis proportion (baseline/chance level).\n\nExample: for a coin-flip test, p₀ = 0.5.\nFor comparing to a known population rate, p₀ = that rate.` },
+  p1:          { label:'Prop H₁',                default:0.7, step:0.01, min:0.001, max:0.999,
+    info:`<b>Proportion under H₁ (p₁)</b>\nThe alternative-hypothesis proportion (the true proportion you want to detect).\n\nThe further p₁ is from p₀, the larger the effect size h and the less sample size needed.\n\nh = 2(arcsin(√p₁) − arcsin(√p₀))` },
+  p2:          { label:'Prop group 2',            default:0.5, step:0.01, min:0.001, max:0.999,
+    info:`<b>Proportion in group 2 (p₂)</b>\nThe proportion in the second group.\n\nEffect size h is computed from both proportions:\nh = 2|arcsin(√p₁) − arcsin(√p₂)|` },
+  rho:         { label:'Correlation ρ',           default:0.3, step:0.01, min:-0.999, max:0.999,
+    info:`<b>Point-biserial correlation (ρ)</b>\nUsed for the t-test correlation model.\nρ = d / √(d² + 4) approximately.\n\n<b>Conventions (Cohen, 1988):</b>\n<span class="conv-badge conv-small">small</span> r = 0.10 (d ≈ 0.20)\n<span class="conv-badge conv-medium">medium</span> r = 0.30 (d ≈ 0.50)\n<span class="conv-badge conv-large">large</span> r = 0.50 (d ≈ 1.00)\n\n<b>Empirical median in psychology (Gignac & Szodorai, 2016):</b>\nMedian r ≈ 0.19 (IQR: 0.11–0.29)` },
+  r1:          { label:'Pearson r₁',              default:0.3, step:0.01, min:-0.999, max:0.999,
+    info:`<b>Pearson r in group/sample 1</b>\nThe correlation coefficient in the first sample.\n\nConventions (Cohen, 1988):\n<span class="conv-badge conv-small">small</span> r = 0.10\n<span class="conv-badge conv-medium">medium</span> r = 0.30\n<span class="conv-badge conv-large">large</span> r = 0.50` },
+  r2:          { label:'Pearson r₂',              default:0.1, step:0.01, min:-0.999, max:0.999,
+    info:`<b>Pearson r in group/sample 2</b>\nThe correlation coefficient in the second sample.\n\nThe test checks whether r₁ ≠ r₂ (after Fisher z-transformation).` },
+  // outputs
+  ncp:          { label:'Noncentrality parameter λ', out:true, info:`<b>Noncentrality parameter (λ)</b>\nMeasures how far the distribution under H₁ is shifted from H₀.\n\nLarger λ → more power.\nλ = effect² × N (approximately).\n\nFor t-tests: λ = d × √n\nFor F-tests: λ = f² × N\nFor χ²-tests: λ = w² × N` },
+  F_crit:       { label:'Critical F',               out:true, info:`<b>Critical F-value</b>\nThe threshold above which the null hypothesis is rejected.\n\nDetermined by α, df₁ (numerator), and df₂ (denominator).` },
+  t_crit:       { label:'Critical t',               out:true, info:`<b>Critical t-value</b>\nThe threshold for rejecting H₀.\n\nFor two-tailed tests: both +t_crit and −t_crit are boundaries.\nDetermined by α and degrees of freedom.` },
+  chi2_crit:    { label:'Critical χ²',              out:true, info:`<b>Critical χ²-value</b>\nThe threshold for rejecting H₀ in a chi-square test.` },
+  z_crit:       { label:'Critical z',               out:true, info:`<b>Critical z-value</b>\nFor α = 0.05 (two-tailed): z_crit = 1.96\nFor α = 0.05 (one-tailed): z_crit = 1.645` },
+  num_df:       { label:'Numerator df',             out:true, info:`<b>Numerator degrees of freedom (df₁)</b>\nFor ANOVA: df₁ = number of groups − 1\nFor regression: df₁ = number of predictors` },
+  den_df:       { label:'Denominator df',           out:true, info:`<b>Denominator degrees of freedom (df₂)</b>\ndf₂ = N − number of groups (ANOVA)\ndf₂ = N − predictors − 1 (regression)` },
+  df:           { label:'Df',                       out:true, info:`<b>Degrees of freedom</b>\nFor t-tests (two-sample): df = n₁ + n₂ − 2\nFor t-tests (one-sample/paired): df = N − 1` },
+  actual_power: { label:'Actual power',             out:true, info:`<b>Actual power (1−β)</b>\nThe achieved statistical power given the exact sample size.\n\nMay slightly exceed the target power because N must be a whole number.` },
+  // Output-only duplicates (schema may emit these as output keys)
+  N_total_out:  { label:'Total sample size',        out:true },
+  alpha_out:    { label:'α err prob',               out:true },
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// MATH UTILS
+// ═══════════════════════════════════════════════════════════════════
+function lgamma(x) {
+  if(x<0.5) return Math.log(Math.PI/Math.sin(Math.PI*x))-lgamma(1-x);
+  x--;
+  let a=0.99999999999980993;
+  const co=[676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+  co.forEach((c,i)=>a+=c/(x+i+1));
+  const t=x+7.5;
+  return 0.5*Math.log(2*Math.PI)+(x+0.5)*Math.log(t)-t+Math.log(a);
+}
+
+function regGammaP(a,x) {
+  if(x<=0) return 0; if(x<0) return 0;
+  if(x<a+1){
+    let sum=1/a,del=1/a;
+    for(let n=1;n<300;n++){del*=x/(a+n);sum+=del;if(Math.abs(del)<1e-12*Math.abs(sum))break;}
+    return sum*Math.exp(-x+a*Math.log(x)-lgamma(a));
+  }
+  let b=x+1-a,c=1e30,d=1/b,h=d;
+  for(let i=1;i<=300;i++){const an=-i*(i-a);b+=2;d=an*d+b;if(Math.abs(d)<1e-30)d=1e-30;c=b+an/c;if(Math.abs(c)<1e-30)c=1e-30;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<1e-12)break;}
+  return 1-Math.exp(-x+a*Math.log(x)-lgamma(a))*h;
+}
+
+function incBeta(a,b,x){
+  if(x<=0)return 0; if(x>=1)return 1;
+  const front=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x))/a;
+  return front*betaCF(a,b,x);
+}
+function betaCF(a,b,x){
+  let c=1,d=1-(a+b)*x/(a+1);if(Math.abs(d)<1e-30)d=1e-30;d=1/d;let h=d;
+  for(let m=1;m<=200;m++){
+    const m2=2*m;
+    let aa=m*(b-m)*x/((a+m2-1)*(a+m2));d=1+aa*d;if(Math.abs(d)<1e-30)d=1e-30;c=1+aa/c;if(Math.abs(c)<1e-30)c=1e-30;d=1/d;h*=d*c;
+    aa=-(a+m)*(a+b+m)*x/((a+m2)*(a+m2+1));d=1+aa*d;if(Math.abs(d)<1e-30)d=1e-30;c=1+aa/c;if(Math.abs(c)<1e-30)c=1e-30;d=1/d;const del=d*c;h*=del;
+    if(Math.abs(del-1)<1e-10)break;
+  }
+  return h;
+}
+
+function normCDF(x){const t=1/(1+0.2316419*Math.abs(x));const poly=t*(0.319381530+t*(-0.356563782+t*(1.781477937+t*(-1.821255978+t*1.330274429))));const p=1-Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI)*poly;return x>=0?p:1-p;}
+function normInv(p){
+  if(p<=0)return -Infinity;if(p>=1)return Infinity;
+  const a=[0,-3.969683028665376e1,2.209460984245205e2,-2.759285104469687e2,1.383577518672690e2,-3.066479806614716e1,2.506628277459239];
+  const b=[0,-5.447609879822406e1,1.615858368580409e2,-1.556989798598866e2,6.680131188771972e1,-1.328068155288572e1];
+  const c=[0,-7.784894002430293e-3,-3.223964580411365e-1,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783];
+  const d=[0,7.784695709041462e-3,3.224671290700398e-1,2.445134137142996,3.754408661907416];
+  const plo=0.02425,phi=1-plo;let q,r;
+  if(p<plo){q=Math.sqrt(-2*Math.log(p));return(((((c[1]*q+c[2])*q+c[3])*q+c[4])*q+c[5])*q+c[6])/((((d[1]*q+d[2])*q+d[3])*q+d[4])*q+1);}
+  if(p<=phi){q=p-0.5;r=q*q;return(((((a[1]*r+a[2])*r+a[3])*r+a[4])*r+a[5])*r+a[6])*q/(((((b[1]*r+b[2])*r+b[3])*r+b[4])*r+b[5])*r+1);}
+  q=Math.sqrt(-2*Math.log(1-p));return-(((((c[1]*q+c[2])*q+c[3])*q+c[4])*q+c[5])*q+c[6])/((((d[1]*q+d[2])*q+d[3])*q+d[4])*q+1);
+}
+function chi2CDF(x,df){return x<=0?0:regGammaP(df/2,x/2);}
+function chi2Inv(p,df){
+  let x=Math.max(0.01,df*Math.pow(1-2/(9*df)+normInv(p)*Math.sqrt(2/(9*df)),3));
+  for(let i=0;i<60;i++){const f=chi2CDF(x,df)-p;const fp=Math.exp((df/2-1)*Math.log(Math.max(x,1e-10))-x/2-lgamma(df/2)-(df/2)*Math.log(2));x-=f/(fp+1e-20);if(x<1e-8)x=1e-8;}
+  return x;
+}
+function fCDF(f,d1,d2){
+  if(f<=0||!isFinite(f)) return 0;
+  if(!isFinite(d1)||!isFinite(d2)||d1<=0||d2<=0) return NaN;
+  return incBeta(d1/2, d2/2, d1*f/(d1*f+d2));
+}
+function fInv(p, d1, d2){
+  if(p<=0) return 0;
+  if(p>=1) return Infinity;
+  // Wilson-Hilferty approx as start
+  let lo=1e-6, hi=1e7;
+  // Quick narrow-down
+  for(let i=0;i<200;i++){
+    const m=(lo+hi)/2;
+    const v=fCDF(m,d1,d2);
+    if(!isFinite(v)){ hi=m; continue; }
+    if(v<p) lo=m; else hi=m;
+    if(hi-lo<1e-7*Math.max(1,(lo+hi)/2)) break;
+  }
+  return (lo+hi)/2;
+}
+function tCDF(t,df){const x=df/(df+t*t);const ib=incBeta(df/2,0.5,x);return t>=0?1-0.5*ib:0.5*ib;}
+function tInv(p,df){
+  let t=normInv(p);
+  for(let i=0;i<40;i++){const f=tCDF(t,df)-p;const fp=Math.exp(lgamma((df+1)/2)-lgamma(df/2)-0.5*Math.log(df*Math.PI))*Math.pow(1+t*t/df,-(df+1)/2);t-=f/(fp+1e-15);}
+  return t;
+}
+
+function powerNonCentralF(f_crit,d1,d2,ncp){
+  if(!isFinite(f_crit)||!isFinite(d1)||!isFinite(d2)||d1<=0||d2<=0) return NaN;
+  if(ncp<=0) return Math.max(0.0001, Math.min(0.9999, 1-fCDF(f_crit,d1,d2)));
+  // Poisson mixture (noncentral F = mixture of central F where d1' = d1+2j)
+  let power=0;
+  let totalW=0;
+  // truncate j based on ncp to avoid wasted iterations
+  const jMax = Math.min(200, Math.max(40, Math.ceil(ncp + 4*Math.sqrt(ncp))));
+  const halfNcp = ncp/2;
+  for(let j=0;j<=jMax;j++){
+    // log P(j; ncp/2) = -ncp/2 + j*log(ncp/2) - lgamma(j+1)
+    const logw = -halfNcp + j*Math.log(halfNcp) - lgamma(j+1);
+    const w = Math.exp(logw);
+    if(!isFinite(w)) continue;
+    totalW += w;
+    const d1j = d1 + 2*j;
+    // P(F > f_crit | d1j, d2) = 1 - I_{x}(d1j/2, d2/2) where x = d1j*f/(d1j*f+d2)
+    const x = d1j*f_crit/(d1j*f_crit + d2);
+    const tail = 1 - incBeta(d1j/2, d2/2, x);
+    if(isFinite(tail)) power += w * tail;
+    if(j>20 && w<1e-10) break;
+  }
+  if(totalW>0) power = power / Math.max(totalW, 1e-12);
+  return Math.max(0.0001, Math.min(0.9999, power));
+}
+function powerNonCentralT(t_crit,df,ncp,tails){
+  const pw=1-normCDF(t_crit-ncp)+(tails===2?normCDF(-t_crit-ncp):0);
+  return Math.min(Math.max(pw,0.0001),0.9999);
+}
+function powerNonCentralChi2(chi2_crit,df,ncp){
+  const pw=1-normCDF((Math.sqrt(2*chi2_crit-1)-Math.sqrt(Math.max(2*(df+ncp)-1,0.01))));
+  return Math.min(Math.max(pw,0.0001),0.9999);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// COMPUTE ENGINE
+// ═══════════════════════════════════════════════════════════════════
+function compute(){
+  const p=S.params, a=S.analysis, t=S.test;
+  let R={};
+  try {
+    switch(t){
+      case 'F_anova': R=compute_F_anova(p,a); break;
+      case 'F_ancova': R=compute_F_ancova(p,a); break;
+      case 'F_rm_within': R=compute_F_rm_within(p,a); break;
+      case 'F_rm_between': R=compute_F_rm_between(p,a); break;
+      case 'F_manova': R=compute_F_manova(p,a); break;
+      case 'F_reg_r2': R=compute_F_reg_r2(p,a); break;
+      case 'F_reg_inc': R=compute_F_reg_inc(p,a); break;
+      case 't_two_indep': R=compute_t_two_indep(p,a); break;
+      case 't_one_samp':  R=compute_t_one_samp(p,a); break;
+      case 't_paired':    R=compute_t_paired(p,a); break;
+      case 't_corr':      R=compute_t_corr(p,a); break;
+      case 't_generic':   R=compute_t_generic(p,a); break;
+      case 'chi2_gof':    R=compute_chi2_gof(p,a); break;
+      case 'chi2_var':    R=compute_chi2_var(p,a); break;
+      case 'z_prop2':     R=compute_z_prop2(p,a); break;
+      case 'z_prop1':     R=compute_z_prop1(p,a); break;
+      case 'z_corr2':     R=compute_z_corr2(p,a); break;
+      case 'z_generic':   R=compute_z_generic(p,a); break;
+      case 'ex_binom':    R=compute_ex_binom(p,a); break;
+      case 'ex_multinom': R=compute_ex_multinom(p,a); break;
+      default:            R=compute_F_anova(p,a);
+    }
+  } catch(e){ console.error('compute error',e); }
+  S.results=R; return R;
+}
+
+function searchN(targetPower, solveFn, minN=2, maxN=100000){
+  // returns the smallest integer N >= minN where actual_power >= targetPower
+  for(let n=minN;n<=maxN;n++){
+    const r=solveFn(n);
+    if(r && isFinite(r.actual_power) && r.actual_power>=targetPower){
+      return {...r, N_total:n};
+    }
+  }
+  const r=solveFn(maxN); return {...r, N_total:maxN, _capped:true};
+}
+
+function compute_F_anova(p,a){
+  const ef=parseFloat(p.effect_f)||0.25, al=parseFloat(p.alpha)||0.05, g=parseInt(p.groups)||3, pw=parseFloat(p.power)||0.95;
+  const d1=g-1;
+  const minN=g+1;
+  const solveN=(N)=>{
+    const d2=Math.max(N-g,1);
+    const ncp=ef*ef*N;
+    const fc=fInv(1-al,d1,d2);
+    const ap=powerNonCentralF(fc,d1,d2,ncp);
+    return {ncp, F_crit:fc, num_df:d1, den_df:d2, actual_power:ap};
+  };
+  if(a==='priori') return searchN(pw, solveN, minN);
+  if(a==='post'){
+    const N=Math.max(minN, parseInt(p.N_total)||90);
+    return {...solveN(N), N_total:N};
+  }
+  if(a==='sensitivity'){
+    const N=Math.max(minN, parseInt(p.N_total)||90);
+    const d2=Math.max(N-g,1);
+    const fc=fInv(1-al,d1,d2);
+    let lo=0.0001, hi=10;
+    for(let i=0;i<60;i++){
+      const mid=(lo+hi)/2;
+      const ap=powerNonCentralF(fc,d1,d2,mid*mid*N);
+      if(ap<pw) lo=mid; else hi=mid;
+    }
+    const e=(lo+hi)/2;
+    return {ncp:e*e*N, F_crit:fc, num_df:d1, den_df:d2, effect_f:e, N_total:N, actual_power:powerNonCentralF(fc,d1,d2,e*e*N)};
+  }
+  if(a==='criterion'){
+    const N=Math.max(minN, parseInt(p.N_total)||90);
+    const d2=Math.max(N-g,1);
+    const ncp=ef*ef*N;
+    let lo=1e-6, hi=0.5;
+    for(let i=0;i<60;i++){
+      const mid=(lo+hi)/2;
+      const fc=fInv(1-mid,d1,d2);
+      const ap=powerNonCentralF(fc,d1,d2,ncp);
+      if(ap<pw) lo=mid; else hi=mid;
+    }
+    const al2=(lo+hi)/2;
+    const fc=fInv(1-al2,d1,d2);
+    return {ncp, F_crit:fc, num_df:d1, den_df:d2, alpha:al2, N_total:N, actual_power:powerNonCentralF(fc,d1,d2,ncp)};
+  }
+  return {};
+}
+
+function compute_F_ancova(p,a){
+  const ef=parseFloat(p.effect_f)||0.25,al=parseFloat(p.alpha)||0.05,g=parseInt(p.groups)||3,cov=parseInt(p.num_cov)||1,pw=parseFloat(p.power)||0.95;
+  const d1=g-1, minN=g+cov+1;
+  const solveN=(N)=>{
+    const d2=Math.max(N-g-cov,1);
+    const ncp=ef*ef*N;
+    const fc=fInv(1-al,d1,d2);
+    return {ncp, F_crit:fc, num_df:d1, den_df:d2, actual_power:powerNonCentralF(fc,d1,d2,ncp)};
+  };
+  if(a==='priori') return searchN(pw, solveN, minN);
+  const N=Math.max(minN, parseInt(p.N_total)||90);
+  return {...solveN(N), N_total:N};
+}
+
+function compute_F_rm_within(p,a){
+  const ef=parseFloat(p.effect_f)||0.25,al=parseFloat(p.alpha)||0.05,m=parseInt(p.num_meas)||3,rm=parseFloat(p.r_m)||0.5,pw=parseFloat(p.power)||0.95;
+  const d1=m-1, minN=2;
+  const solveN=(N)=>{
+    const d2=Math.max((N-1)*(m-1),1);
+    // Within-subjects effective ncp: effect amplified by m/(1−r) approx
+    const ncp=ef*ef*N*m/Math.max(1-rm,0.001);
+    const fc=fInv(1-al,d1,d2);
+    return {ncp, F_crit:fc, num_df:d1, den_df:d2, actual_power:powerNonCentralF(fc,d1,d2,ncp)};
+  };
+  if(a==='priori') return searchN(pw, solveN, minN);
+  const N=Math.max(minN, parseInt(p.N_total)||30);
+  return {...solveN(N), N_total:N};
+}
+
+function compute_F_rm_between(p,a){
+  const ef=parseFloat(p.effect_f)||0.25,al=parseFloat(p.alpha)||0.05,m=parseInt(p.num_meas)||3,g=parseInt(p.num_groups)||2,rm=parseFloat(p.r_m)||0.5,pw=parseFloat(p.power)||0.95;
+  const d1=g-1, minN=g+1;
+  const solveN=(N)=>{
+    const d2=Math.max(N-g,1);
+    const ncp=ef*ef*N*m/(1+(m-1)*rm);
+    const fc=fInv(1-al,d1,d2);
+    return {ncp, F_crit:fc, num_df:d1, den_df:d2, actual_power:powerNonCentralF(fc,d1,d2,ncp)};
+  };
+  if(a==='priori') return searchN(pw, solveN, minN);
+  const N=Math.max(minN, parseInt(p.N_total)||60);
+  return {...solveN(N), N_total:N};
+}
+
+function compute_F_manova(p,a){
+  const ef=parseFloat(p.effect_f)||0.25,al=parseFloat(p.alpha)||0.05,g=parseInt(p.num_groups)||3,resp=parseInt(p.num_resp)||2,pw=parseFloat(p.power)||0.95;
+  const d1=(g-1)*resp, minN=g+resp+1;
+  const solveN=(N)=>{
+    const d2=Math.max(N-g-resp,1);
+    const ncp=ef*ef*N;
+    const fc=fInv(1-al,d1,d2);
+    return {ncp, F_crit:fc, num_df:d1, den_df:d2, actual_power:powerNonCentralF(fc,d1,d2,ncp)};
+  };
+  if(a==='priori') return searchN(pw, solveN, minN);
+  const N=Math.max(minN, parseInt(p.N_total)||60);
+  return {...solveN(N), N_total:N};
+}
+
+function compute_F_reg_r2(p,a){
+  const ef2=parseFloat(p.effect_f2)||0.15,al=parseFloat(p.alpha)||0.05,u=parseInt(p.num_pred)||1,pw=parseFloat(p.power)||0.95;
+  const minN=u+2;
+  const solveN=(N)=>{
+    const v=Math.max(N-u-1,1);
+    const ncp=ef2*N;
+    const fc=fInv(1-al,u,v);
+    return {ncp, F_crit:fc, num_df:u, den_df:v, actual_power:powerNonCentralF(fc,u,v,ncp)};
+  };
+  if(a==='priori') return searchN(pw, solveN, minN);
+  if(a==='post'){
+    const N=Math.max(minN, parseInt(p.N_total)||50);
+    return {...solveN(N), N_total:N};
+  }
+  if(a==='sensitivity'){
+    const N=Math.max(minN, parseInt(p.N_total)||50);
+    const v=Math.max(N-u-1,1);
+    const fc=fInv(1-al,u,v);
+    let lo=1e-6, hi=10;
+    for(let i=0;i<60;i++){
+      const mid=(lo+hi)/2;
+      const ap=powerNonCentralF(fc,u,v,mid*N);
+      if(ap<pw) lo=mid; else hi=mid;
+    }
+    const e=(lo+hi)/2;
+    return {ncp:e*N, F_crit:fc, num_df:u, den_df:v, effect_f2:e, N_total:N, actual_power:powerNonCentralF(fc,u,v,e*N)};
+  }
+  return {};
+}
+
+function compute_F_reg_inc(p,a){
+  const ef2=parseFloat(p.effect_f2)||0.1,al=parseFloat(p.alpha)||0.05;
+  const u1=parseInt(p.num_pred)||2, u2=parseInt(p.num_pred_full)||4, pw=parseFloat(p.power)||0.95;
+  const u=Math.max(u2-u1,1), minN=u2+2;
+  const solveN=(N)=>{
+    const v=Math.max(N-u2-1,1);
+    const ncp=ef2*N;
+    const fc=fInv(1-al,u,v);
+    return {ncp, F_crit:fc, num_df:u, den_df:v, actual_power:powerNonCentralF(fc,u,v,ncp)};
+  };
+  if(a==='priori') return searchN(pw, solveN, minN);
+  const N=Math.max(minN, parseInt(p.N_total)||50);
+  return {...solveN(N), N_total:N};
+}
+
+function _t_solve(n,d,al,tails){
+  const df=n-1,tc=tInv(1-al/tails,df),ncp=d*Math.sqrt(n);
+  return{ncp,t_crit:tc,df,actual_power:powerNonCentralT(tc,df,ncp,tails)};
+}
+function _t_two_solve(n1,n2,d,al,tails){
+  const df=n1+n2-2,tc=tInv(1-al/tails,df),ncp=d*Math.sqrt(n1*n2/(n1+n2));
+  return{ncp,t_crit:tc,df,actual_power:powerNonCentralT(tc,df,ncp,tails)};
+}
+
+function compute_t_two_indep(p,a){
+  const d=parseFloat(p.effect_d)||0.5,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
+  if(a==='priori') return searchN(pw,(n)=>{const r=_t_two_solve(n,n,d,al,tl);return{...r,N_total:n*2};},2);
+  if(a==='post'){const n1=Math.max(2,parseInt(p.n1)||50),n2=Math.max(2,parseInt(p.n2)||50);return _t_two_solve(n1,n2,d,al,tl);}
+  if(a==='sensitivity'){
+    const n1=Math.max(2,parseInt(p.n1)||50),n2=Math.max(2,parseInt(p.n2)||50);
+    let lo=1e-4, hi=10;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;const r=_t_two_solve(n1,n2,mid,al,tl);if(r.actual_power<pw) lo=mid; else hi=mid;}
+    const e=(lo+hi)/2; return {..._t_two_solve(n1,n2,e,al,tl), effect_d:e};
+  }
+  if(a==='criterion'){
+    const n1=Math.max(2,parseInt(p.n1)||50),n2=Math.max(2,parseInt(p.n2)||50);
+    let lo=1e-6, hi=0.5;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;const r=_t_two_solve(n1,n2,d,mid,tl);if(r.actual_power<pw) lo=mid; else hi=mid;}
+    const al2=(lo+hi)/2; return {..._t_two_solve(n1,n2,d,al2,tl), alpha:al2};
+  }
+  return {};
+}
+
+function compute_t_one_samp(p,a){
+  const d=parseFloat(p.effect_d)||0.5,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
+  if(a==='priori') return searchN(pw,(n)=>({..._t_solve(n,d,al,tl),N_total:n}),2);
+  if(a==='post'){const n=Math.max(2,parseInt(p.N_total)||30);return{..._t_solve(n,d,al,tl),N_total:n};}
+  if(a==='sensitivity'){
+    const n=Math.max(2,parseInt(p.N_total)||30);
+    let lo=1e-4, hi=10;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;const r=_t_solve(n,mid,al,tl);if(r.actual_power<pw) lo=mid; else hi=mid;}
+    const e=(lo+hi)/2; return {..._t_solve(n,e,al,tl), effect_d:e, N_total:n};
+  }
+  if(a==='criterion'){
+    const n=Math.max(2,parseInt(p.N_total)||30);
+    let lo=1e-6, hi=0.5;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;const r=_t_solve(n,d,mid,tl);if(r.actual_power<pw) lo=mid; else hi=mid;}
+    const al2=(lo+hi)/2; return {..._t_solve(n,d,al2,tl), alpha:al2, N_total:n};
+  }
+  return {};
+}
+
+function compute_t_paired(p,a){
+  const d=parseFloat(p.effect_dz)||0.5,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
+  if(a==='priori') return searchN(pw,(n)=>({..._t_solve(n,d,al,tl),N_total:n}),2);
+  if(a==='post'){const n=Math.max(2,parseInt(p.N_total)||30);return{..._t_solve(n,d,al,tl),N_total:n};}
+  if(a==='sensitivity'){
+    const n=Math.max(2,parseInt(p.N_total)||30);
+    let lo=1e-4, hi=10;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;const r=_t_solve(n,mid,al,tl);if(r.actual_power<pw) lo=mid; else hi=mid;}
+    const e=(lo+hi)/2; return {..._t_solve(n,e,al,tl), effect_dz:e, N_total:n};
+  }
+  if(a==='criterion'){
+    const n=Math.max(2,parseInt(p.N_total)||30);
+    let lo=1e-6, hi=0.5;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;const r=_t_solve(n,d,mid,tl);if(r.actual_power<pw) lo=mid; else hi=mid;}
+    const al2=(lo+hi)/2; return {..._t_solve(n,d,al2,tl), alpha:al2, N_total:n};
+  }
+  return {};
+}
+
+function compute_t_corr(p,a){
+  const rho=parseFloat(p.rho)||0.3,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
+  // Test of correlation r=0 using t = r*sqrt(N-2)/sqrt(1-r^2), df = N-2
+  const solveN=(n)=>{
+    const df=Math.max(n-2,1);
+    const tc=tInv(1-al/tl, df);
+    const ncp=Math.abs(rho)*Math.sqrt(n-2)/Math.sqrt(1-rho*rho);
+    const ap=powerNonCentralT(tc, df, ncp, tl);
+    return {ncp, t_crit:tc, df, actual_power:ap};
+  };
+  if(a==='priori') return searchN(pw,(n)=>({...solveN(n), N_total:n}), 4);
+  const n=Math.max(4, parseInt(p.N_total)||30);
+  return {...solveN(n), N_total:n};
+}
+
+function compute_t_generic(p,a){ return compute_t_one_samp(p,a); }
+
+function compute_chi2_gof(p,a){
+  const w=parseFloat(p.effect_w)||0.3,al=parseFloat(p.alpha)||0.05,df=Math.max(parseInt(p.df_chi2)||1,1),pw=parseFloat(p.power)||0.95;
+  const chi2c=chi2Inv(1-al,df);
+  const solveN=(n)=>{const ncp=w*w*n;return{ncp,chi2_crit:chi2c,actual_power:powerNonCentralChi2(chi2c,df,ncp)};};
+  if(a==='priori') return searchN(pw,(n)=>({...solveN(n),N_total:n}), df+1);
+  if(a==='post'){const n=Math.max(df+1,parseInt(p.N_total)||50);return{...solveN(n),N_total:n};}
+  if(a==='sensitivity'){
+    const n=Math.max(df+1,parseInt(p.N_total)||50);
+    let lo=1e-4, hi=10;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;if(powerNonCentralChi2(chi2c,df,mid*mid*n)<pw) lo=mid; else hi=mid;}
+    const e=(lo+hi)/2; return {ncp:e*e*n, chi2_crit:chi2c, effect_w:e, N_total:n, actual_power:powerNonCentralChi2(chi2c,df,e*e*n)};
+  }
+  return {};
+}
+
+function compute_chi2_var(p,a){ return compute_chi2_gof({...p,df_chi2:1},a); }
+
+function compute_z_prop2(p,a){
+  const p1v=parseFloat(p.p1)||0.5,p2v=parseFloat(p.p2)||0.3,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
+  const h=Math.abs(2*(Math.asin(Math.sqrt(p1v))-Math.asin(Math.sqrt(p2v))));
+  const zc=normInv(1-al/tl);
+  // For two equal-size groups, N total: each group = N/2, ncp = h * sqrt(N/4)
+  const solveN=(N)=>{
+    const n_per=N/2;
+    const ncp=h*Math.sqrt(n_per/2);
+    const ap=Math.min(0.9999, Math.max(0.0001, 1-normCDF(zc-ncp)+(tl===2?normCDF(-zc-ncp):0)));
+    return {effect_h:h, ncp, z_crit:zc, actual_power:ap};
+  };
+  if(a==='priori') return searchN(pw,(n)=>({...solveN(n),N_total:n}), 4);
+  const n=Math.max(4, parseInt(p.N_total)||100);
+  return {...solveN(n), N_total:n};
+}
+
+function compute_z_prop1(p,a){
+  // Sign test / one-sample proportion test against H0: p = 0.5
+  const p1v=parseFloat(p.p0)||0.7,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
+  const h=Math.abs(2*(Math.asin(Math.sqrt(p1v))-Math.asin(Math.sqrt(0.5))));
+  const zc=normInv(1-al/tl);
+  const solveN=(n)=>{
+    const ncp=h*Math.sqrt(n);
+    const ap=Math.min(0.9999, Math.max(0.0001, 1-normCDF(zc-ncp)+(tl===2?normCDF(-zc-ncp):0)));
+    return {effect_h:h, ncp, z_crit:zc, actual_power:ap};
+  };
+  if(a==='priori') return searchN(pw,(n)=>({...solveN(n),N_total:n}), 2);
+  const n=Math.max(2, parseInt(p.N_total)||50);
+  return {...solveN(n), N_total:n};
+}
+
+function compute_z_corr2(p,a){
+  const r1v=parseFloat(p.r1)||0.3,r2v=parseFloat(p.r2)||0.1,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
+  // Fisher z transform — compares two independent r's, equal-size groups
+  const z1=0.5*Math.log((1+r1v)/(1-r1v)),z2=0.5*Math.log((1+r2v)/(1-r2v));
+  const dz=Math.abs(z1-z2);
+  const zc=normInv(1-al/tl);
+  const solveN=(N)=>{
+    // Per-group n = N/2; SE of (z1-z2) = sqrt(2/(n-3)). ncp = dz / SE = dz*sqrt((n-3)/2)
+    const n_per=N/2;
+    const ncp = n_per>3 ? dz*Math.sqrt((n_per-3)/2) : 0;
+    const ap=Math.min(0.9999, Math.max(0.0001, 1-normCDF(zc-ncp)+(tl===2?normCDF(-zc-ncp):0)));
+    return {ncp, z_crit:zc, actual_power:ap};
+  };
+  if(a==='priori') return searchN(pw,(n)=>({...solveN(n),N_total:n}), 8);
+  const n=Math.max(8, parseInt(p.N_total)||100);
+  return {...solveN(n), N_total:n};
+}
+
+function compute_z_generic(p,a){
+  const h=parseFloat(p.effect_h)||0.4,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
+  const zc=normInv(1-al/tl);
+  const solveN=(n)=>{
+    const ncp=h*Math.sqrt(n);
+    const ap=Math.min(0.9999, Math.max(0.0001, 1-normCDF(zc-ncp)+(tl===2?normCDF(-zc-ncp):0)));
+    return {ncp, z_crit:zc, actual_power:ap};
+  };
+  if(a==='priori') return searchN(pw,(n)=>({...solveN(n),N_total:n}), 2);
+  const n=Math.max(2, parseInt(p.N_total)||50);
+  return {...solveN(n), N_total:n};
+}
+
+function compute_ex_binom(p,a){
+  const p0v=parseFloat(p.p0)||0.5,p1v=parseFloat(p.p1)||0.7,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95;
+  const h=Math.abs(2*(Math.asin(Math.sqrt(p1v))-Math.asin(Math.sqrt(p0v))));
+  const solveN=(n)=>{
+    const zc=normInv(1-al);
+    const ncp=h*Math.sqrt(n);
+    const ap=Math.min(0.9999, Math.max(0.0001, 1-normCDF(zc-ncp)));
+    return {ncp, effect_h:h, actual_power:ap};
+  };
+  if(a==='priori') return searchN(pw,(n)=>({...solveN(n),N_total:n}), 2);
+  const n=Math.max(2, parseInt(p.N_total)||30);
+  return {...solveN(n), N_total:n};
+}
+
+function compute_ex_multinom(p,a){ return compute_chi2_gof(p,a); }
+
+// ═══════════════════════════════════════════════════════════════════
+// UI — PARAM RENDERING
+// ═══════════════════════════════════════════════════════════════════
+const EFFECT_KEYS = new Set(['effect_f','effect_d','effect_dz','effect_w','effect_f2','effect_h','p0','p1','p2','rho','r1','r2']);
+
+function renderParams(){
+  const schema=getSchema(S.test,S.analysis);
+  const inBody=document.getElementById('input-params-body');
+  const outBody=document.getElementById('output-params-body');
+  inBody.innerHTML=''; outBody.innerHTML='';
+
+  schema.in.forEach(key=>{
+    const meta=PARAM_META[key]||{label:key,default:1,step:0.01};
+    if(S.params[key]===undefined) S.params[key]=meta.default;
+    const row=document.createElement('div'); row.className='param-row';
+
+    if(EFFECT_KEYS.has(key)){
+      const btn=document.createElement('button');
+      btn.className='btn-determine'; btn.textContent='Determine';
+      btn.onclick=()=>{ document.getElementById('right-panel').classList.toggle('hidden',false); };
+      row.appendChild(btn);
+    }
+
+    const lbl=document.createElement('div'); lbl.className='param-label';
+    lbl.style.display='flex'; lbl.style.alignItems='center'; lbl.style.gap='2px';
+    const lblTxt=document.createElement('span'); lblTxt.textContent=meta.label;
+    lbl.appendChild(lblTxt);
+
+    // Info icon
+    if(meta.info){
+      const icon=document.createElement('span');
+      icon.className='info-icon'; icon.textContent='i'; icon.title='';
+      icon.addEventListener('mouseenter', e=>showParamTooltip(e, meta.info));
+      icon.addEventListener('mouseleave', ()=>hideParamTooltip());
+      icon.addEventListener('touchstart', e=>{ e.stopPropagation(); showParamTooltip(e.touches[0],meta.info); }, {passive:true});
+      lbl.appendChild(icon);
+    }
+    row.appendChild(lbl);
+
+    const wrap=document.createElement('div'); wrap.className='param-input-wrap';
+    const inp=document.createElement('input'); inp.type='number';
+    inp.value=fmtVal(S.params[key],key);
+    inp.step=meta.step||0.01;
+    if(meta.min!==undefined) inp.min=meta.min;
+    if(meta.max!==undefined) inp.max=meta.max;
+    inp.dataset.key=key;
+    inp.oninput=()=>{ const m=PARAM_META[inp.dataset.key]||{}; S.params[inp.dataset.key]=m.isInt?parseInt(inp.value)||0:parseFloat(inp.value)||0; };
+    wrap.appendChild(inp); row.appendChild(wrap);
+    inBody.appendChild(row);
+  });
+
+  schema.out.forEach(key=>{
+    const meta=PARAM_META[key]||{label:key};
+    const row=document.createElement('div'); row.className='param-row';
+
+    const lbl=document.createElement('div'); lbl.className='param-label';
+    lbl.style.display='flex'; lbl.style.alignItems='center'; lbl.style.gap='2px';
+    const lblTxt=document.createElement('span'); lblTxt.textContent=meta.label;
+    lbl.appendChild(lblTxt);
+    if(meta.info){
+      const icon=document.createElement('span');
+      icon.className='info-icon'; icon.textContent='i';
+      icon.addEventListener('mouseenter',e=>showParamTooltip(e,meta.info));
+      icon.addEventListener('mouseleave',()=>hideParamTooltip());
+      lbl.appendChild(icon);
+    }
+
+    const val=document.createElement('div'); val.className='param-out'; val.id='out-'+key; val.textContent='—';
+    row.appendChild(lbl); row.appendChild(val);
+    outBody.appendChild(row);
+  });
+}
+
+function fmtVal(v,key){
+  if(v===undefined||v===null||isNaN(v)) return '';
+  const meta=PARAM_META[key]||{};
+  if(meta.isInt) return Math.round(v);
+  const step=meta.step||0.01;
+  const dec=step<0.0001?7:step<0.001?6:step<0.01?4:step<0.1?3:step<1?2:0;
+  return parseFloat(v.toFixed(Math.max(dec,7)));
+}
+
+function fmt7(v){
+  if(v===undefined||v===null||isNaN(v)) return '—';
+  if(Number.isInteger(v)) return String(v);
+  return parseFloat(v.toFixed(7)).toString();
+}
+
+function displayResults(R){
+  const schema=getSchema(S.test,S.analysis);
+  schema.out.forEach(key=>{
+    const el=document.getElementById('out-'+key); if(!el) return;
+    const val=R[key];
+    if(val===undefined||val===null){el.textContent='—';return;}
+    if(['N_total','num_df','den_df','df'].includes(key)) el.textContent=Math.ceil(val);
+    else el.textContent=fmt7(val);
+  });
+  const crit=R.F_crit||R.t_crit||R.chi2_crit||R.z_crit;
+  const type=R.F_crit?'F':R.t_crit?'t':R.chi2_crit?'χ²':'z';
+  document.getElementById('crit-label').textContent=crit?`critical ${type} = ${fmt7(crit)}`:'—';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DISTRIBUTION PLOT  (canvas-based, with hover + export)
+// ═══════════════════════════════════════════════════════════════════
+
+// Global plot state for hover hit-testing
+const PLOT = { xmin:0, xmax:1, ymax:1, pad:{l:46,r:14,t:10,b:26}, W:0, H:0,
+               crit:1.96, ncp:0, pdfH0:null, pdfH1:null, hasH1:false,
+               pts:[], ys0:[], ys1:[] };
+
+function getPlotColors(){
+  const cls=document.body.className;
+  const dark = cls.includes('theme-2010s') || cls.includes('theme-terminal');
+  const paper = cls.includes('theme-paper');
+  const pol  = cls.includes('theme-polished');
+  return {
+    bg:        dark?'#111':paper?'#fffdf5':pol?'#fff':'#fff',
+    grid:      dark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.06)',
+    axis:      dark?'#888':'#777',
+    tick:      dark?'#666':'#999',
+    text:      dark?'#aaa':paper?'#5c3d11':'#555',
+    h0stroke:  dark?'#ff6666':'#cc2222',
+    h1stroke:  dark?'#6688ff':'#1144cc',
+    alphaFill: dark?'rgba(255,80,80,0.25)':'rgba(200,40,40,0.28)',
+    betaFill:  dark?'rgba(60,100,255,0.15)':'rgba(40,70,220,0.13)',
+    powerFill: dark?'rgba(60,100,255,0.28)':'rgba(40,70,220,0.30)',
+    critLine:  dark?'#888':'#666',
+  };
+}
+
+function buildPDFs(R){
+  const isF=S.test.startsWith('F'), isT=S.test.startsWith('t'), isChi=S.test.startsWith('chi2');
+  const crit=R.F_crit||R.t_crit||R.chi2_crit||R.z_crit||1.96;
+  const ncp=Math.max(R.ncp||0, 0);
+  const df1=R.num_df||1, df2=Math.max(R.den_df||R.df||30,1);
+  let xmin,xmax,pdfH0,pdfH1;
+
+  if(isF){
+    xmin=0; xmax=Math.max(crit*2.8, df1>1?df1*3:8, 6);
+    const fpdf=(x,d1,d2,lam)=>{
+      if(x<=0.0001) return 0;
+      if(!lam){
+        const lp=lgamma((d1+d2)/2)-lgamma(d1/2)-lgamma(d2/2)+(d1/2)*Math.log(d1/d2)+(d1/2-1)*Math.log(x)-((d1+d2)/2)*Math.log(1+d1*x/d2);
+        return isFinite(lp)?Math.exp(lp):0;
+      }
+      let s=0;
+      for(let j=0;j<=30;j++){
+        const logw=-lam/2+j*Math.log(lam/2+1e-200)-lgamma(j+1);
+        const d1j=d1+2*j;
+        const lp=lgamma((d1j+d2)/2)-lgamma(d1j/2)-lgamma(d2/2)+(d1j/2)*Math.log(d1j/d2)+(d1j/2-1)*Math.log(x)-((d1j+d2)/2)*Math.log(1+d1j*x/d2);
+        s+=Math.exp(logw+lp); if(!isFinite(s)){s=0;break;}
+      }
+      return Math.max(s,0);
+    };
+    pdfH0=x=>fpdf(x,df1,df2,0);
+    pdfH1=x=>fpdf(x,df1,df2,ncp);
+  } else if(isT){
+    const df=R.df||30;
+    const tpdf=(x,dff)=>{
+      const lp=lgamma((dff+1)/2)-lgamma(dff/2)-0.5*Math.log(dff*Math.PI)-((dff+1)/2)*Math.log(1+x*x/dff);
+      return isFinite(lp)?Math.exp(lp):0;
+    };
+    xmin=-Math.max(Math.abs(crit)+3,5);
+    xmax=Math.max(ncp+4, Math.abs(crit)+3, 5);
+    pdfH0=x=>tpdf(x,df);
+    pdfH1=x=>tpdf(x-ncp,df);
+  } else if(isChi){
+    const df=R.df||1;
+    const cpdf=(x,dff)=>{
+      if(x<=0.0001) return 0;
+      const lp=(dff/2-1)*Math.log(x+1e-200)-x/2-lgamma(dff/2)-(dff/2)*Math.log(2);
+      return isFinite(lp)?Math.exp(lp):0;
+    };
+    xmin=0; xmax=Math.max(crit*2.5, df+5*Math.sqrt(2*df), 10);
+    pdfH0=x=>cpdf(x,df);
+    pdfH1=x=>{if(x<=0)return 0;let s=0;for(let j=0;j<=25;j++){const lw=-ncp/2+j*Math.log(ncp/2+1e-200)-lgamma(j+1);s+=Math.exp(lw)*cpdf(x,df+2*j);}return Math.max(s,0);};
+  } else {
+    // z / normal
+    const npdf=x=>Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI);
+    xmin=-Math.max(4, Math.abs(crit)+2);
+    xmax=Math.max(ncp+4, Math.abs(crit)+2, 4);
+    pdfH0=x=>npdf(x);
+    pdfH1=x=>npdf(x-ncp);
+  }
+  return {xmin, xmax, crit, ncp, pdfH0, pdfH1, hasH1: ncp>0.001};
+}
+
+function drawDist(){
+  const canvas=document.getElementById('dist-canvas');
+  if(!canvas) return;
+
+  // Size canvas to its CSS display size (device-pixel-ratio aware)
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.getBoundingClientRect();
+  const CW=Math.max(rect.width||400, 200);
+  const CH=Math.max(rect.height||150, 100);
+  canvas.width=Math.round(CW*dpr);
+  canvas.height=Math.round(CH*dpr);
+  const ctx=canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  const R=S.results;
+  const pad=PLOT.pad;
+  const W=CW, H=CH;
+  const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+  const col=getPlotColors();
+
+  // Background
+  ctx.fillStyle=col.bg; ctx.fillRect(0,0,W,H);
+
+  if(!R||!R.actual_power){ ctx.fillStyle=col.text; ctx.font='11px sans-serif'; ctx.textAlign='center'; ctx.fillText('Run Calculate to see distribution.',W/2,H/2); return; }
+
+  const {xmin,xmax,crit,ncp,pdfH0,pdfH1,hasH1}=buildPDFs(R);
+
+  // Build sample arrays
+  const N=400;
+  const pts=Array.from({length:N+1},(_,i)=>xmin+(xmax-xmin)*i/N);
+  const ys0=pts.map(pdfH0);
+  const ys1=hasH1?pts.map(pdfH1):ys0.map(()=>0);
+  const ymax=Math.max(...ys0,...ys1)*1.15||1;
+
+  // Save to global for hit-test / export
+  Object.assign(PLOT,{xmin,xmax,ymax,W,H,crit,ncp,pdfH0,pdfH1,hasH1,pts,ys0,ys1});
+
+  const sx=x=>pad.l+(x-xmin)/(xmax-xmin)*cW;
+  const sy=y=>pad.t+(1-y/ymax)*cH;
+  const clipX=v=>Math.max(pad.l,Math.min(pad.l+cW,v));
+
+  ctx.save(); ctx.beginPath(); ctx.rect(pad.l,pad.t,cW,cH); ctx.clip();
+
+  // Grid
+  ctx.strokeStyle=col.grid; ctx.lineWidth=0.5;
+  for(let i=0;i<=4;i++){
+    const y=sy(ymax*i/4); ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+  }
+
+  // Alpha region fill — right tail of H0 beyond crit
+  const critPx=clipX(sx(crit));
+  ctx.fillStyle=col.alphaFill;
+  ctx.beginPath();
+  ctx.moveTo(critPx, sy(0));
+  pts.forEach((x,i)=>{ if(x>=crit){ const px=clipX(sx(x)); if(i===0||pts[i-1]<crit) ctx.lineTo(critPx,sy(ys0[i])); ctx.lineTo(px,sy(ys0[i])); }});
+  ctx.lineTo(clipX(sx(xmax)),sy(0));
+  ctx.closePath(); ctx.fill();
+
+  if(hasH1){
+    // Beta region — left of crit under H1
+    ctx.fillStyle=col.betaFill;
+    ctx.beginPath();
+    ctx.moveTo(clipX(sx(xmin)),sy(0));
+    pts.forEach((x,i)=>{ if(x<=crit) ctx.lineTo(clipX(sx(x)),sy(ys1[i])); });
+    ctx.lineTo(critPx,sy(0));
+    ctx.closePath(); ctx.fill();
+
+    // Power region — right of crit under H1
+    ctx.fillStyle=col.powerFill;
+    ctx.beginPath();
+    ctx.moveTo(critPx,sy(0));
+    pts.forEach((x,i)=>{ if(x>=crit){ const px=clipX(sx(x)); if(i===0||pts[i-1]<crit) ctx.lineTo(critPx,sy(ys1[i])); ctx.lineTo(px,sy(ys1[i])); }});
+    ctx.lineTo(clipX(sx(xmax)),sy(0));
+    ctx.closePath(); ctx.fill();
+  }
+
+  // H0 curve
+  ctx.strokeStyle=col.h0stroke; ctx.lineWidth=1.8;
+  ctx.beginPath();
+  pts.forEach((x,i)=>{ const px=clipX(sx(x)),py=sy(ys0[i]); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); });
+  ctx.stroke();
+
+  // H1 curve
+  if(hasH1){
+    ctx.strokeStyle=col.h1stroke; ctx.lineWidth=1.8;
+    ctx.beginPath();
+    pts.forEach((x,i)=>{ const px=clipX(sx(x)),py=sy(ys1[i]); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); });
+    ctx.stroke();
+  }
+
+  // Critical value line
+  ctx.strokeStyle=col.critLine; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(critPx,pad.t); ctx.lineTo(critPx,H-pad.b); ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.restore();
+
+  // Axes
+  ctx.strokeStyle=col.axis; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,H-pad.b); ctx.lineTo(W-pad.r,H-pad.b); ctx.stroke();
+
+  // X-axis ticks & labels
+  ctx.fillStyle=col.text; ctx.font=`${Math.max(8,Math.min(10,CW/60))}px sans-serif`; ctx.textAlign='center';
+  const nTicks=Math.min(8,Math.floor(cW/55));
+  for(let i=0;i<=nTicks;i++){
+    const xv=xmin+(xmax-xmin)*i/nTicks, px=sx(xv);
+    ctx.strokeStyle=col.tick; ctx.lineWidth=0.7;
+    ctx.beginPath(); ctx.moveTo(px,H-pad.b); ctx.lineTo(px,H-pad.b+3); ctx.stroke();
+    ctx.fillStyle=col.text; ctx.fillText(xv.toFixed(xmax-xmin>5?1:2),px,H-pad.b+10);
+  }
+
+  // Y-axis ticks & labels
+  ctx.textAlign='right';
+  for(let i=0;i<=3;i++){
+    const yv=ymax*i/3, py=sy(yv);
+    ctx.strokeStyle=col.tick; ctx.lineWidth=0.7;
+    ctx.beginPath(); ctx.moveTo(pad.l-3,py); ctx.lineTo(pad.l,py); ctx.stroke();
+    ctx.fillStyle=col.text; ctx.fillText(yv.toFixed(2),pad.l-5,py+3);
+  }
+
+  // Greek region labels
+  ctx.font='bold 11px serif'; ctx.textAlign='left';
+  if(hasH1){
+    // β label — centre of left region under H1
+    const bxIdx=Math.floor(pts.length*0.25); const bx=pts[bxIdx]||xmin;
+    if(bx<crit){ const by=Math.max(...ys1.slice(0,Math.floor(pts.length*0.5)))*0.45; ctx.fillStyle=col.h1stroke; ctx.fillText('β',sx(bx),sy(by)); }
+    // α label — in alpha region
+    const axIdx=Math.floor(pts.findIndex(x=>x>=crit)*1.3); const ax=pts[Math.min(axIdx,pts.length-1)]||crit;
+    const ay=ys0[Math.min(axIdx,ys0.length-1)]*0.55;
+    if(ay>0.001){ ctx.fillStyle=col.h0stroke; ctx.fillText('α',sx(ax)+4,sy(ay)); }
+    // 1-β label — power region
+    const px2=(crit+xmax)/2;
+    const pyIdx=pts.findIndex(x=>x>=px2);
+    const py2=ys1[Math.min(pyIdx,ys1.length-1)]*0.5;
+    if(py2>0.001){ ctx.fillStyle=col.h1stroke; ctx.font='9px sans-serif'; ctx.fillText(`1−β=${(R.actual_power||0).toFixed(3)}`,sx(px2)+4,sy(py2)); }
+  }
+}
+
+// ── PLOT HOVER TOOLTIP ──
+function initPlotHover(){
+  const canvas=document.getElementById('dist-canvas');
+  const tip=document.getElementById('plot-tooltip');
+  if(!canvas||!tip) return;
+
+  const getRegion=(mx,my)=>{
+    const {xmin,xmax,ymax,W,H,crit,ncp,hasH1,pad}=PLOT;
+    if(!W) return null;
+    const rect=canvas.getBoundingClientRect();
+    // Map mouse to data coords
+    const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+    const xv=xmin+(mx-pad.l)/cW*(xmax-xmin);
+    const yv=(1-(my-pad.t)/cH)*ymax;
+    if(mx<pad.l||mx>W-pad.r||my<pad.t||my>H-pad.b) return null;
+    const R=S.results; if(!R||!R.actual_power) return null;
+    const alpha=S.params.alpha||0.05;
+    const power=R.actual_power||0;
+    const beta=1-power;
+    if(xv>=crit){
+      // Could be alpha OR power region
+      const h0y=PLOT.pdfH0?PLOT.pdfH0(xv):0;
+      const h1y=PLOT.pdfH1&&hasH1?PLOT.pdfH1(xv):0;
+      if(h0y>0.001||h1y>0.001){
+        if(hasH1 && h1y>h0y*0.3) return {type:'power', alpha, power, beta};
+        return {type:'alpha', alpha, power, beta};
+      }
+      return {type:'alpha', alpha, power, beta};
+    } else {
+      if(hasH1) return {type:'beta', alpha, power, beta};
+      return {type:'h0body', alpha, power, beta};
+    }
+  };
+
+  const TIPS={
+    alpha:  r=>`🔴 α region (Type I error)\nProbability of rejecting H₀ when it is true.\n\nα = ${r.alpha.toFixed(4)}\n\nThis is the significance threshold you set.\nThe red curve shows the H₀ distribution.\nThe shaded tail area = α.`,
+    beta:   r=>`🔵 β region (Type II error)\nProbability of failing to reject H₀ when H₁ is true.\n\nβ = ${r.beta.toFixed(4)}\n\nThe blue shaded area left of the critical\nvalue under H₁ = β (missed effects).`,
+    power:  r=>`💙 Power region (1−β)\nProbability of correctly rejecting H₀ when H₁ is true.\n\n1−β = ${r.power.toFixed(4)}\nβ = ${r.beta.toFixed(4)}\n\nThe blue shaded area right of the critical\nvalue under H₁ = statistical power.`,
+    h0body: r=>`📊 H₀ distribution\nCentral distribution (under null hypothesis).\n\nNo H₁ curve — run a priori or post hoc\nanalysis with an effect size to see both\ndistributions and their overlap.`,
+  };
+
+  canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=PLOT.W/rect.width;
+    const scaleY=PLOT.H/rect.height;
+    const mx=(e.clientX-rect.left)*scaleX;
+    const my=(e.clientY-rect.top)*scaleY;
+    const reg=getRegion(mx,my);
+    if(reg){
+      const txt=TIPS[reg.type]?TIPS[reg.type](reg):'';
+      tip.textContent=txt;
+      tip.style.display='block';
+      // Position near cursor, keep within canvas
+      let tx=e.clientX-rect.left+14, ty=e.clientY-rect.top-10;
+      if(tx+240>rect.width) tx=e.clientX-rect.left-230;
+      if(ty+120>rect.height) ty=e.clientY-rect.top-120;
+      tip.style.left=tx+'px'; tip.style.top=ty+'px';
+    } else {
+      tip.style.display='none';
+    }
+  });
+  canvas.addEventListener('mouseleave',()=>{ tip.style.display='none'; });
+  // Touch support
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();},{ passive:false });
+}
+
+// ── PLOT EXPORT ──
+function exportPlot(){
+  const canvas=document.getElementById('dist-canvas');
+  if(!canvas){ alert('No plot to export.'); return; }
+  const a=document.createElement('a');
+  a.download='cpower_distribution.png';
+  a.href=canvas.toDataURL('image/png');
+  a.click();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PROTOCOL
+// ═══════════════════════════════════════════════════════════════════
+function pushProtocol(){
+  const R=S.results; if(!R||!R.actual_power) return;
+  const effect=S.params.effect_f||S.params.effect_d||S.params.effect_dz||S.params.effect_w||S.params.effect_f2||S.params.effect_h||R.effect_f||R.effect_d||R.effect_h||'—';
+  const groups=S.params.groups||S.params.num_groups||S.params.df_chi2||'—';
+  S.protocol.push({
+    no:S.protocol.length+1,
+    test:(TEST_LABELS[S.test]||S.test).substring(0,35),
+    analysis:S.analysis,
+    alpha:fmt7(S.params.alpha||R.alpha),
+    power:fmt7(R.actual_power),
+    N:R.N_total?Math.ceil(R.N_total):'—',
+    effect:typeof effect==='number'?fmt7(effect):effect,
+    groups:groups,
+    ncp:fmt7(R.ncp),
+  });
+  renderProtocol();
+}
+
+function renderProtocol(){
+  const body=document.getElementById('proto-body');
+  if(!S.protocol.length){
+    body.innerHTML='<tr><td colspan="9" style="padding:14px;text-align:center;color:var(--text3);">No analyses recorded yet. Run a calculation and it will appear here.</td></tr>';
+    return;
+  }
+  body.innerHTML=S.protocol.map(p=>`<tr>
+    <td>${p.no}</td><td>${p.test}</td><td>${p.analysis}</td>
+    <td>${p.alpha}</td><td>${p.power}</td><td>${p.N}</td>
+    <td>${p.effect}</td><td>${p.groups}</td><td>${p.ncp}</td>
+  </tr>`).join('');
+}
+
+function clearProtocol(){S.protocol=[];renderProtocol();}
+
+function copyProtocolText(){
+  const header='#\tTest\tAnalysis\tα\tPower\tN\tEffect\tGroups/df\tλ\n';
+  const rows=S.protocol.map(p=>`${p.no}\t${p.test}\t${p.analysis}\t${p.alpha}\t${p.power}\t${p.N}\t${p.effect}\t${p.groups}\t${p.ncp}`).join('\n');
+  navigator.clipboard.writeText(header+rows).then(()=>alert('Protocol copied to clipboard!'));
+}
+
+function exportProtocolCSV(){
+  const header='"#","Test","Analysis","Alpha","Power","N","Effect","Groups/df","Lambda"\n';
+  const rows=S.protocol.map(p=>`"${p.no}","${p.test}","${p.analysis}","${p.alpha}","${p.power}","${p.N}","${p.effect}","${p.groups}","${p.ncp}"`).join('\n');
+  const blob=new Blob([header+rows],{type:'text/csv'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='cpower_protocol.csv'; a.click();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// REPORT GENERATION
+// ═══════════════════════════════════════════════════════════════════
+function getReportText(){
+  const R=S.results, p=S.params;
+  if(!R||!R.actual_power) return null;
+  const testLabel=TEST_LABELS[S.test]||S.test;
+  const N=R.N_total?Math.ceil(R.N_total):'—';
+  const power=R.actual_power?R.actual_power.toFixed(4):'—';
+  const alpha=p.alpha||R.alpha||0.05;
+  const analysisLabels={priori:'a priori',post:'post hoc',criterion:'criterion',sensitivity:'sensitivity'};
+  const at=analysisLabels[S.analysis]||S.analysis;
+
+  // Effect label
+  const efKey=Object.keys(p).find(k=>k.startsWith('effect_')||['rho','p0','p1','p2','r1','r2'].includes(k));
+  const efVal=efKey?p[efKey]:R.effect_f||R.effect_d||'—';
+  const efLabel=efKey?(PARAM_META[efKey]||{label:'effect size'}).label:'Effect size';
+
+  const templates = {
+    F_anova: () => {
+      const groups=p.groups||3;
+      return `A ${at} power analysis was conducted using C*Power v0.1 (an LLM-generated browser-based implementation based on G*Power; Faul et al., 2007) for a one-way ANOVA with ${groups} groups. `+
+        `We targeted a ${efLabel} of ${fmt7(efVal)} (${cohenGuide('f',efVal)}), with α = ${alpha} and the desired statistical power set to ${S.analysis==='priori'?fmt7(p.power):power}. `+
+        `The analysis indicated that a total sample size of N = ${N} (${Math.ceil(N/groups)} per group) is required to achieve a power of 1−β = ${power}. `+
+        `The noncentrality parameter was λ = ${fmt7(R.ncp)}, and the critical F-value was F(${R.num_df}, ${R.den_df}) = ${fmt7(R.F_crit)}.`;
+    },
+    t_two_indep: () =>
+      `A ${at} power analysis was conducted using C*Power v0.1 for an independent-samples t-test. `+
+      `We targeted Cohen's d = ${fmt7(efVal)} (${cohenGuide('d',efVal)}), with α = ${alpha} and desired power of ${S.analysis==='priori'?fmt7(p.power):power}. `+
+      `The required total sample size is N = ${N} (${Math.ceil(N/2)} per group), achieving 1−β = ${power}. `+
+      `The critical t-value was t(${R.df}) = ${fmt7(R.t_crit)}, and the noncentrality parameter λ = ${fmt7(R.ncp)}.`,
+    t_one_samp: () =>
+      `A ${at} power analysis was conducted using C*Power v0.1 for a one-sample t-test. `+
+      `We targeted Cohen's d = ${fmt7(efVal)} (${cohenGuide('d',efVal)}), with α = ${alpha} and desired power of ${S.analysis==='priori'?fmt7(p.power):power}. `+
+      `The required sample size is N = ${N}, achieving 1−β = ${power}. `+
+      `The critical t-value was t(${R.df}) = ${fmt7(R.t_crit)}.`,
+    t_paired: () =>
+      `A ${at} power analysis was conducted using C*Power v0.1 for a paired-samples t-test. `+
+      `We targeted Cohen's dz = ${fmt7(efVal)} (${cohenGuide('d',efVal)}), with α = ${alpha} and desired power of ${S.analysis==='priori'?fmt7(p.power):power}. `+
+      `The required number of pairs is N = ${N}, achieving 1−β = ${power}. `+
+      `The critical t-value was t(${R.df}) = ${fmt7(R.t_crit)}.`,
+    chi2_gof: () =>
+      `A ${at} power analysis was conducted using C*Power v0.1 for a chi-square goodness-of-fit test (df = ${p.df_chi2||1}). `+
+      `We targeted Cohen's w = ${fmt7(efVal)} (${cohenGuide('w',efVal)}), with α = ${alpha} and desired power of ${S.analysis==='priori'?fmt7(p.power):power}. `+
+      `The required sample size is N = ${N}, achieving 1−β = ${power}. `+
+      `The critical χ²-value was χ²(${p.df_chi2||1}) = ${fmt7(R.chi2_crit)}.`,
+    F_reg_r2: () => {
+      const u=p.num_pred||1;
+      return `A ${at} power analysis was conducted using C*Power v0.1 for multiple linear regression (R² against zero, ${u} predictor${u>1?'s':''}). `+
+        `We targeted Cohen's f² = ${fmt7(efVal)} (${cohenGuide('f2',efVal)}), with α = ${alpha} and desired power of ${S.analysis==='priori'?fmt7(p.power):power}. `+
+        `The required total sample size is N = ${N}, achieving 1−β = ${power}. `+
+        `The critical F-value was F(${R.num_df}, ${R.den_df}) = ${fmt7(R.F_crit)}.`;
+    },
+    z_prop2: () =>
+      `A ${at} power analysis was conducted using C*Power v0.1 for a two-proportions z-test comparing p₁ = ${p.p1} and p₂ = ${p.p2}. `+
+      `The effect size h = ${fmt7(R.effect_h)}, α = ${alpha}, desired power = ${S.analysis==='priori'?fmt7(p.power):power}. `+
+      `The required total sample size is N = ${N} (${Math.ceil(N/2)} per group), achieving 1−β = ${power}.`,
+  };
+
+  const fn=templates[S.test];
+  const main=fn?fn():(
+    `A ${at} power analysis was conducted using C*Power v0.1 for ${testLabel}. `+
+    `Parameters: ${efLabel} = ${fmt7(efVal)}, α = ${alpha}, desired power = ${S.analysis==='priori'?fmt7(p.power):power}. `+
+    `Required N = ${N}, achieved power 1−β = ${power}, λ = ${fmt7(R.ncp)}.`
+  );
+
+  const cite=`\n\nPlease also verify this result using G*Power (Faul, F., Erdfelder, E., Lang, A.-G., & Buchner, A., 2007, Behavior Research Methods, 39, 175–191) before inclusion in a manuscript.`;
+  const warning=`\n\n⚠️ Note: C*Power is a work-in-progress LLM-generated tool. Calculations should be independently verified.`;
+  return main+cite+warning;
+}
+
+function cohenGuide(type,val){
+  const v=parseFloat(val)||0;
+  if(type==='d'||type==='dz'){
+    if(v<0.2) return 'very small';
+    if(v<0.5) return 'small, Cohen\'s convention';
+    if(v<0.8) return 'medium, Cohen\'s convention';
+    return 'large, Cohen\'s convention';
+  }
+  if(type==='f'){
+    if(v<0.1) return 'very small';
+    if(v<0.25) return 'small, Cohen\'s convention';
+    if(v<0.4) return 'medium, Cohen\'s convention';
+    return 'large, Cohen\'s convention';
+  }
+  if(type==='f2'){
+    if(v<0.02) return 'very small';
+    if(v<0.15) return 'small, Cohen\'s convention';
+    if(v<0.35) return 'medium, Cohen\'s convention';
+    return 'large, Cohen\'s convention';
+  }
+  if(type==='w'){
+    if(v<0.1) return 'very small';
+    if(v<0.3) return 'small, Cohen\'s convention';
+    if(v<0.5) return 'medium, Cohen\'s convention';
+    return 'large, Cohen\'s convention';
+  }
+  return '';
+}
+
+function openReport(){
+  const body=document.getElementById('report-body');
+  const txt=getReportText();
+  if(!txt){
+    body.innerHTML='<p style="color:var(--text3);">Run a calculation first, then open the report.</p>';
+  } else {
+    const analysisTypeLabel={priori:'A priori (required N)',post:'Post hoc (achieved power)',criterion:'Criterion (required α)',sensitivity:'Sensitivity (min effect)'}[S.analysis]||S.analysis;
+    body.innerHTML=`
+      <div class="report-section">
+        <div class="report-label">Test: ${(TEST_LABELS[S.test]||S.test).substring(0,60)} — ${analysisTypeLabel}</div>
+        <div class="report-text" id="report-txt">${txt}</div>
+        <button class="report-copy-btn" id="report-copy-btn" onclick="copyReport()">📋 Copy to clipboard</button>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border2);margin:12px 0;">
+      <div style="font-size:11px;color:var(--text3);line-height:1.6;">
+        <strong>How to use this in a manuscript:</strong><br>
+        Paste the text above into your Methods section (typically under "Power Analysis" or "Sample Size Determination"). 
+        Adjust the language to fit your paper's style. Always cross-check with G*Power before submission.
+        <br><br>
+        <strong>For preregistrations:</strong><br>
+        Include the full parameter table from the Protocol tab, plus the output text above. 
+        Note the software version, effect size justification, and α level.
+      </div>
+    `;
+  }
+  openModal('modal-report');
+}
+
+function copyReport(){
+  const txt=document.getElementById('report-txt');
+  if(!txt) return;
+  navigator.clipboard.writeText(txt.textContent).then(()=>{
+    const btn=document.getElementById('report-copy-btn');
+    btn.textContent='✓ Copied!'; btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='📋 Copy to clipboard';btn.classList.remove('copied');},2000);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// XY PLOT
+// ═══════════════════════════════════════════════════════════════════
+function openXYPlot(){ drawXYPlot(); openModal('modal-xy'); }
+
+function drawXYPlot(){
+  const g=document.getElementById('xy-g'); g.innerHTML='';
+  const xaxis=document.getElementById('xy-xaxis').value;
+  const from=parseFloat(document.getElementById('xy-from').value)||0.1;
+  const to=parseFloat(document.getElementById('xy-to').value)||1.0;
+  const W=540,H=240,pad={l:42,r:16,t:14,b:30};
+  const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+
+  const p={...S.params};
+  const pts=[];
+  const steps=80;
+  for(let i=0;i<=steps;i++){
+    const xv=from+(to-from)*i/steps;
+    let power=0;
+    try {
+      const pp={...p};
+      if(xaxis==='effect') { ['effect_f','effect_d','effect_dz','effect_w','effect_f2','effect_h'].forEach(k=>{if(pp[k]!==undefined)pp[k]=xv;}); }
+      else if(xaxis==='N') pp.N_total=Math.round(xv);
+      else if(xaxis==='alpha') pp.alpha=xv;
+      const tmpS={...S,params:pp};
+      const R2=computeWith(tmpS);
+      power=R2.actual_power||0;
+    } catch(e){}
+    pts.push({x:xv,y:Math.min(Math.max(power,0),1)});
+  }
+
+  const sx=x=>(x-from)/(to-from)*cW+pad.l;
+  const sy=y=>(1-y)*cH+pad.t;
+  const mkEl=(tag,attrs)=>{const el=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el;};
+
+  // Grid
+  [0,0.2,0.4,0.6,0.8,1.0].forEach(y=>{
+    g.appendChild(mkEl('line',{x1:pad.l,y1:sy(y).toFixed(1),x2:W-pad.r,y2:sy(y).toFixed(1),stroke:'#ccc','stroke-width':'0.5','stroke-dasharray':'3 3'}));
+    const txt=mkEl('text',{x:pad.l-4,y:(sy(y)+3).toFixed(1),'text-anchor':'end','font-size':'9','font-family':'Helvetica,sans-serif',fill:'#666'});
+    txt.textContent=y.toFixed(1); g.appendChild(txt);
+  });
+  // 0.8 reference
+  g.appendChild(mkEl('line',{x1:pad.l,y1:sy(0.8).toFixed(1),x2:W-pad.r,y2:sy(0.8).toFixed(1),stroke:'#f90','stroke-width':'1','stroke-dasharray':'4 2'}));
+
+  // Curve fill
+  const area=`M${sx(from)},${sy(0)} `+pts.map(p2=>`L${sx(p2.x)},${sy(p2.y)}`).join(' ')+` L${sx(to)},${sy(0)} Z`;
+  g.appendChild(mkEl('path',{d:area,fill:'rgba(50,100,230,0.15)'}));
+
+  // Curve line
+  const line=pts.map((p2,i)=>`${i===0?'M':'L'}${sx(p2.x).toFixed(1)},${sy(p2.y).toFixed(1)}`).join(' ');
+  g.appendChild(mkEl('path',{d:line,stroke:'#2244cc','stroke-width':'2',fill:'none'}));
+
+  // Axes
+  g.appendChild(mkEl('line',{x1:pad.l,y1:H-pad.b,x2:W-pad.r,y2:H-pad.b,stroke:'#888','stroke-width':'1'}));
+  g.appendChild(mkEl('line',{x1:pad.l,y1:pad.t,x2:pad.l,y2:H-pad.b,stroke:'#888','stroke-width':'1'}));
+
+  // X labels
+  for(let i=0;i<=6;i++){
+    const xv=from+(to-from)*i/6;
+    g.appendChild(mkEl('line',{x1:sx(xv).toFixed(1),y1:H-pad.b,x2:sx(xv).toFixed(1),y2:H-pad.b+3,stroke:'#888','stroke-width':'1'}));
+    const txt=mkEl('text',{x:sx(xv).toFixed(1),y:H-pad.b+12,'text-anchor':'middle','font-size':'9','font-family':'Helvetica,sans-serif',fill:'#666'});
+    txt.textContent=xv.toFixed(2); g.appendChild(txt);
+  }
+
+  // Axis labels
+  const xl=mkEl('text',{x:W/2,y:H-2,'text-anchor':'middle','font-size':'9','font-family':'Helvetica,sans-serif',fill:'#555'});
+  xl.textContent={effect:'Effect Size',N:'Total Sample Size (N)',alpha:'α'}[xaxis]||xaxis; g.appendChild(xl);
+  const yl=mkEl('text',{x:10,y:H/2,'text-anchor':'middle','font-size':'9','font-family':'Helvetica,sans-serif',fill:'#555',transform:`rotate(-90,10,${H/2})`});
+  yl.textContent='Power (1−β)'; g.appendChild(yl);
+}
+
+function computeWith(tmpS){
+  const saved={...S};
+  Object.assign(S,tmpS);
+  const R=compute();
+  Object.assign(S,saved);
+  return R;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CALCULATE (main)
+// ═══════════════════════════════════════════════════════════════════
+function calculate(){
+  // Re-read all input values from DOM
+  const schema=getSchema(S.test,S.analysis);
+  document.querySelectorAll('#input-params-body input[type="number"]').forEach((inp,i)=>{
+    const key=inp.dataset.key||schema.in[i];
+    if(!key) return;
+    const meta=PARAM_META[key]||{};
+    S.params[key]=meta.isInt?parseInt(inp.value)||0:parseFloat(inp.value)||0;
+  });
+  const R=compute();
+  displayResults(R);
+  drawDist();
+  pushProtocol();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RIGHT PANEL
+// ═══════════════════════════════════════════════════════════════════
+function toggleRightPanel(){
+  document.getElementById('right-panel').classList.toggle('hidden');
+}
+function rpProcedureChange(){
+  const v=document.getElementById('rp-procedure').value;
+  document.getElementById('rp-means-section').style.display=v==='means'?'':'none';
+  document.getElementById('rp-eta2-section').style.display=v==='eta2'?'':'none';
+  document.getElementById('rp-direct-section').style.display=v==='direct'?'':'none';
+  rpCalculate();
+}
+function rpGroupsChange(){
+  S.rpGroups=parseInt(document.getElementById('rp-groups').value)||3;
+  rpInitGroups(); rpRenderGroups(); rpCalculate();
+}
+function rpInitGroups(){
+  const n=S.rpGroups, en=parseInt(document.getElementById('rp-equal-n').value)||50;
+  while(S.rpGroupData.length<n) S.rpGroupData.push({mean:50,n:en});
+  S.rpGroupData.length=n;
+}
+function rpRenderGroups(){
+  const tb=document.getElementById('rp-group-body'); tb.innerHTML='';
+  S.rpGroupData.forEach((row,i)=>{
+    const tr=document.createElement('tr');
+    if(i===S.rpGroups-1) tr.className='rp-selected';
+    tr.innerHTML=`<td style="text-align:center;padding:2px 4px;">${i+1}</td>
+      <td><input type="number" value="${row.mean}" onchange="rpSetMean(${i},this.value)"></td>
+      <td><input type="number" value="${row.n}" onchange="rpSetN(${i},this.value)"></td>`;
+    tb.appendChild(tr);
+  });
+}
+function rpSetMean(i,v){S.rpGroupData[i].mean=parseFloat(v)||0;rpCalculate();}
+function rpSetN(i,v){S.rpGroupData[i].n=parseInt(v)||1;rpCalculate();}
+function rpSetEqualN(){
+  const n=parseInt(document.getElementById('rp-equal-n').value)||50;
+  S.rpGroupData.forEach(r=>r.n=n); rpRenderGroups(); rpCalculate();
+}
+function rpCalculate(){
+  const proc=document.getElementById('rp-procedure').value;
+  let f=NaN;
+  if(proc==='means'){
+    const sd=parseFloat(document.getElementById('rp-sd').value)||10;
+    const totalN=S.rpGroupData.reduce((s,r)=>s+r.n,0)||1;
+    const gm=S.rpGroupData.reduce((s,r)=>s+r.mean*r.n,0)/totalN;
+    const sigma_m=Math.sqrt(S.rpGroupData.reduce((s,r)=>s+r.n*(r.mean-gm)**2,0)/totalN);
+    f=sigma_m/sd;
+    document.getElementById('rp-total-n').textContent=totalN;
+  } else if(proc==='eta2'){
+    const eta2=parseFloat(document.getElementById('rp-eta2').value)||0.06;
+    f=Math.sqrt(eta2/(1-eta2));
+  } else {
+    f=parseFloat(document.getElementById('rp-direct-f').value)||0.25;
+  }
+  S._rpF=f;
+  document.getElementById('rp-effect-display').textContent=isNaN(f)?'—':f.toFixed(7);
+}
+function rpTransfer(){
+  if(!isNaN(S._rpF)){
+    S.params.effect_f=S._rpF;
+    document.querySelectorAll('#input-params-body input[data-key="effect_f"]').forEach(inp=>inp.value=S._rpF.toFixed(7));
+  }
+  calculate();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// THEMES
+// ═══════════════════════════════════════════════════════════════════
+function setTheme(name){
+  document.body.className='theme-'+name;
+  S.theme=name;
+  document.querySelectorAll('.dropdown-item[id^="dtheme-"]').forEach(el=>{
+    const active=el.id==='dtheme-'+name;
+    el.classList.toggle('active',active);
+    el.querySelector('.check').textContent=active?'✓':' ';
+  });
+  closeAllDropdowns();
+  // Redraw canvas with new theme colors
+  setTimeout(drawDist, 50);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MODALS & DROPDOWNS
+// ═══════════════════════════════════════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function openAbout(){ openModal('modal-about'); }
+function toggleDropdown(id){
+  const menu=document.getElementById(id);
+  const wasOpen=menu.classList.contains('open');
+  closeAllDropdowns();
+  if(!wasOpen) menu.classList.add('open');
+}
+function closeAllDropdowns(){ document.querySelectorAll('.dropdown-menu').forEach(m=>m.classList.remove('open')); }
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.dropdown')&&!e.target.closest('.menu-btn')) closeAllDropdowns();
+  if(e.target.classList.contains('modal-overlay')) e.target.classList.remove('open');
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════════════════════════════
+function switchTab(tab){
+  const isDist=tab==='distributions';
+  document.getElementById('tab-btn-dist').classList.toggle('active',isDist);
+  document.getElementById('tab-btn-proto').classList.toggle('active',!isDist);
+  document.getElementById('tab-distributions').classList.toggle('tab-hidden',!isDist);
+  const proto=document.getElementById('tab-protocol');
+  proto.classList.toggle('tab-visible',!isDist);
+  document.getElementById('right-panel').style.display=isDist?'':'none';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FAMILY / TEST CHANGE
+// ═══════════════════════════════════════════════════════════════════
+function onFamilyChange(){
+  S.family=document.getElementById('sel-family').value;
+  const tests=TESTS[S.family]||[];
+  S.test=tests[0]?.id||S.test;
+  renderTestList(); initParams(); renderParams();
+}
+function onTestChange(){
+  S.test=document.getElementById('sel-test').value;
+  initParams(); renderParams();
+}
+function onAnalysisChange(){
+  S.analysis=document.getElementById('sel-analysis').value;
+  renderParams();
+}
+
+function renderTestList(){
+  const sel=document.getElementById('sel-test'); sel.innerHTML='';
+  (TESTS[S.family]||[]).forEach(t=>{
+    const o=document.createElement('option'); o.value=t.id; o.textContent=t.label;
+    if(t.id===S.test) o.selected=true; sel.appendChild(o);
+  });
+  S.test=sel.value;
+}
+
+function initParams(){
+  const schema=getSchema(S.test,S.analysis);
+  S.params={};
+  schema.in.forEach(key=>{ S.params[key]=(PARAM_META[key]||{default:1}).default; });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PARAM INFO TOOLTIPS
+// ═══════════════════════════════════════════════════════════════════
+let _tipEl=null;
+
+function ensureTipEl(){
+  if(_tipEl) return _tipEl;
+  _tipEl=document.createElement('div');
+  _tipEl.className='param-tooltip';
+  _tipEl.id='param-global-tip';
+  document.body.appendChild(_tipEl);
+  document.addEventListener('scroll',hideParamTooltip,true);
+  return _tipEl;
+}
+
+function showParamTooltip(e, html){
+  const tip=ensureTipEl();
+  // Render HTML with badge spans
+  tip.innerHTML=html
+    .replace(/\n/g,'<br>')
+    .replace(/<span class="conv-badge conv-small">/g,'<span class="conv-badge conv-small">')
+    .replace(/<b>/g,'<b>').replace(/<\/b>/g,'</b>');
+  tip.classList.add('visible');
+  positionTip(tip, e.clientX||e.pageX, e.clientY||e.pageY);
+}
+
+function positionTip(tip, cx, cy){
+  tip.style.left='0px'; tip.style.top='0px';
+  const tw=tip.offsetWidth||240, th=tip.offsetHeight||120;
+  const vw=window.innerWidth, vh=window.innerHeight;
+  let x=cx+14, y=cy-10;
+  if(x+tw>vw-8) x=cx-tw-14;
+  if(y+th>vh-8) y=vh-th-8;
+  if(y<8) y=8;
+  tip.style.left=x+'px'; tip.style.top=y+'px';
+}
+
+function hideParamTooltip(){
+  if(_tipEl) _tipEl.classList.remove('visible');
+}
+
+document.addEventListener('click',()=>hideParamTooltip());
+
+
+function init(){
+  renderTestList(); initParams(); renderParams();
+  S.rpGroupData=[{mean:10,n:50},{mean:11,n:50},{mean:14,n:50},{mean:15,n:50},{mean:20,n:50}];
+  rpRenderGroups(); rpCalculate();
+
+  // PWA manifest
+  const mf={name:"C*Power",short_name:"C*Power",start_url:".",display:"standalone",background_color:"#ece9d8",theme_color:"#d4d0c8",
+    icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23d4d0c8'/><text y='75' x='5' font-size='65' fill='%23000' font-family='serif'>C*</text></svg>",sizes:"any",type:"image/svg+xml"}]};
+  const blob=new Blob([JSON.stringify(mf)],{type:'application/json'});
+  const link=document.createElement('link'); link.rel='manifest'; link.href=URL.createObjectURL(blob);
+  document.head.appendChild(link);
+
+  // Set canvas initial height
+  const canvas=document.getElementById('dist-canvas');
+  if(canvas){
+    // Set CSS height based on viewport
+    const h=window.innerWidth<680?110:155;
+    canvas.style.height=h+'px';
+    // ResizeObserver to redraw when canvas layout changes
+    if(window.ResizeObserver){
+      const ro=new ResizeObserver(()=>{ if(S.results&&S.results.actual_power) drawDist(); });
+      ro.observe(canvas);
+    }
+    // Wire hover
+    initPlotHover();
+  }
+
+  // Draw placeholder text on canvas immediately
+  setTimeout(()=>{ drawDist(); },20);
+  // Full calculate
+  setTimeout(()=>{ calculate(); },150);
+}
+
+init();
+</script>
+</body>
+</html>
