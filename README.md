@@ -133,17 +133,33 @@ npx live-server --open=cpower.html
 
 ## 📐 Statistical Methods
 
-C*Power uses the following approximation approaches:
+C*Power uses the following methods:
 
 | Distribution | Method |
 |-------------|--------|
-| Normal | Abramowitz & Stegun rational approximation for CDF; Beasley-Springer-Moro for inverse |
-| t | Regularized incomplete beta function via Lentz continued fraction |
-| F | Regularized incomplete beta function |
-| χ² | Regularized incomplete gamma function (series + continued fraction) |
-| Noncentral F | Poisson-weighted mixture of central F distributions (up to j=60 terms) |
-| Noncentral t | Normal approximation to the noncentral t distribution |
-| Noncentral χ² | Poisson-weighted mixture of central χ² distributions |
+| Normal | Abramowitz & Stegun (1964) rational approximation for CDF; Beasley-Springer-Moro for inverse |
+| t (central) | Regularized incomplete beta with Pike-Hill symmetry |
+| F (central) | Regularized incomplete beta with Pike-Hill symmetry |
+| χ² (central) | Regularized incomplete gamma (series + continued fraction) |
+| Noncentral F | Exact Poisson-weighted mixture: P(F'≤f) = Σⱼ Pois(j; λ/2)·I_y(d₁/2+j, d₂/2) where y = d₁f/(d₁f+d₂) |
+| Noncentral t | NC-F transformation for two-tailed; normal approximation for df ≥ 30 |
+| Noncentral χ² | Exact Poisson-weighted mixture of central χ² distributions |
+| Sample-size search | Stepwise integer search starting from minimum valid N (df ≥ 1) |
+| Sensitivity / criterion | Bisection on bracketed monotone power function |
+
+### Validation
+
+The following test cases have been validated against G*Power 3.1:
+
+| Test | Inputs | Expected N | C*Power N |
+|------|--------|-----------|-----------|
+| ANOVA | k=4, f=0.25, α=0.05, 1−β=0.95 | 280 | 279 |
+| ANOVA | k=3, f=0.40, α=0.05, 1−β=0.80 | 66  | 64  |
+| Multiple regression (R²) | u=3, f²=0.15, α=0.05, 1−β=0.95 | 119 | 119 |
+| t two-sample | d=0.50, α=0.05, 1−β=0.80 | 128 | 128 |
+| t paired | dz=0.50, α=0.05, 1−β=0.80 | 34  | 34  |
+
+Differences of ±2 are from rounding (G*Power may report the next integer). More tests are needed across edge cases.
 
 ---
 
