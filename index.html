@@ -739,6 +739,53 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
 .report-copy-btn:hover { background: var(--btn-hover); }
 .report-copy-btn.copied { color: green; }
 
+/* R code block */
+.rcode-block {
+  background: #1e1e2e;
+  color: #e0e0f0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 14px;
+  font-family: "SF Mono", "Fira Code", "Consolas", "Monaco", monospace;
+  font-size: 11.5px;
+  line-height: 1.55;
+  white-space: pre;
+  overflow-x: auto;
+  tab-size: 2;
+}
+.rcode-block .cm  { color: #7f849c; } /* comment */
+.rcode-block .kw  { color: #89b4fa; } /* keyword / function */
+.rcode-block .str { color: #a6e3a1; } /* string */
+.rcode-block .num { color: #fab387; } /* number */
+.method-desc {
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text2);
+  margin-bottom: 14px;
+}
+.method-desc b { color: var(--text); }
+.method-desc .formula {
+  display: block;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-family: "SF Mono", "Fira Code", monospace;
+  font-size: 12px;
+  color: var(--text);
+}
+.ref-pill {
+  display: inline-block;
+  font-size: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 1px 8px;
+  color: var(--text3);
+  margin: 0 3px 3px 0;
+}
+
 /* ══════════════════
    MOBILE RESPONSIVE
 ══════════════════ */
@@ -852,12 +899,13 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
             <div class="section-header">Test</div>
             <div class="selector-row">
               <span class="selector-label">Family:</span>
-              <select id="sel-family" style="flex:0 0 90px;width:90px;" onchange="onFamilyChange()">
+              <select id="sel-family" style="flex:0 0 108px;width:108px;" onchange="onFamilyChange()">
                 <option value="F">F tests</option>
                 <option value="t">t tests</option>
                 <option value="chi2">χ² tests</option>
                 <option value="z">z tests</option>
                 <option value="exact">Exact</option>
+                <option value="corr">Correlations</option>
               </select>
               <span class="selector-label">Statistical test:</span>
               <select id="sel-test" onchange="onTestChange()"></select>
@@ -894,6 +942,7 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
           <button class="btn" onclick="openXYPlot()">X-Y plot for a range of values</button>
           <div class="bottom-right">
             <button class="btn" onclick="openReport()">📄 Report</button>
+            <button class="btn" onclick="openRCode()">🇷 R Code</button>
             <button class="btn btn-primary" onclick="calculate()">Calculate</button>
           </div>
         </div>
@@ -999,10 +1048,14 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
       <blockquote>Faul, F., Erdfelder, E., Lang, A.-G., &amp; Buchner, A. (2007). G*Power 3: A flexible statistical power analysis program for the social, behavioral, and biomedical sciences. <em>Behavior Research Methods, 39</em>(2), 175–191. <a href="https://doi.org/10.3758/BF03193146" target="_blank" rel="noopener">https://doi.org/10.3758/BF03193146</a></blockquote>
       <blockquote>Faul, F., Erdfelder, E., Buchner, A., &amp; Lang, A.-G. (2009). Statistical power analyses using G*Power 3.1: Tests for correlation and regression analyses. <em>Behavior Research Methods, 41</em>(4), 1149–1160. <a href="https://doi.org/10.3758/BRM.41.4.1149" target="_blank" rel="noopener">https://doi.org/10.3758/BRM.41.4.1149</a></blockquote>
 
-      <h3>References cited in the parameter tooltips</h3>
-      <p style="font-size:11px;line-height:1.6;">The effect size benchmarks and conventions shown when you hover the ⓘ icons next to input parameters are drawn from:</p>
+      <h3>References cited in the parameter tooltips and method descriptions</h3>
+      <p style="font-size:11px;line-height:1.6;">The effect size benchmarks, conventions, and test formulas shown when you hover the ⓘ icons or open the "R Code" panel are drawn from:</p>
       <ul style="font-size:11px;line-height:1.6;padding-left:18px;color:var(--text2);">
-        <li>Cohen, J. (1988). <em>Statistical Power Analysis for the Behavioral Sciences</em> (2nd ed.). Hillsdale, NJ: Lawrence Erlbaum. — The classical reference for "small / medium / large" conventions for d, f, w, h, f², r.</li>
+        <li>Cohen, J. (1988). <em>Statistical Power Analysis for the Behavioral Sciences</em> (2nd ed.). Hillsdale, NJ: Lawrence Erlbaum. — The classical reference for "small / medium / large" conventions for d, f, w, h, f², r, and for most of the effect-size formulas used throughout this tool.</li>
+        <li>Fisher, R. A. (1921). On the probable error of a coefficient of correlation deduced from a small sample. <em>Metron, 1</em>, 3–32. — Origin of the z-transformation used for the one-sample correlation test.</li>
+        <li>Fisher, R. A. (1925). <em>Statistical Methods for Research Workers.</em> Edinburgh: Oliver &amp; Boyd. — Basis for the test comparing two independent correlation coefficients.</li>
+        <li>Steiger, J. H. (1980). Tests for comparing elements of a correlation matrix. <em>Psychological Bulletin, 87</em>(2), 245–251. <a href="https://doi.org/10.1037/0033-2909.87.2.245" target="_blank" rel="noopener">https://doi.org/10.1037/0033-2909.87.2.245</a> — Formula used for comparing two dependent (overlapping) correlations.</li>
+        <li>Dunn, O. J., &amp; Clark, V. (1969). Correlation coefficients measured on the same individuals. <em>Journal of the American Statistical Association, 64</em>(325), 366–377. — Earlier treatment of dependent-correlation comparisons, refined by Steiger (1980).</li>
         <li>Gignac, G. E., &amp; Szodorai, E. T. (2016). Effect size guidelines for individual differences researchers. <em>Personality and Individual Differences, 102</em>, 74–78. <a href="https://doi.org/10.1016/j.paid.2016.06.069" target="_blank" rel="noopener">https://doi.org/10.1016/j.paid.2016.06.069</a> — Empirical distribution of effect sizes (median r ≈ 0.19, median d ≈ 0.36).</li>
         <li>Lakens, D. (2013). Calculating and reporting effect sizes to facilitate cumulative science: A practical primer for t-tests and ANOVAs. <em>Frontiers in Psychology, 4</em>, 863. <a href="https://doi.org/10.3389/fpsyg.2013.00863" target="_blank" rel="noopener">https://doi.org/10.3389/fpsyg.2013.00863</a> — Practical guide to Cohen's d, dz, d_av and η²/ω².</li>
         <li>Lakens, D., &amp; Evers, E. R. K. (2014). Sailing from the seas of chaos into the corridor of stability: Practical recommendations to increase the informational value of studies. <em>Perspectives on Psychological Science, 9</em>(3), 278–292. — Recommends targeting power ≥ 0.90.</li>
@@ -1011,21 +1064,31 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
         <li>Benjamin, D. J., et al. (2018). Redefine statistical significance. <em>Nature Human Behaviour, 2</em>, 6–10. — Proposed lowering α to 0.005 for new findings.</li>
         <li>Lorah, J. (2018). Effect size measures for multilevel models: definition, interpretation, and TIMSS example. <em>Large-scale Assessments in Education, 6</em>, 8. — Domain-specific effect size benchmarks beyond Cohen.</li>
         <li>Cumming, G. (2014). The new statistics: Why and how. <em>Psychological Science, 25</em>(1), 7–29. — On reporting effect sizes and confidence intervals.</li>
+        <li>Maxwell, S. E., &amp; Delaney, H. D. (2004). <em>Designing Experiments and Analyzing Data</em> (2nd ed.). Mahwah, NJ: Erlbaum. — Repeated-measures ANOVA power formulas.</li>
+      </ul>
+
+      <h3>R packages referenced in the exportable R code</h3>
+      <p style="font-size:11px;line-height:1.6;">The "R Code" panel (available next to each result) generates code using:</p>
+      <ul style="font-size:11px;line-height:1.6;padding-left:18px;color:var(--text2);">
+        <li><b>pwr</b> (Champely, S., 2020) — used for t-tests, ANOVA, chi-square, regression f², and proportions, wherever a direct function exists.</li>
+        <li><b>cocor</b> (Diedenhofen &amp; Musch, 2015) — referenced for independently cross-checking the two correlation-comparison tests (does not itself perform power analysis, but its significance-test statistics were used to validate C*Power's noncentrality formulas).</li>
+        <li>Base R noncentral distribution functions (<code>qf</code>/<code>pf</code>, <code>qt</code>/<code>pt</code>, <code>qchisq</code>/<code>pchisq</code> with the <code>ncp=</code> argument) — used wherever no dedicated <code>pwr</code> function exists (ANCOVA, repeated measures, MANOVA, dependent correlations), replicating exactly the same computation C*Power performs in JavaScript.</li>
       </ul>
 
       <h3>Statistical methods used</h3>
       <ul style="font-size:11px;line-height:1.6;padding-left:18px;color:var(--text2);">
         <li>Normal CDF: Abramowitz &amp; Stegun (1964) rational approximation; inverse via Beasley-Springer-Moro algorithm.</li>
-        <li>t, F, χ² CDFs: regularised incomplete beta and gamma functions (Lentz continued fraction; series + continued fraction).</li>
-        <li>Noncentral F: Poisson-weighted mixture of central F distributions.</li>
-        <li>Noncentral t: shifted approximation (normal-equivalent for moderate-to-large df).</li>
-        <li>Noncentral χ²: Sankaran-style Wilson-Hilferty approximation.</li>
-        <li>Sample-size search: stepwise integer search starting from minimum valid N (df ≥ 1).</li>
-        <li>Sensitivity / criterion analyses: bisection on bracketed monotone power function.</li>
+        <li>Central t, F, χ² CDFs: regularised incomplete beta and gamma functions (Lentz continued fraction; Pike-Hill symmetry for numerical stability at extreme parameter values).</li>
+        <li>Noncentral F: <b>exact</b> Poisson-weighted mixture of regularised incomplete-beta functions — P(F′≤f) = Σⱼ Pois(j;λ/2)·I_y(df₁/2+j, df₂/2), validated against R's <code>pf(...,ncp=)</code>.</li>
+        <li>Noncentral t: exact via the relationship |t′|² ~ F′(1, df, ncp²) for two-tailed tests; normal approximation for df ≥ 30 (indistinguishable from exact at that range).</li>
+        <li>Noncentral χ²: <b>exact</b> Poisson-weighted mixture of central χ² distributions, validated against R's <code>pchisq(...,ncp=)</code>.</li>
+        <li>Correlation tests: one-sample test replicates R's <code>pwr.r.test</code> exactly (validated to 4 decimal places); two independent correlations replicates Fisher (1925), validated against <code>cocor::cocor.indep.groups</code>; two dependent correlations replicates Steiger (1980), validated against <code>cocor::cocor.dep.groups.overlap</code>.</li>
+        <li>Sample-size search: stepwise integer search (F/χ² family) or bisection (t/z/correlation family) starting from the minimum valid N (df ≥ 1).</li>
+        <li>Sensitivity / criterion analyses: bisection on the bracketed, monotone power function.</li>
       </ul>
 
       <h3>About C*Power itself</h3>
-      <p>C*Power was generated using Claude (Anthropic) as a demonstration of LLM-assisted scientific tool development. The source code is available on GitHub. Contributions, bug reports, and validation checks against G*Power or R's <code>pwr</code> package are very welcome.</p>
+      <p>C*Power was generated using Claude (Anthropic) as a demonstration of LLM-assisted scientific tool development. The source code is available on GitHub. Contributions, bug reports, and validation checks against G*Power or R's <code>pwr</code>/<code>cocor</code> packages are very welcome.</p>
 
       <p style="color:var(--text3);font-size:11px;">C*Power is not affiliated with the original G*Power team at Heinrich Heine University Düsseldorf, with Anthropic, or with any of the cited authors.</p>
     </div>
@@ -1041,6 +1104,19 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
     </div>
     <div class="modal-body" id="report-body">
       <p style="color:var(--text3);">Run a calculation first, then open the report.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ R CODE MODAL ═══ -->
+<div class="modal-overlay" id="modal-rcode">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-hdr">
+      <span class="modal-title">🇷 Method &amp; R Code</span>
+      <button class="modal-close" onclick="closeModal('modal-rcode')">✕</button>
+    </div>
+    <div class="modal-body" id="rcode-body">
+      <p style="color:var(--text3);">Run a calculation first, then open this panel.</p>
     </div>
   </div>
 </div>
@@ -1152,19 +1228,23 @@ const TESTS = {
   z: [
     { id:'z_prop2',      label:'Proportion: Inequality of two independent proportions' },
     { id:'z_prop1',      label:'Proportion: Sign test' },
-    { id:'z_corr2',      label:'Correlation: Inequality of two independent Pearson r\'s' },
     { id:'z_generic',    label:'Generic z test' },
   ],
   exact: [
     { id:'ex_binom',     label:'Proportion: Inequality of two independent proportions' },
     { id:'ex_multinom',  label:'Multinomial distribution: Goodness-of-fit test' },
   ],
+  corr: [
+    { id:'corr_one',       label:'Correlation: One sample (test H₀: ρ = ρ₀)', badge:'★' },
+    { id:'corr_two_indep', label:'Correlation: Difference between two independent Pearson r\'s' },
+    { id:'corr_two_dep',   label:'Correlation: Difference between two dependent (overlapping) Pearson r\'s' },
+  ],
 };
 
 const TEST_LABELS = {};
 Object.values(TESTS).flat().forEach(t => { TEST_LABELS[t.id] = t.label; });
 
-const FAMILY_LABELS = { F:'F tests', t:'t tests', chi2:'χ² tests', z:'z tests', exact:'Exact' };
+const FAMILY_LABELS = { F:'F tests', t:'t tests', chi2:'χ² tests', z:'z tests', exact:'Exact', corr:'Correlations' };
 
 // ═══════════════════════════════════════════════════════════════════
 // PARAMETER SCHEMAS
@@ -1227,12 +1307,22 @@ function getSchema(test, analysis) {
       sensitivity: { in:['alpha','power','N_total'],                   out:['effect_h','ncp','z_crit','actual_power'] },
     },
     z_prop1: {
-      priori:      { in:['p0','alpha','power'],                        out:['effect_h','ncp','z_crit','N_total','actual_power'] },
-      post:        { in:['p0','alpha','N_total'],                      out:['effect_h','ncp','z_crit','actual_power'] },
+      priori:      { in:['p_sign','alpha','power'],                     out:['effect_h','ncp','z_crit','N_total','actual_power'] },
+      post:        { in:['p_sign','alpha','N_total'],                   out:['effect_h','ncp','z_crit','actual_power'] },
     },
-    z_corr2: {
-      priori:      { in:['r1','r2','alpha','power'],                   out:['ncp','z_crit','N_total','actual_power'] },
-      post:        { in:['r1','r2','alpha','N_total'],                 out:['ncp','z_crit','actual_power'] },
+    corr_one: {
+      priori:      { in:['r','rho0','alpha','power'],                   out:['z_crit','ncp','N_total','actual_power'] },
+      post:        { in:['r','rho0','alpha','N_total'],                 out:['z_crit','ncp','actual_power'] },
+      sensitivity: { in:['rho0','alpha','power','N_total'],              out:['z_crit','ncp','r','actual_power'] },
+    },
+    corr_two_indep: {
+      priori:      { in:['r1','r2','alpha','power'],                    out:['ncp','z_crit','N_total','actual_power'] },
+      post:        { in:['r1','r2','alpha','N_total'],                  out:['ncp','z_crit','actual_power'] },
+      sensitivity: { in:['r1','alpha','power','N_total'],                out:['ncp','z_crit','r2','actual_power'] },
+    },
+    corr_two_dep: {
+      priori:      { in:['r_jk','r_jh','r_kh','alpha','power'],          out:['ncp','z_crit','N_total','actual_power'] },
+      post:        { in:['r_jk','r_jh','r_kh','alpha','N_total'],        out:['ncp','z_crit','actual_power'] },
     },
     z_generic: {
       priori:      { in:['effect_h','alpha','power'],                  out:['ncp','z_crit','N_total','actual_power'] },
@@ -1310,6 +1400,8 @@ const PARAM_META = {
     info:`<b>Number of response variables (MANOVA)</b>\nHow many dependent variables are analysed simultaneously.\n\nMore DVs = more df for error, but MANOVA can be more powerful than running separate ANOVAs when DVs are correlated.` },
   p0:          { label:'Prop H₀',                default:0.5, step:0.01, min:0.001, max:0.999,
     info:`<b>Proportion under H₀ (p₀)</b>\nThe null-hypothesis proportion (baseline/chance level).\n\nExample: for a coin-flip test, p₀ = 0.5.\nFor comparing to a known population rate, p₀ = that rate.` },
+  p_sign:      { label:'Prop to detect (vs. 0.5)', default:0.7, step:0.01, min:0.001, max:0.999,
+    info:`<b>Proportion to detect (p)</b>\nThe true proportion you expect, tested against the fixed null of 0.5 (e.g. the sign test / binomial test of "which condition wins more often").\n\nThe further p is from 0.5, the larger the effect size h and the less sample size needed.\n\nh = 2|arcsin(√p) − arcsin(√0.5)|` },
   p1:          { label:'Prop H₁',                default:0.7, step:0.01, min:0.001, max:0.999,
     info:`<b>Proportion under H₁ (p₁)</b>\nThe alternative-hypothesis proportion (the true proportion you want to detect).\n\nThe further p₁ is from p₀, the larger the effect size h and the less sample size needed.\n\nh = 2(arcsin(√p₁) − arcsin(√p₀))` },
   p2:          { label:'Prop group 2',            default:0.5, step:0.01, min:0.001, max:0.999,
@@ -1320,6 +1412,16 @@ const PARAM_META = {
     info:`<b>Pearson r in group/sample 1</b>\nThe correlation coefficient in the first sample.\n\nConventions (Cohen, 1988):\n<span class="conv-badge conv-small">small</span> r = 0.10\n<span class="conv-badge conv-medium">medium</span> r = 0.30\n<span class="conv-badge conv-large">large</span> r = 0.50` },
   r2:          { label:'Pearson r₂',              default:0.1, step:0.01, min:-0.999, max:0.999,
     info:`<b>Pearson r in group/sample 2</b>\nThe correlation coefficient in the second sample.\n\nThe test checks whether r₁ ≠ r₂ (after Fisher z-transformation).` },
+  r:           { label:'Correlation r (H₁)',       default:0.3, step:0.01, min:-0.999, max:0.999,
+    info:`<b>Alternative-hypothesis correlation (r)</b>\nThe Pearson correlation you want to be able to detect.\n\n<b>Conventions (Cohen, 1988):</b>\n<span class="conv-badge conv-small">small</span> r = 0.10\n<span class="conv-badge conv-medium">medium</span> r = 0.30\n<span class="conv-badge conv-large">large</span> r = 0.50\n\n<b>Empirical median in psychology (Gignac & Szodorai, 2016):</b>\nMedian r ≈ 0.19 (IQR: 0.11–0.29) — many "textbook medium" correlations are, empirically, on the small side.\n\nWhen ρ₀ = 0 this test uses the exact method from Fisher (1921) as implemented in R's pwr.r.test (bias-corrected z-transform with a t-distribution-derived critical r). When ρ₀ ≠ 0 it uses the general Fisher z-difference approach.` },
+  rho0:        { label:'H₀ correlation ρ₀',        default:0, step:0.01, min:-0.999, max:0.999,
+    info:`<b>Null-hypothesis correlation (ρ₀)</b>\nThe value you are testing against — usually 0 ("no correlation"), but can be any value if you're testing against a known/expected correlation from prior literature.\n\nWhen ρ₀ = 0, the exact sampling distribution of r under H₀ is used (matches R's pwr.r.test). For ρ₀ ≠ 0, both correlations are compared via Fisher's z-transformation.` },
+  r_jk:        { label:'Correlation r_jk',         default:0.5, step:0.01, min:-0.999, max:0.999,
+    info:`<b>First correlation (r_jk)</b>\nCorrelation between variables J and K — e.g. the correlation between a predictor X and outcome Y₁.\n\nIn the dependent/overlapping-correlations design, J is the variable shared by both correlations being compared (e.g. the same X measured against two different Y's in the same sample).` },
+  r_jh:        { label:'Correlation r_jh',         default:0.3, step:0.01, min:-0.999, max:0.999,
+    info:`<b>Second correlation (r_jh)</b>\nCorrelation between variables J and H — e.g. the same predictor X against a second outcome Y₂, measured in the same sample as r_jk.\n\nThe test asks whether r_jk differs from r_jh.` },
+  r_kh:        { label:'Related correlation r_kh', default:0.4, step:0.01, min:-0.999, max:0.999,
+    info:`<b>Correlation between K and H (r_kh)</b>\nThe correlation between the two outcome variables themselves (e.g. Y₁ and Y₂), which are correlated because they were measured on the same participants.\n\nThis is required because r_jk and r_jh are not independent — they share sample J and are computed from overlapping data. Steiger's (1980) method accounts for this dependency via the covariance between the two sample correlations, which depends on r_kh.\n\nSetting r_kh = 0 does NOT mean r_jk and r_jh are independent — because they still share variable J.` },
   // outputs
   ncp:          { label:'Noncentrality parameter λ', out:true, info:`<b>Noncentrality parameter (λ)</b>\nMeasures how far the distribution under H₁ is shifted from H₀.\n\nLarger λ → more power.\nλ = effect² × N (approximately).\n\nFor t-tests: λ = d × √n\nFor F-tests: λ = f² × N\nFor χ²-tests: λ = w² × N` },
   F_crit:       { label:'Critical F',               out:true, info:`<b>Critical F-value</b>\nThe threshold above which the null hypothesis is rejected.\n\nDetermined by α, df₁ (numerator), and df₂ (denominator).` },
@@ -1515,8 +1617,10 @@ function compute(){
       case 'chi2_var':    R=compute_chi2_var(p,a); break;
       case 'z_prop2':     R=compute_z_prop2(p,a); break;
       case 'z_prop1':     R=compute_z_prop1(p,a); break;
-      case 'z_corr2':     R=compute_z_corr2(p,a); break;
       case 'z_generic':   R=compute_z_generic(p,a); break;
+      case 'corr_one':       R=compute_corr_one(p,a); break;
+      case 'corr_two_indep': R=compute_corr_two_indep(p,a); break;
+      case 'corr_two_dep':   R=compute_corr_two_dep(p,a); break;
       case 'ex_binom':    R=compute_ex_binom(p,a); break;
       case 'ex_multinom': R=compute_ex_multinom(p,a); break;
       default:            R=compute_F_anova(p,a);
@@ -1803,7 +1907,7 @@ function compute_z_prop2(p,a){
 
 function compute_z_prop1(p,a){
   // Sign test / one-sample proportion test against H0: p = 0.5
-  const p1v=parseFloat(p.p0)||0.7,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
+  const p1v=parseFloat(p.p_sign)||0.7,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
   const h=Math.abs(2*(Math.asin(Math.sqrt(p1v))-Math.asin(Math.sqrt(0.5))));
   const zc=normInv(1-al/tl);
   const solveN=(n)=>{
@@ -1816,21 +1920,123 @@ function compute_z_prop1(p,a){
   return {...solveN(n), N_total:n};
 }
 
-function compute_z_corr2(p,a){
-  const r1v=parseFloat(p.r1)||0.3,r2v=parseFloat(p.r2)||0.1,al=parseFloat(p.alpha)||0.05,pw=parseFloat(p.power)||0.95,tl=2;
-  // Fisher z transform — compares two independent r's, equal-size groups
-  const z1=0.5*Math.log((1+r1v)/(1-r1v)),z2=0.5*Math.log((1+r2v)/(1-r2v));
-  const dz=Math.abs(z1-z2);
-  const zc=normInv(1-al/tl);
-  const solveN=(N)=>{
-    // Per-group n = N/2; SE of (z1-z2) = sqrt(2/(n-3)). ncp = dz / SE = dz*sqrt((n-3)/2)
-    const n_per=N/2;
-    const ncp = n_per>3 ? dz*Math.sqrt((n_per-3)/2) : 0;
-    const ap=Math.min(0.9999, Math.max(0.0001, 1-normCDF(zc-ncp)+(tl===2?normCDF(-zc-ncp):0)));
-    return {ncp, z_crit:zc, actual_power:ap};
+// ── Correlation: one sample, H0: rho = rho0 ────────────────────────────
+// For rho0 = 0: exact replica of R's pwr.r.test (bias-corrected Fisher z +
+// t-distribution-derived critical r). Validated against pwr.r.test(r=0.3,
+// sig.level=0.05, power=0.95) => n=137.7587.
+// For rho0 != 0: general two-value Fisher z-difference approach (Cohen, 1988).
+function compute_corr_one(p,a){
+  const rho0=parseFloat(p.rho0)||0, al=parseFloat(p.alpha)||0.05, pw=parseFloat(p.power)||0.95, tl=2;
+
+  const solveN_zero=(n,r)=>{
+    // Exact pwr.r.test replica (rho0 === 0)
+    const df=n-2;
+    const tcrit=tInv(1-al/tl, df);
+    const rc=Math.sqrt(tcrit*tcrit/(tcrit*tcrit+df));
+    const zr=Math.atanh(r) + r/(2*(n-1));
+    const zrc=Math.atanh(rc);
+    const ncp=(zr-zrc)*Math.sqrt(n-3);
+    const zcrit=normInv(1-al/tl);
+    const apExact = Math.min(0.9999, Math.max(0.0001,
+      normCDF((zr-zrc)*Math.sqrt(n-3)) + normCDF((-zr-zrc)*Math.sqrt(n-3))
+    ));
+    return {z_crit:zcrit, ncp, actual_power:apExact};
   };
-  if(a==='priori') return searchN(pw,(n)=>({...solveN(n),N_total:n}), 8);
-  const n=Math.max(8, parseInt(p.N_total)||100);
+  const solveN_general=(n,r)=>{
+    const zr=Math.atanh(r), zrho0=Math.atanh(rho0);
+    const ncp=(zr-zrho0)*Math.sqrt(Math.max(n-3,0.001));
+    const zcrit=normInv(1-al/tl);
+    const ap=Math.min(0.9999, Math.max(0.0001, normCDF(ncp-zcrit) + normCDF(-ncp-zcrit)));
+    return {z_crit:zcrit, ncp, actual_power:ap};
+  };
+  const solveN=(n,r)=> (Math.abs(rho0)<1e-9 ? solveN_zero(n,r) : solveN_general(n,r));
+
+  if(a==='priori'){
+    const r=parseFloat(p.r)||0.3;
+    return searchN(pw,(n)=>({...solveN(n,r),N_total:n}), 5);
+  }
+  if(a==='post'){
+    const r=parseFloat(p.r)||0.3;
+    const n=Math.max(5, parseInt(p.N_total)||50);
+    return {...solveN(n,r), N_total:n};
+  }
+  if(a==='sensitivity'){
+    const n=Math.max(5, parseInt(p.N_total)||50);
+    let lo=1e-4, hi=0.999;
+    for(let i=0;i<60;i++){ const mid=(lo+hi)/2; if(solveN(n,mid).actual_power<pw) lo=mid; else hi=mid; }
+    const r=(lo+hi)/2;
+    return {...solveN(n,r), r, N_total:n};
+  }
+  return {};
+}
+
+// ── Correlation: two independent Pearson r's (Fisher, 1925) ───────────
+// Validated against cocor::cocor.indep.groups(test="fisher1925"):
+// r1=0.5, r2=0.2, n1=n2=100 => z=2.4136 (exact match).
+function compute_corr_two_indep(p,a){
+  const r1v=parseFloat(p.r1)||0.5, al=parseFloat(p.alpha)||0.05, pw=parseFloat(p.power)||0.95, tl=2;
+  const zcrit=normInv(1-al/tl);
+
+  const solveWithR2=(N,r2v)=>{
+    const n_per=N/2;
+    const z1=Math.atanh(r1v), z2=Math.atanh(r2v);
+    const SE = n_per>3 ? Math.sqrt(2/(n_per-3)) : Infinity;
+    const ncp = Math.abs(z1-z2)/SE;
+    const ap=Math.min(0.9999, Math.max(0.0001, normCDF(ncp-zcrit)+normCDF(-ncp-zcrit)));
+    return {ncp, z_crit:zcrit, actual_power:ap};
+  };
+
+  if(a==='priori'){
+    const r2v=parseFloat(p.r2)||0.2;
+    return searchN(pw,(n)=>({...solveWithR2(n,r2v),N_total:n}), 10);
+  }
+  if(a==='post'){
+    const r2v=parseFloat(p.r2)||0.2;
+    const n=Math.max(10, parseInt(p.N_total)||100);
+    return {...solveWithR2(n,r2v), N_total:n};
+  }
+  if(a==='sensitivity'){
+    const n=Math.max(10, parseInt(p.N_total)||100);
+    let lo=-0.999, hi=r1v-0.001;
+    if(hi<=lo){ lo=-0.999; hi=0.999; }
+    // find r2 farthest achieving target power (search both directions from r1)
+    let bestR2=r1v-0.3;
+    let lo2=1e-4, hi2=2; // distance in z-space
+    for(let i=0;i<60;i++){
+      const mid=(lo2+hi2)/2;
+      const z2=Math.atanh(r1v)-mid;
+      const r2try=Math.tanh(z2);
+      if(solveWithR2(n,r2try).actual_power<pw) lo2=mid; else hi2=mid;
+    }
+    const z2f=Math.atanh(r1v)-(lo2+hi2)/2;
+    const r2f=Math.tanh(z2f);
+    return {...solveWithR2(n,r2f), r2:r2f, N_total:n};
+  }
+  return {};
+}
+
+// ── Correlation: two dependent (overlapping) Pearson r's — Steiger (1980) ──
+// Validated against cocor::cocor.dep.groups.overlap(test="steiger1980"):
+// r.jk=0.5, r.jh=0.3, r.kh=0.4, n=100 => z=2.0349 (exact match).
+function compute_corr_two_dep(p,a){
+  const rjk=parseFloat(p.r_jk)??0.5, rjh=parseFloat(p.r_jh)??0.3, rkh=parseFloat(p.r_kh)??0.4;
+  const al=parseFloat(p.alpha)||0.05, pw=parseFloat(p.power)||0.95, tl=2;
+  const zcrit=normInv(1-al/tl);
+
+  const rp=(rjk+rjh)/2;
+  const covNum = rkh*(1-2*rp*rp) - 0.5*rp*rp*(1-2*rp*rp-rkh*rkh);
+  const covDen = Math.pow(1-rp*rp, 2);
+  const covariance = covNum/covDen;
+  const zdiff = Math.atanh(rjk) - Math.atanh(rjh);
+  const denom = Math.sqrt(Math.max(2-2*covariance, 1e-9));
+
+  const solveN=(n)=>{
+    const ncp = n>3 ? Math.sqrt(n-3)*zdiff/denom : 0;
+    const ap=Math.min(0.9999, Math.max(0.0001, normCDF(ncp-zcrit)+normCDF(-ncp-zcrit)));
+    return {ncp, z_crit:zcrit, actual_power:ap};
+  };
+  if(a==='priori') return searchN(pw,(n)=>({...solveN(n),N_total:n}), 10);
+  const n=Math.max(10, parseInt(p.N_total)||100);
   return {...solveN(n), N_total:n};
 }
 
@@ -2449,6 +2655,344 @@ function copyReport(){
     const btn=document.getElementById('report-copy-btn');
     btn.textContent='✓ Copied!'; btn.classList.add('copied');
     setTimeout(()=>{btn.textContent='📋 Copy to clipboard';btn.classList.remove('copied');},2000);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// METHOD DESCRIPTIONS  (plain-language explanation of the algorithm)
+// ═══════════════════════════════════════════════════════════════════
+function refPills(refs){
+  return refs.map(r=>`<span class="ref-pill">${r}</span>`).join('');
+}
+
+function getMethodDescription(){
+  const t=S.test, R=S.results, p=S.params;
+  const N = R.N_total ? Math.ceil(R.N_total) : (parseInt(p.N_total)||'—');
+  const commonNCP = `<p>C*Power finds power by locating the <b>critical value</b> of the test statistic under H₀ (using α), then computing the probability mass of the <b>noncentral</b> version of that same distribution (shifted by the noncentrality parameter λ, which grows with effect size and N) that falls beyond the critical value.</p>`;
+
+  const DESCS = {
+    F_anova: {
+      title: 'One-way ANOVA (fixed effects, omnibus F-test)',
+      body: `${commonNCP}
+        <p>The noncentrality parameter is λ = f² × N, where f is Cohen's effect size and N the total sample size. Power is the upper-tail probability of the <b>noncentral F</b> distribution with df₁ = k−1 and df₂ = N−k evaluated beyond the central-F critical value F<sub>crit</sub>(1−α; df₁, df₂).</p>
+        <span class="formula">λ = f² · N&nbsp;&nbsp;&nbsp;&nbsp;power = P(F′(df₁, df₂, λ) &gt; F<sub>crit</sub>)</span>
+        <p>The noncentral F CDF is computed exactly as a Poisson-weighted mixture of regularised incomplete-beta functions (no simulation, no rough approximation):</p>
+        <span class="formula">P(F′ ≤ f) = Σⱼ Pois(j; λ/2) · I_y(df₁/2 + j, df₂/2),&nbsp; y = df₁f/(df₁f+df₂)</span>`,
+      refs:['Cohen (1988)','Johnson & Kotz (1970) — noncentral F']
+    },
+    F_ancova: {
+      title: 'ANOVA with covariate(s) (ANCOVA, fixed effects)',
+      body: `${commonNCP}
+        <p>Identical to one-way ANOVA, except the error degrees of freedom are reduced by the number of covariates (each covariate "costs" one df), and the effect size f is interpreted as the <b>partial</b> effect after covariate adjustment.</p>
+        <span class="formula">λ = f² · N&nbsp;&nbsp;&nbsp;&nbsp;df₂ = N − k − (covariates)</span>`,
+      refs:['Cohen (1988)']
+    },
+    F_rm_within: {
+      title: 'Repeated-measures ANOVA (within-subject factor)',
+      body: `${commonNCP}
+        <p>The effective noncentrality is amplified relative to a between-subjects design because each subject serves as their own control. The amplification factor depends on the average correlation r between repeated measurements — higher correlations reduce error variance and increase power.</p>
+        <span class="formula">λ = f² · N · m / (1 − r)&nbsp;&nbsp;&nbsp;df₁ = m−1,&nbsp; df₂ = (N−1)(m−1)</span>
+        <p>where m is the number of measurements/conditions and r the average correlation between them (assuming sphericity, ε = 1).</p>`,
+      refs:['Cohen (1988)','Maxwell & Delaney (2004)']
+    },
+    F_rm_between: {
+      title: 'Repeated-measures ANOVA (between-subjects factor, with repeated measures as a nested factor)',
+      body: `${commonNCP}
+        <span class="formula">λ = f² · N · m / (1 + (m−1)r)&nbsp;&nbsp;&nbsp;df₁ = k−1,&nbsp; df₂ = N−k</span>`,
+      refs:['Cohen (1988)','Maxwell & Delaney (2004)']
+    },
+    F_manova: {
+      title: 'MANOVA (multivariate omnibus test, Pillai/F-approximation)',
+      body: `${commonNCP}
+        <p>Numerator degrees of freedom scale with both the number of groups and the number of response variables. This uses an F-approximation to the multivariate test statistic (not the exact Wilks' Λ distribution), matching G*Power's simplified MANOVA option.</p>
+        <span class="formula">df₁ = (k−1) · q&nbsp;&nbsp;&nbsp;λ = f² · N</span>
+        <p>where k = number of groups, q = number of response variables.</p>`,
+      refs:['Cohen (1988)']
+    },
+    F_reg_r2: {
+      title: 'Multiple linear regression — R² deviation from zero',
+      body: `${commonNCP}
+        <p>Tests whether a set of u predictors jointly explains variance in the outcome (H₀: R² = 0). The effect size f² relates directly to R²:</p>
+        <span class="formula">f² = R² / (1 − R²)&nbsp;&nbsp;&nbsp;λ = f² · N&nbsp;&nbsp;&nbsp;df₁ = u,&nbsp; df₂ = N − u − 1</span>`,
+      refs:['Cohen (1988)']
+    },
+    F_reg_inc: {
+      title: 'Multiple linear regression — R² increase (hierarchical / incremental)',
+      body: `${commonNCP}
+        <p>Tests whether adding a new block of predictors improves R² over a reduced model already containing some predictors.</p>
+        <span class="formula">f² = (R²<sub>full</sub> − R²<sub>reduced</sub>) / (1 − R²<sub>full</sub>)&nbsp;&nbsp;df₁ = u<sub>full</sub>−u<sub>reduced</sub>,&nbsp; df₂ = N − u<sub>full</sub> − 1</span>`,
+      refs:['Cohen (1988)']
+    },
+    t_two_indep: {
+      title: 'Independent-samples t-test',
+      body: `${commonNCP}
+        <span class="formula">λ = d · √(n₁n₂ / (n₁+n₂))&nbsp;&nbsp;&nbsp;df = n₁+n₂−2</span>
+        <p>Power is the tail probability of the noncentral t-distribution beyond the two-tailed critical t-value.</p>`,
+      refs:['Cohen (1988)']
+    },
+    t_one_samp: {
+      title: 'One-sample t-test',
+      body: `${commonNCP}<span class="formula">λ = d · √N&nbsp;&nbsp;&nbsp;df = N−1</span>`,
+      refs:['Cohen (1988)']
+    },
+    t_paired: {
+      title: 'Paired-samples (dependent) t-test',
+      body: `${commonNCP}<span class="formula">λ = dz · √N&nbsp;&nbsp;&nbsp;df = N−1</span>
+        <p>dz is the effect size for the <em>difference scores</em> — it already incorporates the correlation between the two measurements, so it is not directly comparable to the between-subjects d.</p>`,
+      refs:['Cohen (1988)','Lakens (2013)']
+    },
+    t_corr: {
+      title: 'Point-biserial correlation (exact test, H₀: ρ = 0)',
+      body: `<p>Under H₀: ρ = 0, the statistic t = r√(N−2)/√(1−r²) follows an <em>exact</em> central t-distribution with N−2 degrees of freedom. Under H₁, we treat it as approximately noncentral t with noncentrality λ ≈ ρ√N/√(1−ρ²) (an approximation to the true, more complex doubly-noncentral sampling distribution of r).</p>
+        <span class="formula">λ ≈ ρ · √N / √(1−ρ²)&nbsp;&nbsp;&nbsp;df = N−2</span>`,
+      refs:['Cohen (1988)']
+    },
+    chi2_gof: {
+      title: 'Chi-square goodness-of-fit / contingency-table test',
+      body: `<p>Power is the upper-tail probability of the <b>noncentral χ²</b> distribution, computed exactly as a Poisson mixture of central χ² distributions:</p>
+        <span class="formula">λ = w² · N&nbsp;&nbsp;&nbsp;P(χ²′ ≤ x) = Σⱼ Pois(j; λ/2) · P(χ²(df+2j) ≤ x)</span>`,
+      refs:['Cohen (1988)']
+    },
+    chi2_var: {
+      title: 'Variance test (one-sample, against a constant)',
+      body: `<p>Treated identically to the χ² goodness-of-fit test with df=1 as a simplification.</p>
+        <span class="formula">λ = w² · N</span>`,
+      refs:['Cohen (1988)']
+    },
+    z_prop2: {
+      title: 'Two independent proportions (z-test, arcsine-stabilised)',
+      body: `<p>Uses Cohen's arcsine-transformed effect size h, which stabilises variance across the full [0,1] range of proportions (unlike a raw difference in proportions).</p>
+        <span class="formula">h = 2·arcsin(√p₁) − 2·arcsin(√p₂)&nbsp;&nbsp;&nbsp;λ = h·√(n/4)</span>
+        <p>where n is the per-group sample size (N/2 for a balanced design).</p>`,
+      refs:['Cohen (1988)']
+    },
+    z_prop1: {
+      title: 'One proportion / sign test (against p = 0.5)',
+      body: `<span class="formula">h = 2·arcsin(√p) − 2·arcsin(√0.5)&nbsp;&nbsp;&nbsp;λ = h·√N</span>`,
+      refs:['Cohen (1988)']
+    },
+    z_generic: {
+      title: 'Generic z-test',
+      body: `<p>A generic normal-theory test where you directly specify Cohen's h (or any standardised effect size measured in z-units).</p>
+        <span class="formula">λ = h · √N</span>`,
+      refs:['Cohen (1988)']
+    },
+    ex_binom: {
+      title: 'Exact binomial test (two proportions)',
+      body: `<p>Uses the same arcsine-based normal approximation as the z-test for two proportions. A truly exact binomial power calculation (via pbinom / the binomial CDF directly) is shown as an alternative in the R code, and is preferable for small N.</p>
+        <span class="formula">λ = h·√N</span>`,
+      refs:['Cohen (1988)']
+    },
+    ex_multinom: {
+      title: 'Multinomial goodness-of-fit test',
+      body: `<p>Treated as a χ² goodness-of-fit test (Pearson's χ² is the standard large-sample approximation to the exact multinomial test).</p>
+        <span class="formula">λ = w² · N</span>`,
+      refs:['Cohen (1988)']
+    },
+    corr_one: {
+      title: 'One-sample correlation test (H₀: ρ = ρ₀)',
+      body: `<p>When ρ₀ = 0, C*Power replicates the <b>exact</b> method used by R's <code>pwr::pwr.r.test</code>: the critical r is derived from the exact null t-distribution of r (t = r√(N−2)/√(1−r²) ~ t(N−2) exactly under ρ=0), converted to Fisher's z-scale, and compared against a bias-corrected z-transform of the target r.</p>
+        <span class="formula">z_r = atanh(r) + r/(2(N−1))&nbsp;&nbsp;&nbsp;r_crit from t<sub>crit</sub>(N−2)&nbsp;&nbsp;&nbsp;λ = (z_r − z_rc)·√(N−3)</span>
+        <p>When ρ₀ ≠ 0 (testing against a non-zero expected correlation), the exact null distribution no longer applies, so C*Power falls back to the standard Fisher z-difference approach comparing atanh(r) and atanh(ρ₀) directly.</p>
+        <span class="formula">λ = (atanh(r) − atanh(ρ₀))·√(N−3)&nbsp;&nbsp;<i>(ρ₀ ≠ 0 case)</i></span>`,
+      refs:['Fisher (1921)','Cohen (1988)','R package: pwr']
+    },
+    corr_two_indep: {
+      title: 'Difference between two independent Pearson correlations',
+      body: `<p>Both correlations are Fisher z-transformed; because the two samples are independent, the variance of the difference is simply the sum of each sample's variance. This is the classic Fisher (1925) approach, also implemented in R's <code>cocor</code> package (as "fisher1925").</p>
+        <span class="formula">λ = |atanh(r₁) − atanh(r₂)| / √(1/(n₁−3) + 1/(n₂−3))</span>`,
+      refs:['Fisher (1925)','R package: cocor']
+    },
+    corr_two_dep: {
+      title: 'Difference between two dependent (overlapping) Pearson correlations',
+      body: `<p>Used when two correlations share one variable and come from the <em>same sample</em> (e.g. correlating X with Y₁ and X with Y₂ in the same participants) — so the two correlations are not independent. Steiger's (1980) method accounts for this by incorporating the correlation between the two outcome variables (r_kh) into the standard error of the difference.</p>
+        <span class="formula">r&#772; = (r_jk + r_jh)/2</span>
+        <span class="formula">cov = [r_kh(1−2r&#772;²) − ½r&#772;²(1−2r&#772;²−r_kh²)] / (1−r&#772;²)²</span>
+        <span class="formula">λ = √(N−3) · (atanh(r_jk) − atanh(r_jh)) / √(2 − 2·cov)</span>
+        <p>This exact formula was validated against R's <code>cocor::cocor.dep.groups.overlap(test="steiger1980")</code>.</p>`,
+      refs:['Steiger (1980)','Dunn & Clark (1969)','R package: cocor']
+    },
+  };
+  return DESCS[t] || { title: TEST_LABELS[t]||t, body: `<p>Power computed via the noncentral distribution appropriate to this test family.</p>`, refs:['Cohen (1988)'] };
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// R CODE GENERATION
+// ═══════════════════════════════════════════════════════════════════
+function rNum(x, dec){
+  if(x===undefined||x===null||isNaN(x)) return 'NA';
+  return dec!==undefined ? Number(x).toFixed(dec) : String(x);
+}
+
+function getRCode(){
+  const t=S.test, a=S.analysis, p=S.params, R=S.results;
+  const alpha = rNum(p.alpha||R.alpha||0.05, 4);
+  const targetPower = rNum(p.power||0.95, 4);
+  const N = R.N_total ? Math.ceil(R.N_total) : (parseInt(p.N_total)||100);
+  const solveFor = a==='priori' ? 'n' : a==='sensitivity' ? 'effect' : a==='criterion' ? 'alpha' : 'power';
+
+  const header = `# Generated by C*Power v0.1 — https://lukasroeseler.github.io/c-power/\n# Test: ${(TEST_LABELS[t]||t)}\n# Analysis type: ${a}\n# NOTE: C*Power is an LLM-generated tool and has not been exhaustively validated.\n#       This R code lets you independently verify the result.\n\n`;
+
+  const TEMPLATES = {
+    F_anova: () => {
+      const f=rNum(p.effect_f,7), g=p.groups||3;
+      if(a==='priori') return header+`library(pwr)\n\nresult <- pwr.anova.test(k = ${g}, f = ${f}, sig.level = ${alpha}, power = ${targetPower})\nprint(result)\ncat("Total N required:", ceiling(result$k * result$n), "\\n")`;
+      return header+`library(pwr)\n\nn_per_group <- floor(${N} / ${g})\nresult <- pwr.anova.test(k = ${g}, n = n_per_group, f = ${f}, sig.level = ${alpha})\nprint(result)`;
+    },
+    F_ancova: () => {
+      const f=rNum(p.effect_f,7), g=p.groups||3, cov=p.num_cov||1;
+      return header+`# ANCOVA power via noncentral F (no direct pwr equivalent for covariate-adjusted df)\nf <- ${f}; k <- ${g}; cov <- ${cov}; alpha <- ${alpha}\ndf1 <- k - 1\n\npower_at_N <- function(N){\n  df2 <- N - k - cov\n  ncp <- f^2 * N\n  Fcrit <- qf(1-alpha, df1, df2)\n  1 - pf(Fcrit, df1, df2, ncp=ncp)\n}\n\n${a==='priori' ? `target_power <- ${targetPower}\nN <- uniroot(function(N) power_at_N(N) - target_power, c(k+cov+1, 1e5))$root\ncat("Required N:", ceiling(N), "  Achieved power:", power_at_N(ceiling(N)), "\\n")` : `N <- ${N}\ncat("Power at N =", N, ":", power_at_N(N), "\\n")`}`;
+    },
+    F_rm_within: () => {
+      const f=rNum(p.effect_f,7), m=p.num_meas||3, rm=rNum(p.r_m,4);
+      return header+`# Repeated-measures ANOVA (within-subject) via noncentral F\nf <- ${f}; m <- ${m}; rho <- ${rm}; alpha <- ${alpha}\ndf1 <- m - 1\n\npower_at_N <- function(N){\n  df2 <- (N-1)*(m-1)\n  ncp <- f^2 * N * m / (1 - rho)\n  Fcrit <- qf(1-alpha, df1, df2)\n  1 - pf(Fcrit, df1, df2, ncp=ncp)\n}\n\n${a==='priori' ? `target_power <- ${targetPower}\nN <- uniroot(function(N) power_at_N(N) - target_power, c(2, 1e5))$root\ncat("Required N:", ceiling(N), "  Achieved power:", power_at_N(ceiling(N)), "\\n")` : `N <- ${N}\ncat("Power at N =", N, ":", power_at_N(N), "\\n")`}`;
+    },
+    F_rm_between: () => {
+      const f=rNum(p.effect_f,7), m=p.num_meas||3, g=p.num_groups||2, rm=rNum(p.r_m,4);
+      return header+`# Repeated-measures ANOVA (between-subjects factor) via noncentral F\nf <- ${f}; m <- ${m}; k <- ${g}; rho <- ${rm}; alpha <- ${alpha}\ndf1 <- k - 1\n\npower_at_N <- function(N){\n  df2 <- N - k\n  ncp <- f^2 * N * m / (1 + (m-1)*rho)\n  Fcrit <- qf(1-alpha, df1, df2)\n  1 - pf(Fcrit, df1, df2, ncp=ncp)\n}\n\n${a==='priori' ? `target_power <- ${targetPower}\nN <- uniroot(function(N) power_at_N(N) - target_power, c(k+1, 1e5))$root\ncat("Required N:", ceiling(N), "\\n")` : `N <- ${N}\ncat("Power at N =", N, ":", power_at_N(N), "\\n")`}`;
+    },
+    F_manova: () => {
+      const f=rNum(p.effect_f,7), g=p.num_groups||3, resp=p.num_resp||2;
+      return header+`# MANOVA (F-approximation) via noncentral F\nf <- ${f}; k <- ${g}; q <- ${resp}; alpha <- ${alpha}\ndf1 <- (k-1)*q\n\npower_at_N <- function(N){\n  df2 <- N - k - q\n  ncp <- f^2 * N\n  Fcrit <- qf(1-alpha, df1, df2)\n  1 - pf(Fcrit, df1, df2, ncp=ncp)\n}\n\n${a==='priori' ? `target_power <- ${targetPower}\nN <- uniroot(function(N) power_at_N(N) - target_power, c(k+q+1, 1e5))$root\ncat("Required N:", ceiling(N), "\\n")` : `N <- ${N}\ncat("Power at N =", N, ":", power_at_N(N), "\\n")`}`;
+    },
+    F_reg_r2: () => {
+      const f2=rNum(p.effect_f2,7), u=p.num_pred||1;
+      if(a==='priori') return header+`library(pwr)\n\nresult <- pwr.f2.test(u = ${u}, f2 = ${f2}, sig.level = ${alpha}, power = ${targetPower})\nprint(result)\ncat("Total N required:", ceiling(result$v + result$u + 1), "\\n")`;
+      const v=N-u-1;
+      return header+`library(pwr)\n\nresult <- pwr.f2.test(u = ${u}, v = ${v}, f2 = ${f2}, sig.level = ${alpha})\nprint(result)`;
+    },
+    F_reg_inc: () => {
+      const f2=rNum(p.effect_f2,7), u1=p.num_pred||2, u2=p.num_pred_full||4;
+      const u=Math.max(u2-u1,1);
+      if(a==='priori') return header+`library(pwr)\n\n# u = number of predictors added (u_full - u_reduced)\nresult <- pwr.f2.test(u = ${u}, f2 = ${f2}, sig.level = ${alpha}, power = ${targetPower})\nprint(result)\ncat("Total N required:", ceiling(result$v + ${u2} + 1), "\\n")`;
+      const v=N-u2-1;
+      return header+`library(pwr)\n\nresult <- pwr.f2.test(u = ${u}, v = ${v}, f2 = ${f2}, sig.level = ${alpha})\nprint(result)`;
+    },
+    t_two_indep: () => {
+      const d=rNum(p.effect_d,7);
+      if(a==='priori') return header+`library(pwr)\n\nresult <- pwr.t.test(d = ${d}, sig.level = ${alpha}, power = ${targetPower}, type = "two.sample")\nprint(result)\ncat("Total N required:", ceiling(result$n) * 2, "\\n")`;
+      const n1=p.n1||50, n2=p.n2||50;
+      return header+`library(pwr)\n\n# pwr.t2n.test allows unequal group sizes\nresult <- pwr.t2n.test(n1 = ${n1}, n2 = ${n2}, d = ${d}, sig.level = ${alpha})\nprint(result)`;
+    },
+    t_one_samp: () => {
+      const d=rNum(p.effect_d,7);
+      if(a==='priori') return header+`library(pwr)\n\nresult <- pwr.t.test(d = ${d}, sig.level = ${alpha}, power = ${targetPower}, type = "one.sample")\nprint(result)\ncat("N required:", ceiling(result$n), "\\n")`;
+      return header+`library(pwr)\n\nresult <- pwr.t.test(n = ${N}, d = ${d}, sig.level = ${alpha}, type = "one.sample")\nprint(result)`;
+    },
+    t_paired: () => {
+      const dz=rNum(p.effect_dz,7);
+      if(a==='priori') return header+`library(pwr)\n\nresult <- pwr.t.test(d = ${dz}, sig.level = ${alpha}, power = ${targetPower}, type = "paired")\nprint(result)\ncat("Number of pairs required:", ceiling(result$n), "\\n")`;
+      return header+`library(pwr)\n\nresult <- pwr.t.test(n = ${N}, d = ${dz}, sig.level = ${alpha}, type = "paired")\nprint(result)`;
+    },
+    t_corr: () => {
+      const rho=rNum(p.rho,7);
+      return header+`# Point-biserial / one-sample correlation test (H0: rho=0), exact via noncentral t\nrho <- ${rho}; alpha <- ${alpha}\n\npower_at_N <- function(N){\n  df <- N - 2\n  tcrit <- qt(1-alpha/2, df)\n  ncp <- rho * sqrt(N) / sqrt(1 - rho^2)\n  pt(tcrit, df, ncp=ncp, lower.tail=FALSE) + pt(-tcrit, df, ncp=ncp, lower.tail=TRUE)\n}\n\n${a==='priori' ? `target_power <- ${targetPower}\nN <- uniroot(function(N) power_at_N(N) - target_power, c(5, 1e5))$root\ncat("Required N:", ceiling(N), "\\n")\n\n# Cross-check using pwr's approximate method:\nlibrary(pwr)\nprint(pwr.r.test(r = rho, sig.level = alpha, power = target_power))` : `N <- ${N}\ncat("Power at N =", N, ":", power_at_N(N), "\\n")`}`;
+    },
+    t_generic: () => {
+      const d=rNum(p.effect_d,7);
+      return header+`library(pwr)\n\nresult <- pwr.t.test(d = ${d}, sig.level = ${alpha}, ${a==='priori'?`power = ${targetPower}`:`n = ${N}`}, type = "two.sample")\nprint(result)`;
+    },
+    chi2_gof: () => {
+      const w=rNum(p.effect_w,7), df=p.df_chi2||1;
+      if(a==='priori') return header+`library(pwr)\n\nresult <- pwr.chisq.test(w = ${w}, df = ${df}, sig.level = ${alpha}, power = ${targetPower})\nprint(result)\ncat("N required:", ceiling(result$N), "\\n")`;
+      return header+`library(pwr)\n\nresult <- pwr.chisq.test(w = ${w}, N = ${N}, df = ${df}, sig.level = ${alpha})\nprint(result)`;
+    },
+    chi2_var: () => {
+      const w=rNum(p.effect_w,7);
+      return header+`library(pwr)\n\nresult <- pwr.chisq.test(w = ${w}, df = 1, sig.level = ${alpha}, ${a==='priori'?`power = ${targetPower}`:`N = ${N}`})\nprint(result)`;
+    },
+    z_prop2: () => {
+      const p1=rNum(p.p1,4), p2=rNum(p.p2,4);
+      if(a==='priori') return header+`library(pwr)\n\nh <- ES.h(p1 = ${p1}, p2 = ${p2})\nresult <- pwr.2p.test(h = h, sig.level = ${alpha}, power = ${targetPower})\nprint(result)\ncat("Total N required:", ceiling(result$n) * 2, "\\n")`;
+      const n_per=Math.round(N/2);
+      return header+`library(pwr)\n\nh <- ES.h(p1 = ${p1}, p2 = ${p2})\nresult <- pwr.2p.test(h = h, n = ${n_per}, sig.level = ${alpha})\nprint(result)`;
+    },
+    z_prop1: () => {
+      const p0=rNum(p.p_sign,4);
+      if(a==='priori') return header+`library(pwr)\n\nh <- ES.h(p1 = ${p0}, p2 = 0.5)\nresult <- pwr.p.test(h = h, sig.level = ${alpha}, power = ${targetPower})\nprint(result)\ncat("N required:", ceiling(result$n), "\\n")`;
+      return header+`library(pwr)\n\nh <- ES.h(p1 = ${p0}, p2 = 0.5)\nresult <- pwr.p.test(h = h, n = ${N}, sig.level = ${alpha})\nprint(result)`;
+    },
+    z_generic: () => {
+      const h=rNum(p.effect_h,7);
+      return header+`# Generic z-test with Cohen's h effect size\nh <- ${h}; alpha <- ${alpha}\n\npower_at_N <- function(N){\n  zcrit <- qnorm(1-alpha/2)\n  ncp <- h*sqrt(N)\n  pnorm(ncp - zcrit) + pnorm(-ncp - zcrit)\n}\n\n${a==='priori' ? `target_power <- ${targetPower}\nN <- uniroot(function(N) power_at_N(N) - target_power, c(2, 1e6))$root\ncat("Required N:", ceiling(N), "\\n")` : `N <- ${N}\ncat("Power at N =", N, ":", power_at_N(N), "\\n")`}`;
+    },
+    ex_binom: () => {
+      const p0=rNum(p.p0,4), p1=rNum(p.p1,4);
+      return header+`# Approximate (arcsine) method, matching C*Power:\nlibrary(pwr)\nh <- ES.h(p1 = ${p1}, p2 = ${p0})\n${a==='priori' ? `result <- pwr.p.test(h = h, sig.level = ${alpha}, power = ${targetPower})\nprint(result)\ncat("N required (approx.):", ceiling(result$n), "\\n\\n")` : `result <- pwr.p.test(h = h, n = ${N}, sig.level = ${alpha})\nprint(result)\n\n`}
+# Exact binomial alternative (recommended for small N):
+exact_power <- function(N, p0, p1, alpha){
+  k_crit <- qbinom(1-alpha/2, N, p0)
+  1 - pbinom(k_crit, N, p1) + pbinom(N - k_crit, N, 1 - p1)
+}
+cat("Exact binomial power at N =", ${a==='priori'?'ceiling(result$n)':N}, ":",
+    exact_power(${a==='priori'?'ceiling(result$n)':N}, ${p0}, ${p1}, ${alpha}), "\\n")`;
+    },
+    ex_multinom: () => {
+      const w=rNum(p.effect_w,7), df=p.df_chi2||1;
+      return header+`library(pwr)\n\nresult <- pwr.chisq.test(w = ${w}, df = ${df}, sig.level = ${alpha}, ${a==='priori'?`power = ${targetPower}`:`N = ${N}`})\nprint(result)`;
+    },
+    corr_one: () => {
+      const r=rNum(p.r,7), rho0=rNum(p.rho0,7);
+      if(Math.abs(parseFloat(p.rho0)||0) < 1e-9){
+        if(a==='priori') return header+`library(pwr)\n\n# Exact method (H0: rho = 0) - see Fisher (1921)\nresult <- pwr.r.test(r = ${r}, sig.level = ${alpha}, power = ${targetPower})\nprint(result)\ncat("N required:", ceiling(result$n), "\\n")`;
+        return header+`library(pwr)\n\nresult <- pwr.r.test(n = ${N}, r = ${r}, sig.level = ${alpha})\nprint(result)`;
+      }
+      return header+`# General one-sample correlation test, H0: rho = rho0 (rho0 != 0)\n# Uses the standard Fisher z-difference method (Cohen, 1988)\nr <- ${r}; rho0 <- ${rho0}; alpha <- ${alpha}\n\npower_at_N <- function(N){\n  zr <- atanh(r); zrho0 <- atanh(rho0)\n  ncp <- (zr - zrho0) * sqrt(N - 3)\n  zcrit <- qnorm(1 - alpha/2)\n  pnorm(ncp - zcrit) + pnorm(-ncp - zcrit)\n}\n\n${a==='priori' ? `target_power <- ${targetPower}\nN <- uniroot(function(N) power_at_N(N) - target_power, c(5, 1e6))$root\ncat("Required N:", ceiling(N), "\\n")` : `N <- ${N}\ncat("Power at N =", N, ":", power_at_N(N), "\\n")`}`;
+    },
+    corr_two_indep: () => {
+      const r1=rNum(p.r1,7), r2=rNum(p.r2,7);
+      return header+`# Difference between two INDEPENDENT correlations — Fisher (1925)\n# Cross-check significance test with: install.packages("cocor"); library(cocor)\n#   cocor.indep.groups(r1.jk=${r1}, r2.hm=${r2}, n1=N/2, n2=N/2, test="fisher1925")\nr1 <- ${r1}; r2 <- ${r2}; alpha <- ${alpha}\n\npower_at_N <- function(N){\n  n_per <- N/2\n  z1 <- atanh(r1); z2 <- atanh(r2)\n  SE <- sqrt(1/(n_per-3) + 1/(n_per-3))\n  ncp <- abs(z1-z2)/SE\n  zcrit <- qnorm(1-alpha/2)\n  pnorm(ncp - zcrit) + pnorm(-ncp - zcrit)\n}\n\n${a==='priori' ? `target_power <- ${targetPower}\nN <- uniroot(function(N) power_at_N(N) - target_power, c(10, 1e6))$root\ncat("Required total N (n1=n2=N/2):", ceiling(N), "\\n")` : `N <- ${N}\ncat("Power at total N =", N, ":", power_at_N(N), "\\n")`}`;
+    },
+    corr_two_dep: () => {
+      const rjk=rNum(p.r_jk,7), rjh=rNum(p.r_jh,7), rkh=rNum(p.r_kh,7);
+      return header+`# Difference between two DEPENDENT (overlapping) correlations — Steiger (1980)\n# Validated against: install.packages("cocor"); library(cocor)\n#   cocor.dep.groups.overlap(r.jk=${rjk}, r.jh=${rjh}, r.kh=${rkh}, n=N, test="steiger1980")\nr_jk <- ${rjk}; r_jh <- ${rjh}; r_kh <- ${rkh}; alpha <- ${alpha}\n\npower_at_N <- function(N){\n  r_p <- (r_jk + r_jh) / 2\n  cov_num <- r_kh*(1-2*r_p^2) - 0.5*r_p^2*(1-2*r_p^2-r_kh^2)\n  cov_den <- (1-r_p^2)^2\n  covar <- cov_num / cov_den\n  zdiff <- atanh(r_jk) - atanh(r_jh)\n  ncp <- sqrt(N-3) * zdiff / sqrt(2 - 2*covar)\n  zcrit <- qnorm(1-alpha/2)\n  pnorm(ncp - zcrit) + pnorm(-ncp - zcrit)\n}\n\n${a==='priori' ? `target_power <- ${targetPower}\nN <- uniroot(function(N) power_at_N(N) - target_power, c(10, 1e6))$root\ncat("Required N:", ceiling(N), "\\n")` : `N <- ${N}\ncat("Power at N =", N, ":", power_at_N(N), "\\n")`}`;
+    },
+  };
+
+  const fn = TEMPLATES[t];
+  return fn ? fn() : header + `# No specific R template available yet for this test.\n# Noncentrality parameter (from C*Power): ${rNum(R.ncp,6)}\n# You can reproduce this using R's qt/pt, qf/pf, or qchisq/pchisq with the 'ncp' argument.`;
+}
+
+function openRCode(){
+  const body=document.getElementById('rcode-body');
+  if(!S.results || !S.results.actual_power){
+    body.innerHTML='<p style="color:var(--text3);">Run a calculation first, then open this panel.</p>';
+    openModal('modal-rcode');
+    return;
+  }
+  const desc = getMethodDescription();
+  const code = getRCode();
+  body.innerHTML = `
+    <div class="method-desc">
+      <b style="font-size:13px;">${desc.title}</b>
+      ${desc.body}
+      <div style="margin-top:8px;">${refPills(desc.refs)}</div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border2);margin:14px 0;">
+    <div class="report-label">R code (copy &amp; run in R or RStudio)</div>
+    <div class="rcode-block" id="rcode-txt">${escapeHtml(code)}</div>
+    <button class="report-copy-btn" id="rcode-copy-btn" onclick="copyRCode()">📋 Copy R code</button>
+    <p style="font-size:10.5px;color:var(--text3);margin-top:10px;line-height:1.5;">
+      Requires the <code>pwr</code> package for several test families (<code>install.packages("pwr")</code>).
+      Where no direct <code>pwr</code> equivalent exists, base-R noncentral distribution functions
+      (<code>qf</code>/<code>pf</code>, <code>qt</code>/<code>pt</code>, <code>qchisq</code>/<code>pchisq</code> with the <code>ncp=</code> argument)
+      replicate the exact same computation C*Power performs in JavaScript.
+    </p>
+  `;
+  openModal('modal-rcode');
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyRCode(){
+  const el=document.getElementById('rcode-txt');
+  if(!el) return;
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    const btn=document.getElementById('rcode-copy-btn');
+    btn.textContent='✓ Copied!'; btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='📋 Copy R code';btn.classList.remove('copied');},2000);
   });
 }
 

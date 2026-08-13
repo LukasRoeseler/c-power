@@ -10,16 +10,17 @@ Generated using [Claude](https://claude.ai) (Anthropic) as a demonstration of LL
 
 ## 🚀 Quick Start
 
-Just open `cpower.html` in any modern browser. No installation, no dependencies, no server needed.
+**Live:** [lukasroeseler.github.io/c-power](https://lukasroeseler.github.io/c-power/)
+
+Or run it locally — it's a single self-contained `index.html`, no installation, no dependencies, no server needed:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/cpower
-open cpower.html          # macOS
-start cpower.html         # Windows
-xdg-open cpower.html      # Linux
+git clone https://github.com/lukasroeseler/c-power
+cd c-power
+open index.html          # macOS
+start index.html         # Windows
+xdg-open index.html      # Linux
 ```
-
-Or [**use it online →**](https://YOUR_USERNAME.github.io/cpower) *(if hosted via GitHub Pages)*
 
 ---
 
@@ -29,10 +30,11 @@ Or [**use it online →**](https://YOUR_USERNAME.github.io/cpower) *(if hosted v
 | Family | Tests |
 |--------|-------|
 | **F tests** | One-way ANOVA, ANCOVA, Repeated Measures (within/between), MANOVA, Multiple Regression (R², R² increase) |
-| **t tests** | Independent samples, One sample, Paired samples, Correlation (point biserial), Generic |
+| **t tests** | Independent samples, One sample, Paired samples, Correlation (point-biserial, exact), Generic |
 | **χ² tests** | Goodness-of-fit / contingency tables, Variance |
-| **z tests** | Two proportions, Sign test, Two correlations (Pearson r), Generic |
+| **z tests** | Two proportions, Sign test, Generic |
 | **Exact tests** | Binomial, Multinomial goodness-of-fit |
+| **Correlations** | One sample (H₀: ρ=ρ₀), Difference between two independent r's (Fisher, 1925), Difference between two dependent/overlapping r's (Steiger, 1980) |
 
 ### Analysis Types
 - **A priori** — Compute required sample size given α, power, and effect size
@@ -41,10 +43,12 @@ Or [**use it online →**](https://YOUR_USERNAME.github.io/cpower) *(if hosted v
 - **Sensitivity** — Compute minimum detectable effect size given α, power, and N
 
 ### Other Features
-- 📊 **Distribution plot** — H₀ and H₁ distributions with α, β, and power regions shaded
+- 📊 **Distribution plot** — H₀ and H₁ distributions with α, β, and power regions shaded; hover for explanations, export as PNG
 - 📄 **Report generator** — Copy-paste text for Methods sections and preregistrations
+- 🇷 **R code export** — Per-test method description (plain-language + formula) plus copy-pasteable R code that reproduces the exact same number, using the `pwr` package where available and base-R noncentral distribution functions otherwise
 - 📋 **Protocol tab** — Automatic log of all analyses, exportable as CSV
-- 📈 **X-Y plot** — Power curves across ranges of effect size, N, or α
+- 📈 **X-Y plot** — Power curves across ranges of effect size, N, α, or power, with hover readout and PNG/CSV export
+- ⓘ **Parameter tooltips** — Effect-size conventions and empirical benchmarks from Cohen (1988), Gignac & Szodorai (2016), and others
 - 🎨 **5 themes** — G\*Power Classic, Flat & Teal (2010s), Polished Minimal, Terminal/Hacker, Aged Paper/Sepia
 - 📱 **Mobile-first** — Fully responsive layout for phones and tablets
 - 💾 **PWA-ready** — Installable as a home-screen app (Add to Home Screen)
@@ -116,17 +120,27 @@ Contributions are very welcome, especially:
 ### File structure
 
 ```
-cpower.html     # Everything — HTML, CSS, and JavaScript in one file
+index.html      # Everything — HTML, CSS, and JavaScript in one file
 README.md       # This file
 ```
 
 ### Running locally
 
-No build step required. Just open `cpower.html` in a browser.
+No build step required. Just open `index.html` in a browser.
 
 For development with live reload:
 ```bash
-npx live-server --open=cpower.html
+npx live-server --open=index.html
+```
+
+### Deployment (GitHub Pages)
+
+The live site is served from the repository root via GitHub Pages, so the app file **must be named `index.html`** at the repo root (not `cpower.html`). Pushing to the default branch redeploys automatically within ~1 minute; GitHub Pages caches for up to 10 minutes (`Cache-Control: max-age=600`), so hard-refresh (or wait) after deploying if you don't see changes immediately.
+
+```bash
+git add index.html README.md
+git commit -m "Add correlation tests, R code export, method descriptions"
+git push origin main
 ```
 
 ---
@@ -149,17 +163,25 @@ C*Power uses the following methods:
 
 ### Validation
 
-The following test cases have been validated against G*Power 3.1:
+The following test cases have been validated against G*Power 3.1 and/or R (`pwr`, `cocor`):
 
-| Test | Inputs | Expected N | C*Power N |
+| Test | Inputs | Expected | C*Power |
 |------|--------|-----------|-----------|
-| ANOVA | k=4, f=0.25, α=0.05, 1−β=0.95 | 280 | 279 |
-| ANOVA | k=3, f=0.40, α=0.05, 1−β=0.80 | 66  | 64  |
-| Multiple regression (R²) | u=3, f²=0.15, α=0.05, 1−β=0.95 | 119 | 119 |
-| t two-sample | d=0.50, α=0.05, 1−β=0.80 | 128 | 128 |
-| t paired | dz=0.50, α=0.05, 1−β=0.80 | 34  | 34  |
+| ANOVA | k=4, f=0.25, α=0.05, 1−β=0.95 | N=280 | N=279 |
+| ANOVA | k=3, f=0.40, α=0.05, 1−β=0.80 | N=66  | N=64  |
+| Multiple regression (R²) | u=3, f²=0.15, α=0.05, 1−β=0.95 | N=119 | N=119 |
+| t two-sample | d=0.50, α=0.05, 1−β=0.80 | N=128 | N=128 |
+| t paired | dz=0.50, α=0.05, 1−β=0.80 | N=34  | N=34  |
+| Correlation (one sample) | r=0.30, α=0.05, 1−β=0.95 | N=137.76 (`pwr.r.test`) | N=138 |
+| Correlation (two independent) | r₁=0.5, r₂=0.2, n₁=n₂=100 | z=2.4136 (`cocor::fisher1925`) | z=2.4136 |
+| Correlation (two dependent/overlapping) | r_jk=0.5, r_jh=0.3, r_kh=0.4, n=100 | z=2.0349 (`cocor::steiger1980`) | z=2.0349 |
 
-Differences of ±2 are from rounding (G*Power may report the next integer). More tests are needed across edge cases.
+Differences of ±2 in required N are from rounding (G*Power/pwr report a real number; C*Power rounds up to the next integer). The correlation tests were validated by installing R packages `pwr` and `cocor` and comparing test statistics directly — see `/tests/validate_correlations.R` if included, or the R code export feature within the app itself.
+
+### Known issues
+
+- **`z_prop1` (Sign test) default values produce zero effect size.** The schema uses `p0` as the "proportion to detect" for this test, but `PARAM_META.p0`'s default (0.5) is also 0.5 — the same as the fixed null — so the default effect size h=0 and the N-search runs to its 100,000 cap. Not a bug in the underlying math; it's a default-value collision. **Fix:** either give `z_prop1` its own default (e.g. change the input the UI shows, or override the default specifically for this test in `renderParams()`), or default it to something like 0.7 so first-time users see a sensible result. Search `compute_z_prop1` in `index.html`.
+- Sensitivity/criterion analyses for tests without a closed-form solution use bisection with a fixed iteration count (60) — should converge to machine precision, but hasn't been stress-tested at extreme parameter values (e.g. α → 0, N → 2).
 
 ---
 
