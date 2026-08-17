@@ -1,4 +1,4 @@
-# C*Power v0.1
+# C*Power v0.2
 
 > **⚠️ WORK IN PROGRESS — Calculations have not been independently validated. Do not use for published research without cross-checking against G*Power or another validated tool.**
 
@@ -44,13 +44,15 @@ xdg-open index.html      # Linux
 
 ### Other Features
 - 📊 **Distribution plot** — H₀ and H₁ distributions with α, β, and power regions shaded; hover for explanations, export as PNG
-- 📄 **Report generator** — Copy-paste text for Methods sections and preregistrations
-- 🇷 **R code export** — Per-test method description (plain-language + formula) plus copy-pasteable R code that reproduces the exact same number, using the `pwr` package where available and base-R noncentral distribution functions otherwise
+- 📄 **Report generator** — Copy-paste text for Methods sections and preregistrations, shown inline below the parameters (auto-refreshes on every Calculate)
+- 🇷 **R code export** — Per-test method description (plain-language + formula) plus copy-pasteable R code that reproduces the exact same number, using the `pwr` package where available and base-R noncentral distribution functions otherwise — shown inline below the parameters, alongside the report
+- 🧮 **Effect Size Calculator** — its own tab with ~11 conversion recipes across mean differences (d/g/dz/Glass's Δ), correlations, variance-explained (η²/ω²/f/f²/R²), proportions/categorical (h/OR/RR/w/Cramér's V/φ), and odds ratios; every conversion shows its formula, applicable warnings, and the literature/R packages it's based on, plus a one-click "Send" into the main calculator's matching input when relevant
 - 📋 **Protocol tab** — Automatic log of all analyses, exportable as CSV
 - 📈 **X-Y plot** — Power curves across ranges of effect size, N, α, or power, with hover readout and PNG/CSV export
 - ⓘ **Parameter tooltips** — Effect-size conventions and empirical benchmarks from Cohen (1988), Gignac & Szodorai (2016), and others
 - 🎨 **5 themes** — G\*Power Classic, Flat & Teal (2010s), Polished Minimal, Terminal/Hacker, Aged Paper/Sepia
 - 📱 **Mobile-first** — Fully responsive layout for phones and tablets
+- 🔍 **Screen-size preview** — Pick Desktop/Tablet/Mobile/Custom from the menu bar to check the responsive layout at a given width without resizing your actual browser window
 - 💾 **PWA-ready** — Installable as a home-screen app (Add to Home Screen)
 
 ---
@@ -59,7 +61,8 @@ xdg-open index.html      # Linux
 
 C*Power is designed to work well on mobile:
 
-- Responsive layout collapses the effect size drawer on small screens
+- Responsive layout (params, tabs, and the Effect Size Calculator's two-column layout all collapse to a single column on narrow screens)
+- The in-app "Screen size" selector (top menu bar) lets you preview Mobile/Tablet widths from a desktop browser before testing on an actual device
 - Touch-friendly controls with appropriate tap targets
 - Installable as a Progressive Web App:
   - **iOS Safari**: Share → Add to Home Screen
@@ -180,8 +183,8 @@ Differences of ±2 in required N are from rounding (G*Power/pwr report a real nu
 
 ### Known issues
 
-- **`z_prop1` (Sign test) default values produce zero effect size.** The schema uses `p0` as the "proportion to detect" for this test, but `PARAM_META.p0`'s default (0.5) is also 0.5 — the same as the fixed null — so the default effect size h=0 and the N-search runs to its 100,000 cap. Not a bug in the underlying math; it's a default-value collision. **Fix:** either give `z_prop1` its own default (e.g. change the input the UI shows, or override the default specifically for this test in `renderParams()`), or default it to something like 0.7 so first-time users see a sensible result. Search `compute_z_prop1` in `index.html`.
 - Sensitivity/criterion analyses for tests without a closed-form solution use bisection with a fixed iteration count (60) — should converge to machine precision, but hasn't been stress-tested at extreme parameter values (e.g. α → 0, N → 2).
+- Several Effect Size Calculator conversions (ω² from η², d↔OR via the logit method, d→f for more than two groups) are documented approximations rather than exact identities — see the warning shown with each conversion.
 
 ---
 

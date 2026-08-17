@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#d4d0c8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="C*Power">
-<title>C*Power v0.1</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%23d4d0c8'/%3E%3Ctext y='75' x='5' font-size='65' fill='%23000' font-family='serif'%3EC*%3C/text%3E%3C/svg%3E">
+<title>C*Power v0.2</title>
 <style>
 /* ═══════════════════════════════════════════════════════
    BASE RESET
@@ -19,6 +20,23 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
+}
+/* Screen-size preview mode: constrains .app-window to a chosen width so the
+   responsive/mobile layout can be checked from a desktop browser without
+   resizing the real window. */
+body.preview-active {
+  overflow: auto;
+  background: #2b2b2b;
+  display: flex;
+  justify-content: center;
+  padding: 18px 0;
+}
+body.preview-active .app-window {
+  width: var(--preview-w, 375px);
+  flex: 0 0 auto;
+  height: calc(100vh - 36px);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.3), 0 14px 44px rgba(0,0,0,0.5);
+  border-radius: 6px;
 }
 button, select, input { font-family: inherit; font-size: 11px; }
 button { cursor: pointer; }
@@ -177,6 +195,8 @@ body.theme-paper {
   background: var(--bg);
   color: var(--text);
   overflow: hidden;
+  container-type: inline-size;
+  container-name: appshell;
 }
 
 /* ── WIP BANNER ── */
@@ -312,19 +332,6 @@ body.theme-paper {
   overflow: hidden;
   border-right: 1px solid var(--border);
 }
-
-/* ── RIGHT PANEL (Effect size drawer) ── */
-.right-panel {
-  width: 230px;
-  flex-shrink: 0;
-  background: var(--surface);
-  border-left: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  transition: width 0.2s, opacity 0.2s;
-}
-.right-panel.hidden { width: 0; opacity: 0; overflow: hidden; pointer-events: none; }
 
 /* ── DISTRIBUTION PLOT ── */
 .plot-area {
@@ -552,6 +559,8 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
 #tab-distributions.tab-hidden { display: none; }
 #tab-protocol { display: none; flex: 1; overflow: auto; padding: 8px; background: var(--surface); }
 #tab-protocol.tab-visible { display: block; }
+#tab-effectsize { display: none; flex: 1; overflow: auto; padding: 8px; background: var(--surface); }
+#tab-effectsize.tab-visible { display: block; }
 
 /* ── PROTOCOL TABLE ── */
 .proto-wrap { overflow-x: auto; }
@@ -580,24 +589,7 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
 .proto-table tr:nth-child(even) td { background: var(--surface2); }
 .proto-table tr:hover td { background: var(--surface2); }
 
-/* ── RIGHT PANEL STYLES ── */
-.rp-hdr {
-  background: var(--header-bg);
-  border-bottom: 1px solid var(--border);
-  padding: 4px 8px;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text2);
-  flex-shrink: 0;
-}
-.rp-body {
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow-y: auto;
-  flex: 1;
-}
+/* ── EFFECT SIZE FORM ROWS (reused across the Effect Size Calculator tab) ── */
 .rp-row { display: flex; align-items: center; gap: 5px; }
 .rp-row label { flex: 1; font-size: 11px; color: var(--text); }
 .rp-row input { flex: 0 0 64px; width: 64px; text-align: right; }
@@ -785,23 +777,102 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
   color: var(--text3);
   margin: 0 3px 3px 0;
 }
+.rpkg-pill {
+  background: color-mix(in srgb, #3478f6 10%, var(--surface2));
+  border-color: color-mix(in srgb, #3478f6 35%, var(--border2));
+  color: color-mix(in srgb, #3478f6 55%, var(--text3));
+  font-family: "SF Mono", "Fira Code", monospace;
+}
+
+/* ── INLINE OUTPUT SECTIONS (Report / R Code — below the parameters) ── */
+.output-sections { padding: 0 7px 7px; display: flex; flex-direction: column; gap: 6px; }
+.output-card { border: 1px solid var(--border); border-radius: 4px; background: var(--panel); }
+.output-card > summary {
+  cursor: pointer;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text2);
+  background: var(--header-bg);
+  border-radius: 4px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.output-card > summary::-webkit-details-marker { display: none; }
+.output-card > summary .oc-hint { font-weight: 400; font-size: 10px; color: var(--text3); }
+.output-card > summary .oc-arrow { transition: transform 0.15s; flex-shrink: 0; }
+.output-card[open] > summary { border-radius: 4px 4px 0 0; border-bottom: 1px solid var(--border); }
+.output-card[open] > summary .oc-arrow { transform: rotate(180deg); }
+.output-card-body { padding: 10px; }
+
+/* ── EFFECT SIZE CALCULATOR ── */
+.fx-layout { display: grid; grid-template-columns: minmax(220px,320px) 1fr; gap: 8px; align-items: start; }
+.fx-warning {
+  background: color-mix(in srgb, #f59e0b 14%, var(--surface2));
+  border: 1px solid color-mix(in srgb, #f59e0b 40%, var(--border2));
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text2);
+  margin: 6px 0;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.fx-warning .fx-warn-icon { flex-shrink: 0; }
+.fx-table td.fx-val { font-family: "SF Mono", "Fira Code", monospace; font-weight: 600; white-space: nowrap; }
+.fx-table td.fx-note { color: var(--text3); font-size: 10.5px; }
+.fx-send-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 
 /* ══════════════════
    MOBILE RESPONSIVE
 ══════════════════ */
+/* Shared rules are duplicated between @media (reacts to the real browser
+   window) and @container (reacts to .app-window's own width, which is what
+   the in-app screen-size preview changes) so both real resizing and the
+   simulated preview trigger the same mobile layout — plain CSS has no
+   mixin/include mechanism to de-duplicate this in a build-free single file. */
 @media (max-width: 680px) {
-  .right-panel { display: none !important; }
   .params-row { grid-template-columns: 1fr; }
   #dist-canvas { height: 110px; }
   .selector-row { flex-wrap: wrap; }
   .selector-row .selector-label { flex: 0 0 100%; margin-bottom: 1px; }
   .bottom-bar { padding: 4px 6px; gap: 4px; }
-  .btn { padding: 3px 10px; font-size: 10px; }
-  .menubar-title { font-size: 11px; }
+  .btn { padding: 5px 10px; min-height: 28px; font-size: 10px; }
+  .btn-determine { min-height: 22px; }
+  .menubar { flex-wrap: wrap; height: auto; min-height: 24px; padding: 3px 6px; }
+  .menubar-title { font-size: 11px; margin-right: 4px; }
   .tab { padding: 4px 10px 5px; font-size: 10px; }
   .form-sections { padding: 4px 5px; gap: 4px; }
+  .modal { max-width: 94vw; }
+  .fx-layout { grid-template-columns: 1fr; }
+  .rcode-block { font-size: 10.5px; padding: 8px 10px; }
 }
 @media (max-width: 400px) {
+  .params-row { grid-template-columns: 1fr; }
+  .bottom-right { width: 100%; justify-content: flex-end; }
+}
+@container appshell (max-width: 680px) {
+  .params-row { grid-template-columns: 1fr; }
+  #dist-canvas { height: 110px; }
+  .selector-row { flex-wrap: wrap; }
+  .selector-row .selector-label { flex: 0 0 100%; margin-bottom: 1px; }
+  .bottom-bar { padding: 4px 6px; gap: 4px; }
+  .btn { padding: 5px 10px; min-height: 28px; font-size: 10px; }
+  .btn-determine { min-height: 22px; }
+  .menubar { flex-wrap: wrap; height: auto; min-height: 24px; padding: 3px 6px; }
+  .menubar-title { font-size: 11px; margin-right: 4px; }
+  .tab { padding: 4px 10px 5px; font-size: 10px; }
+  .form-sections { padding: 4px 5px; gap: 4px; }
+  .modal { max-width: 94vw; }
+  .fx-layout { grid-template-columns: 1fr; }
+  .rcode-block { font-size: 10.5px; padding: 8px 10px; }
+}
+@container appshell (max-width: 400px) {
   .params-row { grid-template-columns: 1fr; }
   .bottom-right { width: 100%; justify-content: flex-end; }
 }
@@ -845,7 +916,7 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
   <!-- MENU BAR -->
   <div class="menubar">
     <div class="menubar-left">
-      <span class="menubar-title">C*Power v0.1</span>
+      <span class="menubar-title">C*Power v0.2</span>
 
       <!-- About button -->
       <button class="menu-btn" onclick="openAbout()">About</button>
@@ -862,12 +933,25 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
         </div>
       </div>
     </div>
+
+    <div class="menubar-right" style="display:flex;align-items:center;gap:4px;">
+      <span class="selector-label" style="white-space:nowrap;">Screen size:</span>
+      <select id="sel-screensize" style="width:auto;height:20px;padding:0 4px;font-size:10px;" onchange="onScreenSizeChange()" title="Preview the layout at a given width without resizing your actual browser window">
+        <option value="auto">Auto (real window)</option>
+        <option value="1280">Desktop (1280px)</option>
+        <option value="768">Tablet (768px)</option>
+        <option value="375">Mobile (375px)</option>
+        <option value="custom">Custom…</option>
+      </select>
+      <input type="number" id="fld-screensize-custom" value="375" min="280" max="2560" step="1" style="display:none;width:64px;height:20px;padding:0 4px;font-size:10px;" onchange="onScreenSizeChange()">
+    </div>
   </div>
 
   <!-- TABS -->
   <div class="tab-bar">
     <div class="tab active" id="tab-btn-dist"   onclick="switchTab('distributions')">Central and noncentral distributions</div>
     <div class="tab"        id="tab-btn-proto"  onclick="switchTab('protocol')">Protocol of power analyses</div>
+    <div class="tab"        id="tab-btn-fx"     onclick="switchTab('effectsize')">Effect Size Calculator</div>
   </div>
 
   <!-- MAIN BODY -->
@@ -935,14 +1019,30 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
             </div>
           </div>
 
+          <!-- Row 4: Report / R Code — inline, below the parameters, auto-updated on Calculate -->
+          <div class="output-sections">
+            <details class="output-card" id="report-card">
+              <summary>📄 Report <span class="oc-hint">(auto-updates on Calculate)</span><span class="oc-arrow">▾</span></summary>
+              <div class="output-card-body" id="report-body">
+                <p style="color:var(--text3);">Run a calculation to generate the manuscript-ready report text.</p>
+              </div>
+            </details>
+            <details class="output-card" id="rcode-card">
+              <summary>🇷 Method &amp; R Code <span class="oc-hint">(auto-updates on Calculate)</span><span class="oc-arrow">▾</span></summary>
+              <div class="output-card-body" id="rcode-body">
+                <p style="color:var(--text3);">Run a calculation to generate R code that reproduces the result.</p>
+              </div>
+            </details>
+          </div>
+
         </div><!-- /form-sections -->
 
         <!-- Bottom bar -->
         <div class="bottom-bar">
           <button class="btn" onclick="openXYPlot()">X-Y plot for a range of values</button>
           <div class="bottom-right">
-            <button class="btn" onclick="openReport()">📄 Report</button>
-            <button class="btn" onclick="openRCode()">🇷 R Code</button>
+            <button class="btn" onclick="jumpToOutputCard('report-card')">📄 Report</button>
+            <button class="btn" onclick="jumpToOutputCard('rcode-card')">🇷 R Code</button>
             <button class="btn btn-primary" onclick="calculate()">Calculate</button>
           </div>
         </div>
@@ -972,57 +1072,32 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
         </div>
       </div>
 
-    </div><!-- /left-panel -->
-
-    <!-- RIGHT PANEL: Effect size drawer -->
-    <div class="right-panel" id="right-panel">
-      <div class="rp-hdr">Select procedure</div>
-      <div class="rp-body">
-        <div>
-          <select id="rp-procedure" style="width:100%;" onchange="rpProcedureChange()">
-            <option value="means">Effect size from means</option>
-            <option value="eta2">From η²</option>
-            <option value="direct">Direct f input</option>
-          </select>
-        </div>
-
-        <div id="rp-means-section">
-          <div class="rp-row"><label>Number of groups</label>
-            <input type="number" id="rp-groups" value="5" min="2" max="50" onchange="rpGroupsChange()">
+      <!-- Effect Size Calculator tab content -->
+      <div id="tab-effectsize">
+        <p style="font-size:11px;color:var(--text3);line-height:1.5;margin-bottom:8px;">
+          Convert between effect size metrics. Pick what you have on the left; every metric it can be converted to
+          appears on the right, together with the formula used, caveats/warnings, and the literature &amp; R packages
+          the conversion is based on. Always sanity-check a conversion before relying on it — several are approximations.
+        </p>
+        <div class="fx-layout">
+          <div class="param-panel">
+            <div class="param-panel-hdr">Convert from</div>
+            <div class="param-panel-body">
+              <div class="rp-row" style="margin-bottom:6px;">
+                <label style="flex:0 0 auto;">Effect size / statistic I have:</label>
+              </div>
+              <select id="fx-recipe" style="width:100%;margin-bottom:8px;" onchange="fxRecipeChange()"></select>
+              <div id="fx-inputs"></div>
+            </div>
           </div>
-          <div class="rp-row"><label>SD σ within groups</label>
-            <input type="number" id="rp-sd" value="10" min="0.001" step="0.1" onchange="rpCalculate()">
-          </div>
-          <table class="group-table" style="margin-top:4px;">
-            <thead><tr><th>Group</th><th>Mean</th><th>Size</th></tr></thead>
-            <tbody id="rp-group-body"></tbody>
-          </table>
-          <hr class="rp-sep">
-          <div class="rp-row"><label>Equal n</label>
-            <input type="number" id="rp-equal-n" value="50" min="1" onchange="rpSetEqualN()">
+          <div class="param-panel">
+            <div class="param-panel-hdr">Equivalent effect sizes &amp; guidance</div>
+            <div class="param-panel-body" id="fx-results"></div>
           </div>
         </div>
-
-        <div id="rp-eta2-section" style="display:none;">
-          <div class="rp-row"><label>η² value</label>
-            <input type="number" id="rp-eta2" value="0.06" min="0.001" max="0.999" step="0.01" onchange="rpCalculate()">
-          </div>
-        </div>
-
-        <div id="rp-direct-section" style="display:none;">
-          <div class="rp-row"><label>Effect size f</label>
-            <input type="number" id="rp-direct-f" value="0.25" min="0.001" step="0.01" onchange="rpCalculate()">
-          </div>
-        </div>
-
-        <hr class="rp-sep">
-        <div class="rp-result-row"><span>Total sample size</span><span class="rval" id="rp-total-n">250</span></div>
-        <div class="rp-result-row"><span>Effect size f</span><span class="rval" id="rp-effect-display">—</span></div>
-
-        <button class="btn btn-primary" style="width:100%;margin-top:6px;justify-content:center;" onclick="rpTransfer()">Calculate and transfer to main window</button>
-        <button class="btn" style="width:100%;justify-content:center;margin-top:4px;" onclick="toggleRightPanel()">Close effect size drawer</button>
       </div>
-    </div>
+
+    </div><!-- /left-panel -->
 
   </div><!-- /main-body -->
 
@@ -1032,7 +1107,7 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
 <div class="modal-overlay" id="modal-about">
   <div class="modal" style="max-width:620px;">
     <div class="modal-hdr">
-      <span class="modal-title">About C*Power v0.1</span>
+      <span class="modal-title">About C*Power v0.2</span>
       <button class="modal-close" onclick="closeModal('modal-about')">✕</button>
     </div>
     <div class="modal-body">
@@ -1091,32 +1166,6 @@ select:focus, input:focus { border-color: #3478f6; outline: none; }
       <p>C*Power was generated using Claude (Anthropic) as a demonstration of LLM-assisted scientific tool development. The source code is available on GitHub. Contributions, bug reports, and validation checks against G*Power or R's <code>pwr</code>/<code>cocor</code> packages are very welcome.</p>
 
       <p style="color:var(--text3);font-size:11px;">C*Power is not affiliated with the original G*Power team at Heinrich Heine University Düsseldorf, with Anthropic, or with any of the cited authors.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ REPORT MODAL ═══ -->
-<div class="modal-overlay" id="modal-report">
-  <div class="modal" style="max-width:580px;">
-    <div class="modal-hdr">
-      <span class="modal-title">📄 Analysis Report</span>
-      <button class="modal-close" onclick="closeModal('modal-report')">✕</button>
-    </div>
-    <div class="modal-body" id="report-body">
-      <p style="color:var(--text3);">Run a calculation first, then open the report.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ R CODE MODAL ═══ -->
-<div class="modal-overlay" id="modal-rcode">
-  <div class="modal" style="max-width:640px;">
-    <div class="modal-hdr">
-      <span class="modal-title">🇷 Method &amp; R Code</span>
-      <button class="modal-close" onclick="closeModal('modal-rcode')">✕</button>
-    </div>
-    <div class="modal-body" id="rcode-body">
-      <p style="color:var(--text3);">Run a calculation first, then open this panel.</p>
     </div>
   </div>
 </div>
@@ -1194,11 +1243,8 @@ const S = {
   params: {},
   results: {},
   protocol: [],
-  rpGroups: 5,
-  rpGroupData: [],
-  rpSD: 10,
   theme: 'classic',
-  _rpF: NaN,
+  fxInitialized: false,
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -2088,7 +2134,7 @@ function renderParams(){
     if(EFFECT_KEYS.has(key)){
       const btn=document.createElement('button');
       btn.className='btn-determine'; btn.textContent='Determine';
-      btn.onclick=()=>{ document.getElementById('right-panel').classList.toggle('hidden',false); };
+      btn.onclick=()=>{ openEffectSizeCalculator(key); };
       row.appendChild(btn);
     }
 
@@ -2541,47 +2587,47 @@ function getReportText(){
   const templates = {
     F_anova: () => {
       const groups=p.groups||3;
-      return `A ${at} power analysis was conducted using C*Power v0.1 (an LLM-generated browser-based implementation based on G*Power; Faul et al., 2007) for a one-way ANOVA with ${groups} groups. `+
+      return `A ${at} power analysis was conducted using C*Power v0.2 (an LLM-generated browser-based implementation based on G*Power; Faul et al., 2007) for a one-way ANOVA with ${groups} groups. `+
         `We targeted a ${efLabel} of ${fmt7(efVal)} (${cohenGuide('f',efVal)}), with α = ${alpha} and the desired statistical power set to ${S.analysis==='priori'?fmt7(p.power):power}. `+
         `The analysis indicated that a total sample size of N = ${N} (${Math.ceil(N/groups)} per group) is required to achieve a power of 1−β = ${power}. `+
         `The noncentrality parameter was λ = ${fmt7(R.ncp)}, and the critical F-value was F(${R.num_df}, ${R.den_df}) = ${fmt7(R.F_crit)}.`;
     },
     t_two_indep: () =>
-      `A ${at} power analysis was conducted using C*Power v0.1 for an independent-samples t-test. `+
+      `A ${at} power analysis was conducted using C*Power v0.2 for an independent-samples t-test. `+
       `We targeted Cohen's d = ${fmt7(efVal)} (${cohenGuide('d',efVal)}), with α = ${alpha} and desired power of ${S.analysis==='priori'?fmt7(p.power):power}. `+
       `The required total sample size is N = ${N} (${Math.ceil(N/2)} per group), achieving 1−β = ${power}. `+
       `The critical t-value was t(${R.df}) = ${fmt7(R.t_crit)}, and the noncentrality parameter λ = ${fmt7(R.ncp)}.`,
     t_one_samp: () =>
-      `A ${at} power analysis was conducted using C*Power v0.1 for a one-sample t-test. `+
+      `A ${at} power analysis was conducted using C*Power v0.2 for a one-sample t-test. `+
       `We targeted Cohen's d = ${fmt7(efVal)} (${cohenGuide('d',efVal)}), with α = ${alpha} and desired power of ${S.analysis==='priori'?fmt7(p.power):power}. `+
       `The required sample size is N = ${N}, achieving 1−β = ${power}. `+
       `The critical t-value was t(${R.df}) = ${fmt7(R.t_crit)}.`,
     t_paired: () =>
-      `A ${at} power analysis was conducted using C*Power v0.1 for a paired-samples t-test. `+
+      `A ${at} power analysis was conducted using C*Power v0.2 for a paired-samples t-test. `+
       `We targeted Cohen's dz = ${fmt7(efVal)} (${cohenGuide('d',efVal)}), with α = ${alpha} and desired power of ${S.analysis==='priori'?fmt7(p.power):power}. `+
       `The required number of pairs is N = ${N}, achieving 1−β = ${power}. `+
       `The critical t-value was t(${R.df}) = ${fmt7(R.t_crit)}.`,
     chi2_gof: () =>
-      `A ${at} power analysis was conducted using C*Power v0.1 for a chi-square goodness-of-fit test (df = ${p.df_chi2||1}). `+
+      `A ${at} power analysis was conducted using C*Power v0.2 for a chi-square goodness-of-fit test (df = ${p.df_chi2||1}). `+
       `We targeted Cohen's w = ${fmt7(efVal)} (${cohenGuide('w',efVal)}), with α = ${alpha} and desired power of ${S.analysis==='priori'?fmt7(p.power):power}. `+
       `The required sample size is N = ${N}, achieving 1−β = ${power}. `+
       `The critical χ²-value was χ²(${p.df_chi2||1}) = ${fmt7(R.chi2_crit)}.`,
     F_reg_r2: () => {
       const u=p.num_pred||1;
-      return `A ${at} power analysis was conducted using C*Power v0.1 for multiple linear regression (R² against zero, ${u} predictor${u>1?'s':''}). `+
+      return `A ${at} power analysis was conducted using C*Power v0.2 for multiple linear regression (R² against zero, ${u} predictor${u>1?'s':''}). `+
         `We targeted Cohen's f² = ${fmt7(efVal)} (${cohenGuide('f2',efVal)}), with α = ${alpha} and desired power of ${S.analysis==='priori'?fmt7(p.power):power}. `+
         `The required total sample size is N = ${N}, achieving 1−β = ${power}. `+
         `The critical F-value was F(${R.num_df}, ${R.den_df}) = ${fmt7(R.F_crit)}.`;
     },
     z_prop2: () =>
-      `A ${at} power analysis was conducted using C*Power v0.1 for a two-proportions z-test comparing p₁ = ${p.p1} and p₂ = ${p.p2}. `+
+      `A ${at} power analysis was conducted using C*Power v0.2 for a two-proportions z-test comparing p₁ = ${p.p1} and p₂ = ${p.p2}. `+
       `The effect size h = ${fmt7(R.effect_h)}, α = ${alpha}, desired power = ${S.analysis==='priori'?fmt7(p.power):power}. `+
       `The required total sample size is N = ${N} (${Math.ceil(N/2)} per group), achieving 1−β = ${power}.`,
   };
 
   const fn=templates[S.test];
   const main=fn?fn():(
-    `A ${at} power analysis was conducted using C*Power v0.1 for ${testLabel}. `+
+    `A ${at} power analysis was conducted using C*Power v0.2 for ${testLabel}. `+
     `Parameters: ${efLabel} = ${fmt7(efVal)}, α = ${alpha}, desired power = ${S.analysis==='priori'?fmt7(p.power):power}. `+
     `Required N = ${N}, achieved power 1−β = ${power}, λ = ${fmt7(R.ncp)}.`
   );
@@ -2645,7 +2691,6 @@ function openReport(){
       </div>
     `;
   }
-  openModal('modal-report');
 }
 
 function copyReport(){
@@ -2831,7 +2876,7 @@ function getRCode(){
   const N = R.N_total ? Math.ceil(R.N_total) : (parseInt(p.N_total)||100);
   const solveFor = a==='priori' ? 'n' : a==='sensitivity' ? 'effect' : a==='criterion' ? 'alpha' : 'power';
 
-  const header = `# Generated by C*Power v0.1 — https://lukasroeseler.github.io/c-power/\n# Test: ${(TEST_LABELS[t]||t)}\n# Analysis type: ${a}\n# NOTE: C*Power is an LLM-generated tool and has not been exhaustively validated.\n#       This R code lets you independently verify the result.\n\n`;
+  const header = `# Generated by C*Power v0.2 — https://lukasroeseler.github.io/c-power/\n# Test: ${(TEST_LABELS[t]||t)}\n# Analysis type: ${a}\n# NOTE: C*Power is an LLM-generated tool and has not been exhaustively validated.\n#       This R code lets you independently verify the result.\n\n`;
 
   const TEMPLATES = {
     F_anova: () => {
@@ -2957,7 +3002,6 @@ function openRCode(){
   const body=document.getElementById('rcode-body');
   if(!S.results || !S.results.actual_power){
     body.innerHTML='<p style="color:var(--text3);">Run a calculation first, then open this panel.</p>';
-    openModal('modal-rcode');
     return;
   }
   const desc = getMethodDescription();
@@ -2979,7 +3023,6 @@ function openRCode(){
       replicate the exact same computation C*Power performs in JavaScript.
     </p>
   `;
-  openModal('modal-rcode');
 }
 
 function escapeHtml(s){
@@ -3293,71 +3336,411 @@ function calculate(){
   displayResults(R);
   drawDist();
   pushProtocol();
+  openReport();
+  openRCode();
+}
+
+function jumpToOutputCard(id){
+  const card=document.getElementById(id);
+  if(!card) return;
+  card.open=true;
+  card.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// RIGHT PANEL
+// EFFECT SIZE CALCULATOR  (interactive conversion between metrics)
 // ═══════════════════════════════════════════════════════════════════
-function toggleRightPanel(){
-  document.getElementById('right-panel').classList.toggle('hidden');
+// Conversion primitives. Where a relation depends on assumptions (equal
+// variances, balanced groups, a particular design), that assumption is
+// surfaced as a warning in the recipe that uses it rather than hidden here.
+const ES = {
+  dToR:(d,n1,n2)=> (n1&&n2) ? d/Math.sqrt(d*d+((n1+n2)*(n1+n2))/(n1*n2)) : d/Math.sqrt(d*d+4),
+  rToD:r=> 2*r/Math.sqrt(Math.max(1-r*r,1e-9)),
+  hedgesG:(d,dfN)=> d*(1-3/(4*dfN-1)),
+  orToD:OR=> Math.log(OR)*Math.sqrt(3)/Math.PI,
+};
+
+function fxRow(label,metricKey,raw,formula,note){
+  return {label, metricKey, raw, value:isFinite(raw)?fmt7(raw):'—', formula:formula||'', note:note||''};
 }
-function rpProcedureChange(){
-  const v=document.getElementById('rp-procedure').value;
-  document.getElementById('rp-means-section').style.display=v==='means'?'':'none';
-  document.getElementById('rp-eta2-section').style.display=v==='eta2'?'':'none';
-  document.getElementById('rp-direct-section').style.display=v==='direct'?'':'none';
-  rpCalculate();
+
+const FX_RECIPES = {
+  means_anova: {
+    group:'ANOVA / group means', label:'Group means & SD → f (k groups)',
+    customInputs:true,
+    compute(){
+      const sd=parseFloat(document.getElementById('fx-sd')?.value)||10;
+      const data=S.fxGroupData||[];
+      const totalN=data.reduce((s,r)=>s+r.n,0)||1;
+      const gm=data.reduce((s,r)=>s+r.mean*r.n,0)/totalN;
+      const sigma_m=Math.sqrt(data.reduce((s,r)=>s+r.n*(r.mean-gm)**2,0)/totalN);
+      const f=sigma_m/sd, k=data.length;
+      const eta2=(f*f)/(1+f*f);
+      const rows=[
+        fxRow("Cohen's f",'f',f,'f = σ(means) / σ(within)'),
+        fxRow('η² (eta-squared)','eta2',eta2,'η² = f² / (1+f²)'),
+        fxRow('f²','f2',f*f,'f² = f × f'),
+        fxRow('Total N (as entered)',null,totalN,'Σ nᵢ'),
+      ];
+      if(k===2) rows.splice(1,0,fxRow("Cohen's d (2 groups only)",'d',2*f,'d = 2f, valid only for exactly two groups'));
+      return {
+        rows,
+        warnings:["Assumes fixed-effects one-way ANOVA with homogeneous (equal) variance across groups — f is the ratio of the SD of group means to the common within-group SD."],
+        refs:['Cohen (1988)'],
+        rpkgs:['effectsize::cohens_f']
+      };
+    }
+  },
+  eta2_from: {
+    group:'ANOVA / group means', label:'η² (+ df) → f, f², d, ω²',
+    inputs:[
+      {key:'eta2', label:'η²', default:0.06, step:0.01, min:0.0001, max:0.999},
+      {key:'df1', label:'df₁ (groups − 1)', default:2, step:1, min:1, isInt:true},
+      {key:'df2', label:'df₂ (error df)', default:57, step:1, min:1, isInt:true},
+    ],
+    compute(v){
+      const eta2=v.eta2, df1=v.df1, df2=v.df2, N=df1+df2+1;
+      const f=Math.sqrt(eta2/Math.max(1-eta2,1e-9)), f2=f*f;
+      const F=(eta2/df1)/Math.max((1-eta2)/df2,1e-9);
+      let omega2=(df1*(F-1))/(df1*(F-1)+N);
+      const omega2Note = omega2<0 ? 'negative value truncated to 0 (common for small/null effects)' : 'approximate, one-way balanced design';
+      omega2=Math.max(omega2,0);
+      const rows=[
+        fxRow("Cohen's f",'f',f,'f = √(η²/(1−η²))'),
+        fxRow('f²','f2',f2,'f² = η²/(1−η²)'),
+        fxRow('ω² (omega-squared)',null,omega2,'ω² = df₁(F−1) / (df₁(F−1)+N)',omega2Note),
+        fxRow('Implied total N',null,N,'N = df₁+df₂+1'),
+      ];
+      if(df1===1) rows.splice(1,0,fxRow("Cohen's d (2 groups only)",'d',2*f,'d = 2f, valid only when df₁ = 1'));
+      return {
+        rows,
+        warnings:["ω² uses the standard one-way, balanced-design approximation (Kirk, 1996); for unbalanced or multi-factor designs, compute ω² directly from the fitted model instead (e.g. with the effectsize R package).",
+          "d is only shown when df₁ = 1 (exactly two groups) — the f = d/2 relation doesn't generalise beyond two groups."],
+        refs:['Cohen (1988)','Kirk (1996)','Olejnik & Algina (2003)'],
+        rpkgs:['effectsize::eta_squared','effectsize::omega_squared']
+      };
+    }
+  },
+  f_direct: {
+    group:'ANOVA / group means', label:"Cohen's f → η², f², d",
+    inputs:[{key:'f', label:"Cohen's f", default:0.25, step:0.01, min:0.0001}],
+    compute(v){
+      const f=v.f, eta2=(f*f)/(1+f*f);
+      return {
+        rows:[
+          fxRow('η² (eta-squared)','eta2',eta2,'η² = f² / (1+f²)'),
+          fxRow('f²','f2',f*f,'f² = f × f'),
+          fxRow("Cohen's d (2 groups only)",'d',2*f,'d = 2f, valid only for exactly two groups'),
+        ],
+        warnings:['The f → d relation (d = 2f) is only exact for a design with exactly two groups.'],
+        refs:['Cohen (1988)'], rpkgs:['effectsize::cohens_f']
+      };
+    }
+  },
+  r2_regression: {
+    group:'Regression', label:'R² → f², f (Cohen\'s f² deviation-from-zero)',
+    inputs:[{key:'r2', label:'R²', default:0.13, step:0.01, min:0.0001, max:0.999}],
+    compute(v){
+      const r2=v.r2, f2=r2/Math.max(1-r2,1e-9), f=Math.sqrt(f2);
+      return {
+        rows:[
+          fxRow('f² (Cohen\'s f²)','f2',f2,'f² = R² / (1−R²)'),
+          fxRow("Cohen's f",'f',f,'f = √f²'),
+        ],
+        warnings:["Treats R² as the full model's variance explained (\"R² deviation from zero\"). For an R² increase between nested models, use ΔR²/(1−R²full) — see the \"R² increase\" test in the main calculator instead."],
+        refs:['Cohen (1988)'], rpkgs:['pwr::ES.f2']
+      };
+    }
+  },
+  two_means: {
+    group:'Mean difference (t-family)', label:'Two independent means (M, SD, n) → d, g, r, f',
+    inputs:[
+      {key:'m1', label:'Mean, group 1', default:12, step:0.1},
+      {key:'m2', label:'Mean, group 2', default:10, step:0.1},
+      {key:'sd1', label:'SD, group 1', default:4, step:0.1, min:0.0001},
+      {key:'sd2', label:'SD, group 2', default:4, step:0.1, min:0.0001},
+      {key:'n1', label:'n, group 1', default:30, step:1, min:2, isInt:true},
+      {key:'n2', label:'n, group 2', default:30, step:1, min:2, isInt:true},
+    ],
+    compute(v){
+      const {m1,m2,sd1,sd2,n1,n2}=v;
+      const dfN=n1+n2-2;
+      const sp=Math.sqrt(((n1-1)*sd1*sd1+(n2-1)*sd2*sd2)/Math.max(dfN,1));
+      const d=(m1-m2)/sp;
+      const g=ES.hedgesG(d,dfN);
+      const r=ES.dToR(d,n1,n2);
+      const f=d/2, eta2=r*r;
+      const glass=(m1-m2)/sd2;
+      return {
+        rows:[
+          fxRow("Cohen's d",'d',d,'d = (M₁−M₂) / SD_pooled'),
+          fxRow("Hedges' g (small-sample corrected)",null,g,'g = d × (1 − 3/(4·df−1))'),
+          fxRow('Pearson r','r',r,'r = d / √(d² + (n₁+n₂)²/(n₁n₂))'),
+          fxRow("Cohen's f",'f',f,'f = d/2 (two groups)'),
+          fxRow('η²',null,eta2,'η² = r²'),
+          fxRow("Glass's Δ (uses group 2 SD only)",null,glass,'Δ = (M₁−M₂) / SD₂'),
+        ],
+        warnings:["d and g assume homogeneity of variance (pooled SD). If the two groups' variances differ substantially, report Glass's Δ instead — it only uses the (presumed control) group 2's SD."],
+        refs:['Cohen (1988)','Hedges (1981)','Borenstein, Hedges, Higgins & Rothstein (2009)'],
+        rpkgs:['effectsize::cohens_d','esc::esc_mean_sd']
+      };
+    }
+  },
+  t_stat: {
+    group:'Mean difference (t-family)', label:'t-statistic + df → d / dz, r',
+    inputs:[
+      {key:'t', label:'t statistic', default:2.5, step:0.01},
+      {key:'df', label:'df', default:58, step:1, min:1, isInt:true},
+      {key:'design', label:'Design (1 = independent groups, 0 = one-sample/paired)', default:1, step:1, min:0, max:1, isInt:true},
+    ],
+    compute(v){
+      const {t,df,design}=v, r=t/Math.sqrt(t*t+df);
+      const rows=[fxRow('Pearson r','r',r,'r = t / √(t²+df)')];
+      if(design){
+        const n1=(df+2)/2, n2=n1;
+        const d=t*Math.sqrt(1/n1+1/n2);
+        rows.unshift(fxRow("Cohen's d (independent groups)",'d',d,'d = t·√(1/n₁+1/n₂), n₁=n₂=(df+2)/2'));
+      } else {
+        const n=df+1, dz=t/Math.sqrt(n);
+        rows.unshift(fxRow('Cohen\'s dz (one-sample/paired)','dz',dz,'dz = t/√n, n = df+1'));
+      }
+      return {
+        rows,
+        warnings: design ? ["Independent-groups conversion assumes equal group sizes (n₁=n₂=(df+2)/2). For unequal n, use the \"Two independent means\" recipe with your exact n₁/n₂ instead."] : [],
+        refs:['Rosenthal (1994)','Cohen (1988)'],
+        rpkgs:['effectsize::t_to_d','effectsize::t_to_r']
+      };
+    }
+  },
+  paired_means: {
+    group:'Mean difference (t-family)', label:'Paired mean difference (M_diff, SD_diff, n) → dz',
+    inputs:[
+      {key:'mdiff', label:'Mean difference', default:3, step:0.1},
+      {key:'sddiff', label:'SD of the differences', default:6, step:0.1, min:0.0001},
+      {key:'n', label:'n (pairs)', default:30, step:1, min:2, isInt:true},
+    ],
+    compute(v){
+      const dz=v.mdiff/v.sddiff;
+      return {
+        rows:[fxRow('Cohen\'s dz','dz',dz,'dz = M_diff / SD_diff')],
+        warnings:["If you only have each condition's mean/SD and the correlation r between pairs (not SD_diff directly), first compute SD_diff = √(SD₁²+SD₂²−2·r·SD₁·SD₂), then use that value here."],
+        refs:['Cohen (1988)','Lakens (2013)'],
+        rpkgs:['effectsize::repeated_measures_d']
+      };
+    }
+  },
+  corr_r: {
+    group:'Correlation', label:'Correlation r → d, f, η²/R²',
+    inputs:[{key:'r', label:'Correlation r', default:0.3, step:0.01, min:-0.999, max:0.999}],
+    compute(v){
+      const r=v.r, d=ES.rToD(r), f=Math.abs(r)/Math.sqrt(Math.max(1-r*r,1e-9)), eta2=r*r;
+      return {
+        rows:[
+          fxRow("Cohen's d",'d',d,'d = 2r / √(1−r²)'),
+          fxRow("Cohen's f",'f',f,'f = |r| / √(1−r²)'),
+          fxRow('η² / R²',null,eta2,'η² = r²'),
+        ],
+        warnings:['Treats r as a simple bivariate correlation (equivalent to R² with a single predictor) — not the same as a partial correlation in a multi-predictor model.'],
+        refs:['Cohen (1988)'], rpkgs:['effectsize::r_to_d']
+      };
+    }
+  },
+  two_props: {
+    group:'Proportions & categorical', label:'Two proportions → h, odds ratio, risk ratio',
+    inputs:[
+      {key:'p1', label:'Proportion, group 1', default:0.5, step:0.01, min:0.001, max:0.999},
+      {key:'p2', label:'Proportion, group 2', default:0.3, step:0.01, min:0.001, max:0.999},
+    ],
+    compute(v){
+      const {p1,p2}=v;
+      const h=Math.abs(2*Math.asin(Math.sqrt(p1))-2*Math.asin(Math.sqrt(p2)));
+      const OR=(p1/(1-p1))/(p2/(1-p2)), RR=p1/p2;
+      return {
+        rows:[
+          fxRow("Cohen's h",'h',h,'h = |2·asin(√p₁) − 2·asin(√p₂)|'),
+          fxRow('Odds ratio',null,OR,'OR = [p₁/(1−p₁)] / [p₂/(1−p₂)]'),
+          fxRow('Risk ratio',null,RR,'RR = p₁ / p₂'),
+        ],
+        warnings:[], refs:['Cohen (1988)','Fleiss, Levin & Paik (2003)'],
+        rpkgs:['pwr::ES.h','epitools::oddsratio']
+      };
+    }
+  },
+  one_prop: {
+    group:'Proportions & categorical', label:'One proportion vs. reference → h',
+    inputs:[
+      {key:'p', label:'Proportion observed/expected', default:0.65, step:0.01, min:0.001, max:0.999},
+      {key:'p0', label:'Reference proportion', default:0.5, step:0.01, min:0.001, max:0.999},
+    ],
+    compute(v){
+      const h=Math.abs(2*Math.asin(Math.sqrt(v.p))-2*Math.asin(Math.sqrt(v.p0)));
+      return { rows:[fxRow("Cohen's h",'h',h,'h = |2·asin(√p) − 2·asin(√p₀)|')], warnings:[], refs:['Cohen (1988)'], rpkgs:['pwr::ES.h'] };
+    }
+  },
+  chi2_stat: {
+    group:'Proportions & categorical', label:'χ² statistic + N (+ table shape) → w, Cramér\'s V, φ',
+    inputs:[
+      {key:'chi2', label:'χ² statistic', default:12, step:0.1, min:0},
+      {key:'n', label:'Total N', default:200, step:1, min:1, isInt:true},
+      {key:'dfmin', label:'min(rows−1, cols−1)', default:1, step:1, min:1, isInt:true},
+    ],
+    compute(v){
+      const w=Math.sqrt(v.chi2/v.n), V=w/Math.sqrt(v.dfmin);
+      const rows=[
+        fxRow("Cohen's w",'w',w,'w = √(χ²/N)'),
+        fxRow("Cramér's V",null,V,'V = w / √(min(rows−1,cols−1))'),
+      ];
+      if(v.dfmin===1) rows.push(fxRow('φ (phi, 2×2 tables only)',null,w,'φ = w when the table is 2×2'));
+      return { rows, warnings:[], refs:['Cohen (1988)','Cramér (1946)'], rpkgs:['effectsize::cramers_v','effectsize::phi'] };
+    }
+  },
+  odds_ratio: {
+    group:'Odds ratio', label:'Odds ratio → d, r (logit method)',
+    inputs:[{key:'or', label:'Odds ratio', default:2.5, step:0.01, min:0.0001}],
+    compute(v){
+      const d=ES.orToD(v.or), r=ES.dToR(d);
+      return {
+        rows:[
+          fxRow("Cohen's d",'d',d,'d = ln(OR) × √3/π'),
+          fxRow('Pearson r','r',r,'r = d / √(d²+4)'),
+        ],
+        warnings:['The logit-method conversion (Chinn, 2000) assumes normally-distributed latent variables with equal variance in each group. Treat as approximate for small samples, rare events, or non-normal underlying distributions.'],
+        refs:['Chinn (2000)','Borenstein, Hedges, Higgins & Rothstein (2009)'],
+        rpkgs:['esc::esc_2x2','effectsize::oddsratio_to_d']
+      };
+    }
+  },
+};
+
+const FX_TARGET_MAP = { f:'effect_f', f2:'effect_f2', d:'effect_d', dz:'effect_dz', h:'effect_h', w:'effect_w', r:['r','rho','r1','r2'] };
+
+const FX_KEY_TO_RECIPE = {
+  effect_f:'means_anova', effect_f2:'r2_regression', effect_d:'two_means', effect_dz:'paired_means',
+  effect_w:'chi2_stat', effect_h:'two_props', p0:'two_props', p1:'two_props', p2:'two_props',
+  rho:'corr_r', r:'corr_r', r1:'corr_r', r2:'corr_r',
+};
+
+function openEffectSizeCalculator(key){
+  switchTab('effectsize');
+  const recipeId=FX_KEY_TO_RECIPE[key];
+  if(recipeId && FX_RECIPES[recipeId]){
+    S.fxRecipe=recipeId;
+    const sel=document.getElementById('fx-recipe'); if(sel) sel.value=recipeId;
+    fxRecipeChange();
+  }
 }
-function rpGroupsChange(){
-  S.rpGroups=parseInt(document.getElementById('rp-groups').value)||3;
-  rpInitGroups(); rpRenderGroups(); rpCalculate();
+
+function fxInit(){
+  S.fxInitialized=true;
+  const sel=document.getElementById('fx-recipe'); sel.innerHTML='';
+  const groups={};
+  Object.entries(FX_RECIPES).forEach(([id,r])=>{ (groups[r.group]=groups[r.group]||[]).push([id,r]); });
+  Object.entries(groups).forEach(([gname,items])=>{
+    const og=document.createElement('optgroup'); og.label=gname;
+    items.forEach(([id,r])=>{ const o=document.createElement('option'); o.value=id; o.textContent=r.label; og.appendChild(o); });
+    sel.appendChild(og);
+  });
+  S.fxRecipe=S.fxRecipe||Object.keys(FX_RECIPES)[0];
+  sel.value=S.fxRecipe;
+  fxRecipeChange();
 }
-function rpInitGroups(){
-  const n=S.rpGroups, en=parseInt(document.getElementById('rp-equal-n').value)||50;
-  while(S.rpGroupData.length<n) S.rpGroupData.push({mean:50,n:en});
-  S.rpGroupData.length=n;
+
+function fxRecipeChange(){
+  S.fxRecipe=document.getElementById('fx-recipe').value;
+  const recipe=FX_RECIPES[S.fxRecipe];
+  S.fxValues={};
+  (recipe.inputs||[]).forEach(inp=>{ S.fxValues[inp.key]=inp.default; });
+  fxRenderInputs();
+  fxCompute();
 }
-function rpRenderGroups(){
-  const tb=document.getElementById('rp-group-body'); tb.innerHTML='';
-  S.rpGroupData.forEach((row,i)=>{
+
+function fxRenderInputs(){
+  const recipe=FX_RECIPES[S.fxRecipe];
+  const wrap=document.getElementById('fx-inputs'); wrap.innerHTML='';
+  if(recipe.customInputs){ fxRenderMeansAnovaInputs(wrap); return; }
+  recipe.inputs.forEach(inp=>{
+    const row=document.createElement('div'); row.className='rp-row';
+    const lbl=document.createElement('label'); lbl.textContent=inp.label; row.appendChild(lbl);
+    const input=document.createElement('input'); input.type='number'; input.value=S.fxValues[inp.key];
+    if(inp.step!=null) input.step=inp.step;
+    if(inp.min!=null) input.min=inp.min;
+    if(inp.max!=null) input.max=inp.max;
+    input.oninput=()=>{ S.fxValues[inp.key]=inp.isInt?(parseInt(input.value)||0):(parseFloat(input.value)||0); fxCompute(); };
+    row.appendChild(input);
+    wrap.appendChild(row);
+  });
+}
+
+function fxRenderMeansAnovaInputs(wrap){
+  S.fxGroupData=S.fxGroupData||[{mean:10,n:50},{mean:11,n:50},{mean:14,n:50},{mean:15,n:50},{mean:20,n:50}];
+  wrap.innerHTML=`
+    <div class="rp-row"><label>Number of groups</label><input type="number" id="fx-groups" value="${S.fxGroupData.length}" min="2" max="50" onchange="fxGroupsChange()"></div>
+    <div class="rp-row"><label>SD σ within groups</label><input type="number" id="fx-sd" value="${S.fxMeansSd||10}" min="0.001" step="0.1" oninput="fxCompute()"></div>
+    <table class="group-table" style="margin-top:4px;"><thead><tr><th>Group</th><th>Mean</th><th>Size</th></tr></thead><tbody id="fx-group-body"></tbody></table>
+    <hr class="rp-sep">
+    <div class="rp-row"><label>Equal n</label><input type="number" id="fx-equal-n" value="50" min="1" onchange="fxSetEqualN()"></div>
+  `;
+  fxRenderGroupRows();
+}
+function fxRenderGroupRows(){
+  const tb=document.getElementById('fx-group-body'); if(!tb) return; tb.innerHTML='';
+  S.fxGroupData.forEach((row,i)=>{
     const tr=document.createElement('tr');
-    if(i===S.rpGroups-1) tr.className='rp-selected';
     tr.innerHTML=`<td style="text-align:center;padding:2px 4px;">${i+1}</td>
-      <td><input type="number" value="${row.mean}" onchange="rpSetMean(${i},this.value)"></td>
-      <td><input type="number" value="${row.n}" onchange="rpSetN(${i},this.value)"></td>`;
+      <td><input type="number" value="${row.mean}" onchange="fxSetGroupMean(${i},this.value)"></td>
+      <td><input type="number" value="${row.n}" onchange="fxSetGroupN(${i},this.value)"></td>`;
     tb.appendChild(tr);
   });
 }
-function rpSetMean(i,v){S.rpGroupData[i].mean=parseFloat(v)||0;rpCalculate();}
-function rpSetN(i,v){S.rpGroupData[i].n=parseInt(v)||1;rpCalculate();}
-function rpSetEqualN(){
-  const n=parseInt(document.getElementById('rp-equal-n').value)||50;
-  S.rpGroupData.forEach(r=>r.n=n); rpRenderGroups(); rpCalculate();
+function fxGroupsChange(){
+  const n=Math.max(2,parseInt(document.getElementById('fx-groups').value)||2);
+  const en=parseInt(document.getElementById('fx-equal-n')?.value)||50;
+  while(S.fxGroupData.length<n) S.fxGroupData.push({mean:50,n:en});
+  S.fxGroupData.length=n;
+  fxRenderGroupRows(); fxCompute();
 }
-function rpCalculate(){
-  const proc=document.getElementById('rp-procedure').value;
-  let f=NaN;
-  if(proc==='means'){
-    const sd=parseFloat(document.getElementById('rp-sd').value)||10;
-    const totalN=S.rpGroupData.reduce((s,r)=>s+r.n,0)||1;
-    const gm=S.rpGroupData.reduce((s,r)=>s+r.mean*r.n,0)/totalN;
-    const sigma_m=Math.sqrt(S.rpGroupData.reduce((s,r)=>s+r.n*(r.mean-gm)**2,0)/totalN);
-    f=sigma_m/sd;
-    document.getElementById('rp-total-n').textContent=totalN;
-  } else if(proc==='eta2'){
-    const eta2=parseFloat(document.getElementById('rp-eta2').value)||0.06;
-    f=Math.sqrt(eta2/(1-eta2));
-  } else {
-    f=parseFloat(document.getElementById('rp-direct-f').value)||0.25;
-  }
-  S._rpF=f;
-  document.getElementById('rp-effect-display').textContent=isNaN(f)?'—':f.toFixed(7);
+function fxSetGroupMean(i,v){ S.fxGroupData[i].mean=parseFloat(v)||0; fxCompute(); }
+function fxSetGroupN(i,v){ S.fxGroupData[i].n=parseInt(v)||1; fxCompute(); }
+function fxSetEqualN(){
+  const n=parseInt(document.getElementById('fx-equal-n').value)||50;
+  S.fxGroupData.forEach(r=>r.n=n); fxRenderGroupRows(); fxCompute();
 }
-function rpTransfer(){
-  if(!isNaN(S._rpF)){
-    S.params.effect_f=S._rpF;
-    document.querySelectorAll('#input-params-body input[data-key="effect_f"]').forEach(inp=>inp.value=S._rpF.toFixed(7));
-  }
+
+function fxFindSendTarget(metricKey){
+  const cand=FX_TARGET_MAP[metricKey]; if(!cand) return null;
+  const keys=Array.isArray(cand)?cand:[cand];
+  const schema=getSchema(S.test,S.analysis);
+  return keys.find(k=>schema.in.includes(k)) || null;
+}
+
+let _fxLastResult=null;
+function fxCompute(){
+  const recipe=FX_RECIPES[S.fxRecipe];
+  _fxLastResult=recipe.compute(S.fxValues);
+  fxRenderResults(_fxLastResult);
+}
+
+function fxRenderResults(result){
+  const wrap=document.getElementById('fx-results');
+  let html='<table class="proto-table fx-table" style="min-width:0;"><thead><tr><th>Metric</th><th>Value</th><th>Formula</th><th>Note</th><th></th></tr></thead><tbody>';
+  result.rows.forEach(row=>{
+    const target=row.metricKey?fxFindSendTarget(row.metricKey):null;
+    const sendBtn=target?`<button class="btn-determine" onclick="fxSendToTest('${row.metricKey}','${target}')">→ Send</button>`:'';
+    html+=`<tr><td>${row.label}</td><td class="fx-val">${row.value}</td><td class="fx-note">${row.formula}</td><td class="fx-note">${row.note}</td><td>${sendBtn}</td></tr>`;
+  });
+  html+='</tbody></table>';
+  (result.warnings||[]).forEach(w=>{ html+=`<div class="fx-warning"><span class="fx-warn-icon">⚠️</span><span>${w}</span></div>`; });
+  html+=`<div style="margin-top:8px;">${refPills(result.refs||[])}${(result.rpkgs||[]).map(p=>`<span class="ref-pill rpkg-pill">R: ${p}</span>`).join('')}</div>`;
+  wrap.innerHTML=html;
+}
+
+function fxSendToTest(metricKey,paramKey){
+  if(!_fxLastResult) return;
+  const row=_fxLastResult.rows.find(r=>r.metricKey===metricKey);
+  if(!row||!isFinite(row.raw)) return;
+  S.params[paramKey]=row.raw;
+  switchTab('distributions');
+  renderParams();
   calculate();
 }
 
@@ -3365,7 +3748,8 @@ function rpTransfer(){
 // THEMES
 // ═══════════════════════════════════════════════════════════════════
 function setTheme(name){
-  document.body.className='theme-'+name;
+  Array.from(document.body.classList).forEach(c=>{ if(c.startsWith('theme-')) document.body.classList.remove(c); });
+  document.body.classList.add('theme-'+name);
   S.theme=name;
   document.querySelectorAll('.dropdown-item[id^="dtheme-"]').forEach(el=>{
     const active=el.id==='dtheme-'+name;
@@ -3375,6 +3759,27 @@ function setTheme(name){
   closeAllDropdowns();
   // Redraw canvas with new theme colors
   setTimeout(drawDist, 50);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SCREEN-SIZE PREVIEW  (check the mobile/tablet layout from a desktop
+// browser by constraining .app-window's width, instead of resizing the
+// real window — the @container rules react to that width the same way
+// they'd react to a real narrow viewport)
+// ═══════════════════════════════════════════════════════════════════
+function onScreenSizeChange(){
+  const sel=document.getElementById('sel-screensize').value;
+  const customFld=document.getElementById('fld-screensize-custom');
+  customFld.style.display=sel==='custom'?'':'none';
+  if(sel==='auto'){
+    document.body.classList.remove('preview-active');
+    document.documentElement.style.removeProperty('--preview-w');
+    return;
+  }
+  const w=sel==='custom'?(parseInt(customFld.value)||375):parseInt(sel);
+  document.body.classList.add('preview-active');
+  document.documentElement.style.setProperty('--preview-w', w+'px');
+  setTimeout(drawDist, 60);
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -3399,13 +3804,14 @@ document.addEventListener('click',e=>{
 // TAB SWITCHING
 // ═══════════════════════════════════════════════════════════════════
 function switchTab(tab){
-  const isDist=tab==='distributions';
+  const isDist=tab==='distributions', isProto=tab==='protocol', isFx=tab==='effectsize';
   document.getElementById('tab-btn-dist').classList.toggle('active',isDist);
-  document.getElementById('tab-btn-proto').classList.toggle('active',!isDist);
+  document.getElementById('tab-btn-proto').classList.toggle('active',isProto);
+  document.getElementById('tab-btn-fx').classList.toggle('active',isFx);
   document.getElementById('tab-distributions').classList.toggle('tab-hidden',!isDist);
-  const proto=document.getElementById('tab-protocol');
-  proto.classList.toggle('tab-visible',!isDist);
-  document.getElementById('right-panel').style.display=isDist?'':'none';
+  document.getElementById('tab-protocol').classList.toggle('tab-visible',isProto);
+  document.getElementById('tab-effectsize').classList.toggle('tab-visible',isFx);
+  if(isFx && !S.fxInitialized) fxInit();
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -3487,8 +3893,6 @@ document.addEventListener('click',()=>hideParamTooltip());
 
 function init(){
   renderTestList(); initParams(); renderParams();
-  S.rpGroupData=[{mean:10,n:50},{mean:11,n:50},{mean:14,n:50},{mean:15,n:50},{mean:20,n:50}];
-  rpRenderGroups(); rpCalculate();
 
   // PWA manifest
   const mf={name:"C*Power",short_name:"C*Power",start_url:".",display:"standalone",background_color:"#ece9d8",theme_color:"#d4d0c8",
@@ -3497,18 +3901,15 @@ function init(){
   const link=document.createElement('link'); link.rel='manifest'; link.href=URL.createObjectURL(blob);
   document.head.appendChild(link);
 
-  // Set canvas initial height
+  // Canvas height is controlled entirely by CSS (base rule + @media/@container
+  // breakpoints) so it responds to both real window resizes and the in-app
+  // screen-size preview; a ResizeObserver just redraws when the box changes.
   const canvas=document.getElementById('dist-canvas');
   if(canvas){
-    // Set CSS height based on viewport
-    const h=window.innerWidth<680?110:155;
-    canvas.style.height=h+'px';
-    // ResizeObserver to redraw when canvas layout changes
     if(window.ResizeObserver){
       const ro=new ResizeObserver(()=>{ if(S.results&&S.results.actual_power) drawDist(); });
       ro.observe(canvas);
     }
-    // Wire hover
     initPlotHover();
   }
 
