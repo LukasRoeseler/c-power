@@ -24,6 +24,16 @@ xdg-open index.html      # Linux
 
 ---
 
+## 📱 Android app
+
+Download the latest `C-Power-*.apk` from the [Releases page](https://github.com/lukasroeseler/c-power/releases), open it on your phone and allow installation from your browser/file manager. The app is the same `index.html`, wrapped with Capacitor, portrait-only and fully offline.
+
+You can also install the site as a PWA ("Add to Home screen") from [lukasroeseler.github.io/c-power](https://lukasroeseler.github.io/c-power/).
+
+To publish a new APK: `git tag v0.2.1 && git push origin v0.2.1` (the *Android APK* workflow builds and attaches it). Optional repo secrets `ANDROID_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` replace the bundled public signing key.
+
+---
+
 ## ✨ Features
 
 ### Statistical Tests
